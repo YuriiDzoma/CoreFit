@@ -1,6 +1,10 @@
-    // Account
-export const getIsAuth = (state) => state.account.isAuth;
-export const getLanguage = (state) => state.account.language;
-export const getIsDarkTheme = (state) => state.account.isDarkTheme;
+import { RootState } from './store';
 
-export const getText = (state) => state.language.text;
+    // Account
+// Account
+export const getIsAuth = (state: RootState) => state.account.isAuth;
+export const getLanguage = (state: RootState) => state.account.language;
+export const getIsDarkTheme = (state: RootState) => state.account.isDarkTheme;
+
+
+export const getText = (state: RootState) => state.language.text;

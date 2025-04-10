@@ -1,6 +1,6 @@
 import React from "react";
 
-export const getLanguages = async (value) => {
+export const getLanguages = async (value: string) => {
     const eng = {
         base: {
             login: 'Login',
