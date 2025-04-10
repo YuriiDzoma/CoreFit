@@ -7,6 +7,7 @@ import React, {useEffect, useState} from 'react';
 import Header from "./components/header/header";
 import Navigation from "./components/navigation/navigation";
 import StartPreloader from "../ui/startPreloader/startPreloader";
+import PwaInstallPrompt from "./components/PwaInstallPrompt/pwaInstallPrompt";
 
 export default function RootLayout({children,}: { children: React.ReactNode; }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +30,7 @@ export default function RootLayout({children,}: { children: React.ReactNode; }) 
 
         </head>
         <body className={`${roboto.className} antialiased`}>
+        <PwaInstallPrompt />
         <div className={styles.container}>
             <Header/>
             {isAuthenticated && <Navigation/>}
