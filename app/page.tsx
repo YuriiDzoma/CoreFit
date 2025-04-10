@@ -5,5 +5,5 @@ import Navigation from "./components/navigation/navigation";
 import Link from 'next/link';
 
 export default function Home() {
-  return;
+  return <p>upd 1</p>;
 }

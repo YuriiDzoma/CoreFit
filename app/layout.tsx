@@ -3,11 +3,10 @@ import '../ui/base.scss';
 import '../ui/global.css';
 import {roboto} from '../ui/fonts';
 import styles from "./app.module.scss";
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from "./components/header/header";
 import Navigation from "./components/navigation/navigation";
 import StartPreloader from "../ui/startPreloader/startPreloader";
-
 
 export default function RootLayout({children,}: { children: React.ReactNode; }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -23,15 +22,20 @@ export default function RootLayout({children,}: { children: React.ReactNode; }) 
     }, []);
     return (
         <html lang="en">
-            <body className={`${roboto.className} antialiased`}>
-                <div className={styles.container}>
-                    <Header />
-                    {isAuthenticated && <Navigation />}
-                    <div className={styles.content}>
-                        {isLoading ? <StartPreloader /> : children}
-                    </div>
-                </div>
-            </body>
+        <head>
+            <link rel="manifest" href="../public/manifest.json" />
+            <meta name="theme-color" content="#000000" />
+            <link rel="apple-touch-icon" href="../public/icons/icon-192x192.png" />
+        </head>
+        <body className={`${roboto.className} antialiased`}>
+        <div className={styles.container}>
+            <Header/>
+            {isAuthenticated && <Navigation/>}
+            <div className={styles.content}>
+                {isLoading ? <StartPreloader/> : children}
+            </div>
+        </div>
+        </body>
         </html>
     );
 }
