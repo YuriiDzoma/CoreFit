@@ -4,10 +4,14 @@ import {useForm} from "react-hook-form";
 import InputBox from "../../components/inputBox/inputBox";
 import {emailOptions, firstNameOptions, passwordOptions} from "../../settings/validations";
 import Link from "next/link";
+import {useDispatch} from "react-redux";
+import {useAppSelector} from "../../hooks/redux";
+import {getText} from "../../../store/selectors";
 
 
 const SignInForm = () => {
-    // const dispatch = useDispatch();
+    const { base } = useAppSelector(getText)
+    const dispatch = useDispatch();
     type signInForm = {
         name: string;
         email: string;
@@ -33,20 +37,20 @@ const SignInForm = () => {
 
     return (
         <form className={'form'} onSubmit={handleSubmit(onSubmit)}>
-            <h2 className={'title'}>Authorization</h2>
+            <h2 className={'title'}>{base.authorization}</h2>
             <InputBox
                 errors={errors}
                 name="name"
-                label="Your Name"
-                placeholder="Name"
+                placeholder={base.plHolName}
+                label={base.lblName}
                 options={register("name", firstNameOptions)}
             />
             <InputBox
                 errors={errors}
                 name="email"
                 type="text"
-                placeholder="E-mail"
-                label="Your E-mail"
+                placeholder={base.plHolEmail}
+                label={base.lblEmail}
                 options={{
                     ...register("email", {
                         ...emailOptions,
@@ -58,8 +62,8 @@ const SignInForm = () => {
                 errors={errors}
                 name="password"
                 type="password"
-                placeholder="Password"
-                label="Your password"
+                placeholder={base.plHolPass}
+                label={base.lblPass}
                 options={{
                     ...register("password", {
                         ...passwordOptions,
@@ -68,11 +72,11 @@ const SignInForm = () => {
                 }}
             />
             <button type={"submit"} className={`submit`}>
-                <span>Sign In</span>
+                <span>{base.signUp}</span>
             </button>
             <div className={'toSign'}>
-                <p>If you have an account</p>
-                <Link href={'/login'}>Login</Link>
+                <p>{base.haveAcc}</p>
+                <Link href={'/login'}>{base.login}</Link>
             </div>
         </form>
     )

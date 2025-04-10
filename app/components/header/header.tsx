@@ -3,9 +3,12 @@ import Image from 'next/image';
 import styles from './header.module.scss'
 import Link from "next/link";
 import useWindowSize from "../../hooks/useWindowSize";
+import {useAppSelector} from "../../hooks/redux";
+import {getText} from "../../../store/selectors";
 
 
 const Header = () => {
+    const { base } = useAppSelector(getText)
     const { width } = useWindowSize();
     return (
         <div className={styles.header}>
@@ -19,7 +22,7 @@ const Header = () => {
                 <p>COREFIT</p>
             </Link>
             <Link href="/login" className={`button`}>
-                <span>Log in</span>
+                <span>{base.login}</span>
             </Link>
         </div>
 

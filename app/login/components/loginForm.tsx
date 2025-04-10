@@ -4,10 +4,14 @@ import {useForm} from "react-hook-form";
 import InputBox from "../../components/inputBox/inputBox";
 import {emailOptions, passwordOptions} from "../../settings/validations";
 import Link from "next/link";
+import {useAppSelector} from "../../hooks/redux";
+import {getText} from "../../../store/selectors";
+import {useDispatch} from "react-redux";
 
 
 const Login = () => {
-    // const dispatch = useDispatch();
+    const { base } = useAppSelector(getText)
+    const dispatch = useDispatch();
     type LoginForm = {
         email: string;
         password: string;
@@ -32,13 +36,13 @@ const Login = () => {
 
     return (
         <form className={'form'} onSubmit={handleSubmit(onSubmit)}>
-            <h2 className={'title'}>Authorization</h2>
+            <h2 className={'title'}>{base.authorization}</h2>
             <InputBox
                 errors={errors}
                 name="email"
                 type="text"
-                placeholder="E-mail"
-                label="Your E-mail"
+                placeholder={base.plHolEmail}
+                label={base.lblEmail}
                 options={{
                     ...register("email", {
                         ...emailOptions,
@@ -50,8 +54,8 @@ const Login = () => {
                 errors={errors}
                 name="password"
                 type="password"
-                placeholder="Password"
-                label="Your password"
+                placeholder={base.plHolPass}
+                label={base.lblPass}
                 options={{
                     ...register("password", {
                         ...passwordOptions,
@@ -60,11 +64,11 @@ const Login = () => {
                 }}
             />
             <button type={"submit"} className={`submit`}>
-                <span>Login</span>
+                <span>{base.login}</span>
             </button>
             <div className={'toSign'}>
-                <p>If you don't have an account</p>
-                <Link href={'/signin'}>Sign In</Link>
+                <p>{base.notHaveAcc}</p>
+                <Link href={'/signin'}>{base.signUp}</Link>
             </div>
         </form>
     )
