@@ -15,8 +15,8 @@ const Header = () => {
             <Link className={styles.logo} href={'/'}>
                 <Image
                     src="/logos/logo.png"
-                    width={width < 768 ? 32 : 64}
-                    height={width < 768 ? 32 : 64}
+                    width={width < 768 ? 32 : 52}
+                    height={width < 768 ? 32 : 52}
                     alt="Screenshots of the dashboard project showing desktop version"
                 />
                 <p>COREFIT</p>

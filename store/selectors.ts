@@ -1,6 +1,5 @@
 import { RootState } from './store';
 
-    // Account
 // Account
 export const getIsAuth = (state: RootState) => state.account.isAuth;
 export const getLanguage = (state: RootState) => state.account.language;
