@@ -1,6 +1,6 @@
 'use client';
 import { createClient } from '@/utils/supabase/client';
-import React from "react";
+import React from 'react';
 
 export default function GoogleLogin() {
     const handleLogin = async () => {
@@ -8,7 +8,7 @@ export default function GoogleLogin() {
         await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: `${window.location.origin}`, // або хардкод: 'https://core-fit-ua.vercel.app'
+                redirectTo: 'https://core-fit-ua.vercel.app', // жорстко, без `${window.location.origin}`
             },
         });
     };
