@@ -5,9 +5,10 @@ import Link from "next/link";
 import useWindowSize from "../../hooks/useWindowSize";
 import {useAppSelector} from "../../hooks/redux";
 import {getText} from "../../../store/selectors";
+import type { Session } from '@supabase/supabase-js';
 
 
-const Header = () => {
+const Header = ({ session }: { session: Session | null }) => {
     const { base } = useAppSelector(getText)
     const { width } = useWindowSize();
     return (
@@ -21,9 +22,11 @@ const Header = () => {
                 />
                 <p>COREFIT</p>
             </Link>
-            <Link href="/login" className={`button`}>
-                <span>{base.login}</span>
-            </Link>
+            {!session && (
+                <Link href="/login" className={`button`}>
+                    <span>{base.login}</span>
+                </Link>
+            )}
         </div>
 
     )

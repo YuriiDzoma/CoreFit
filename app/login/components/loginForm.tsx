@@ -7,6 +7,7 @@ import Link from "next/link";
 import {useAppSelector} from "../../hooks/redux";
 import {getText} from "../../../store/selectors";
 import {useDispatch} from "react-redux";
+import GoogleLogin from "./googleLogin";
 
 
 const Login = () => {
@@ -70,6 +71,7 @@ const Login = () => {
                 <p>{base.notHaveAcc}</p>
                 <Link href={'/signin'}>{base.signUp}</Link>
             </div>
+            <GoogleLogin />
         </form>
     )
 }

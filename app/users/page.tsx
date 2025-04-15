@@ -1,3 +1,10 @@
+import UserList from "./components/userList";
+
 export default function Page() {
-    return <p>Users Page upd 1</p>;
+    return (
+        <div>
+            <h1>Список користувачів</h1>
+            {/*<UserList />*/}
+        </div>
+    );
 }
