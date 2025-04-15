@@ -32,7 +32,7 @@ const AppShell = ({ children }: { children: React.ReactNode }) => {
             <PwaInstallPrompt />
             <div className={styles.container}>
                 <Header session={session} />
-                {session && <Navigation />} {/* ✅ показувати тільки якщо є сесія */}
+                {session && <Navigation />}
                 <div className={styles.content}>
                     {isLoading ? <StartPreloader /> : children}
                 </div>
