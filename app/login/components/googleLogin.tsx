@@ -17,5 +17,5 @@ export default function GoogleLogin() {
         });
     };
 
-    return <button type={'button'} onClick={handleLogin}>Увійти через Google</button>;
+    return <button type={'button'} onClick={handleLogin}>Увійти через Google ТЕСТ</button>;
 }
