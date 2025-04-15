@@ -4,7 +4,7 @@ export default function Page() {
     return (
         <div>
             <h1>Список користувачів</h1>
-            {/*<UserList />*/}
+            <UserList />
         </div>
     );
 }
