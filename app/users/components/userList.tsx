@@ -14,18 +14,16 @@ export default function UserList() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
-    console.log(users)
-
     useEffect(() => {
         const supabase = createClient();
 
         const fetchUsers = async () => {
+
             const { data, error } = await supabase
                 .from('profiles')
                 .select('id, username, avatar_url, created_at');
-
+            console.log(data)
             if (!error && data) {
-                console.log(data)
                 setUsers(data);
             }
             setLoading(false);

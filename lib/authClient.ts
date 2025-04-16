@@ -8,12 +8,10 @@ export function useSupabaseSession() {
     const supabase = createClient();
 
     useEffect(() => {
-        // Встановлюємо початкову сесію
-        supabase.auth.getSession().then(({ data }) => {
-            setSession(data.session);
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
         });
 
-        // Слухаємо зміни сесії
         const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
         });
