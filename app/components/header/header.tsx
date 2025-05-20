@@ -18,7 +18,7 @@ const Header = ({ session }: { session: Session | null }) => {
                     src="/logos/logo.png"
                     width={width < 768 ? 32 : 52}
                     height={width < 768 ? 32 : 52}
-                    alt="Screenshots of the dashboard project showing desktop version"
+                    alt="logo"
                 />
                 <p>COREFIT</p>
             </Link>

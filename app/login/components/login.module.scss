@@ -1,0 +1,28 @@
+.googleAuth {
+  display: flex;
+  column-gap: 16px;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  justify-content: center;
+}
+
+.actions {
+  display: flex;
+  column-gap: 16px;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  .googleAuth {
+    min-height: 60px;
+  }
+
+  .actions {
+    flex-direction: row;
+  }
+}
+

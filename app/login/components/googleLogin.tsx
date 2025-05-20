@@ -1,6 +1,8 @@
 'use client';
 import { createClient } from '@/utils/supabase/client';
 import React from 'react';
+import Image from "next/image";
+import styles from './login.module.scss'
 
 export default function GoogleLogin() {
     const handleLogin = async () => {
@@ -19,8 +21,14 @@ export default function GoogleLogin() {
     };
 
     return (
-        <button type="button" onClick={handleLogin}>
-            Увійти через Google
+        <button className={`${styles.googleAuth} button`} type="button" onClick={handleLogin}>
+            <Image
+                src="/icons/googleIcon.svg"
+                width={24}
+                height={24}
+                alt="Screenshots of the dashboard project showing desktop version"
+            />
+             <span>Auth with Google</span>
         </button>
     );
 }

@@ -1,0 +1,25 @@
+.users {
+  h2 {
+    font-size: 18px;
+    text-align: center;
+    color: #f3e8dd;
+    margin-bottom: 16px;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+
+    li {
+      display: flex;
+      column-gap: 16px;
+
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+      }
+    }
+  }
+}

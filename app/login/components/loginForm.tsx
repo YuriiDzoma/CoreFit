@@ -8,7 +8,7 @@ import {useAppSelector} from "../../hooks/redux";
 import {getText} from "../../../store/selectors";
 import {useDispatch} from "react-redux";
 import GoogleLogin from "./googleLogin";
-
+import styles from './login.module.scss'
 
 const Login = () => {
     const { base } = useAppSelector(getText)
@@ -64,14 +64,18 @@ const Login = () => {
                     }),
                 }}
             />
-            <button type={"submit"} className={`submit`}>
-                <span>{base.login}</span>
-            </button>
+            <div className={styles.actions}>
+                <button type={"submit"} className={`submit`}>
+                    <span>{base.login}</span>
+                </button>
+                <GoogleLogin />
+            </div>
+
             <div className={'toSign'}>
                 <p>{base.notHaveAcc}</p>
                 <Link href={'/signin'}>{base.signUp}</Link>
             </div>
-            <GoogleLogin />
+
         </form>
     )
 }

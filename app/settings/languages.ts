@@ -20,7 +20,7 @@ export const getLanguages = async (value: string) => {
             plHolPass: 'Password',
             notHaveAcc: 'If you don\'t have an account',
             haveAcc: 'If you have an account',
-
+            allUsers: 'All users',
         }
     };
 
@@ -43,7 +43,7 @@ export const getLanguages = async (value: string) => {
             plHolPass: 'Пароль',
             notHaveAcc: 'Если у вас нет учетной записи',
             haveAcc: 'Если у вас есть аккаунт',
-
+            allUsers: 'Все пользователи',
         }
     };
 
@@ -66,7 +66,7 @@ export const getLanguages = async (value: string) => {
             plHolPass: 'Пароль',
             notHaveAcc: 'Якщо у вас немає облікового запису',
             haveAcc: 'Якщо у вас є обліковий запис',
-
+            allUsers: 'Всі користувачі',
         }
     };
 
