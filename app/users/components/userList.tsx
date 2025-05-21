@@ -1,42 +1,28 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
+import React, { useEffect, useState } from 'react';
 import {getText} from "../../../store/selectors";
 import {useAppSelector} from "../../hooks/redux";
 import styles from './userList.module.scss'
+import {UsersPageSkeleton} from "../../../ui/skeleton/skeleton";
+import {fetchUsers} from "../../../lib/userData";
+import Link from 'next/link';
+import {User} from "../../../types/user";
 
-
-type User = {
-    id: string;
-    username: string;
-    avatar_url: string;
-    created_at: string;
-};
 
 export default function UserList() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
-    const { base } = useAppSelector(getText)
+    const { base } = useAppSelector(getText);
 
     useEffect(() => {
-        const supabase = createClient();
-
-        const fetchUsers = async () => {
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('id, username, avatar_url, created_at');
-            console.log(data)
-            if (!error && data) {
-                setUsers(data);
-            }
+        fetchUsers().then((fetchedUsers) => {
+            setUsers(fetchedUsers);
             setLoading(false);
-        };
-
-        fetchUsers();
+        });
     }, []);
 
-    if (loading) return <p>Завантаження...</p>;
+    if (loading) return <UsersPageSkeleton />;
 
     return (
         <div className={styles.users}>
@@ -44,13 +30,14 @@ export default function UserList() {
             <ul>
                 {users.map((user) => (
                     <li key={user.id}>
-                        <img src={user.avatar_url} alt=""/>
-                        <p>{user.username}</p><br />
-                        {/*<small>{new Date(user.created_at).toLocaleString()}</small>*/}
+                        <Link href={`/profile/${user.id}`} className={styles.userLink}>
+                            <img src={user.avatar_url} alt={user.username} />
+                            <p>{user.username}</p>
+                            {/*<small>{new Date(user.created_at).toLocaleString()}</small>*/}
+                        </Link>
                     </li>
                 ))}
             </ul>
         </div>
-
     );
 }

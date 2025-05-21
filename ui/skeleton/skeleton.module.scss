@@ -1,0 +1,38 @@
+.usersPage {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+
+  &__title {
+    height: 20px;
+    width: 30%;
+    margin: 0 auto;
+    background-color: #2e364a;
+    border-radius: 4px;
+  }
+}
+
+.users {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+.user {
+  display: flex;
+  column-gap: 16px;
+
+  &__img {
+    background-color: #2e364a;
+    border-radius: 4px;
+    width: 60px;
+    height: 60px;
+  }
+
+  &__name {
+    height: 16px;
+    width: 50%;
+    background-color: #2e364a;
+    border-radius: 4px;
+  }
+}
