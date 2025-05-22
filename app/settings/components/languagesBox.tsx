@@ -31,6 +31,7 @@ export const LanguagesBox = () => {
     ]
     return (
         <div className={styles.languages}>
+            <p>languages changer</p>
             {languages && languages.map((lan, index) => (
                 <button key={index} className={styles.languages__btn} onClick={() => handleChangeLanguage(lan.value)}>
                     <span className={styles.languages__title}>{lan.name}</span>
