@@ -2,13 +2,14 @@ import React from "react";
 import styles from './profiles.module.scss'
 import Image from "next/image";
 import useWindowSize from "../../hooks/useWindowSize";
-import {getUserId} from "../../../store/selectors";
+import {getIsDarkTheme, getUserId} from "../../../store/selectors";
 import {useAppSelector} from "../../hooks/redux";
 import {ProfileType} from "../../../types/user";
 
 const Profile = ({profile}: {profile: ProfileType}) => {
     const { width } = useWindowSize();
     const currentId = useAppSelector(getUserId);
+    const isDark = useAppSelector(getIsDarkTheme);
 
     return (
         <div className={styles.profile}>
@@ -26,7 +27,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                 {currentId === profile.id && (
                     <button className={styles.settings}>
                         <Image
-                            src="/icons/settings.svg"
+                            src={isDark ? "/icons/settings.svg" : "/icons/settingsDark.svg"}
                             width={24}
                             height={24}
                             alt="settings"

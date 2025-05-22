@@ -1,6 +1,11 @@
 import { createClient } from '@/utils/supabase/client';
 import {ProfileType, User} from "../types/user";
 
+type UserSettings = {
+    isDarkTheme: boolean;
+    language: string;
+};
+
 export const fetchUsers = async (): Promise<ProfileType[]> => {
     const supabase = createClient();
     const { data, error } = await supabase
@@ -46,20 +51,27 @@ export const fetchOwnProfile = async (): Promise<ProfileType | null> => {
     return fetchUserProfileById(user.id);
 };
 
-export const fetchUserTheme = async (id: string): Promise<'dark' | 'light'> => {
+export const fetchUserSettings = async (userId: string): Promise<UserSettings> => {
     const supabase = createClient();
+
     const { data, error } = await supabase
         .from('profiles')
-        .select('isDarkTheme')
-        .eq('id', id)
+        .select('isDarkTheme, language')
+        .eq('id', userId)
         .single();
 
-    if (error || data?.isDarkTheme === undefined) {
-        console.warn('Fallback to dark theme due to missing isDarkTheme');
-        return 'dark'; // fallback
+    if (error || !data) {
+        console.warn('Failed to fetch user settings, fallback applied', error);
+        return {
+            isDarkTheme: true,
+            language: 'english',
+        };
     }
 
-    return data.isDarkTheme ? 'dark' : 'light';
+    return {
+        isDarkTheme: data.isDarkTheme ?? true,
+        language: data.language ?? 'english',
+    };
 };
 
 export const toggleThemeInDB = async (userId: string, currentTheme: boolean): Promise<boolean> => {
@@ -76,4 +88,19 @@ export const toggleThemeInDB = async (userId: string, currentTheme: boolean): Pr
     }
 
     return !currentTheme;
+};
+
+export const updateUserLanguage = async (userId: string, language: string): Promise<boolean> => {
+    const supabase = createClient();
+    const { error } = await supabase
+        .from('profiles')
+        .update({ language })
+        .eq('id', userId);
+
+    if (error) {
+        console.error('Error updating language:', error);
+        return false;
+    }
+
+    return true;
 };

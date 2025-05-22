@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {getIsDarkTheme, getUserId} from "../../../store/selectors";
-import {useState} from "react";
+import React, {useState} from "react";
 import {toggleThemeInDB} from "../../../lib/userData";
 import { setIsDarkTheme } from '@/store/account-slice';
 
@@ -43,7 +43,7 @@ const Menu = () => {
             </button>
             <div className={isActive ? styles.menu__show : styles.menu__hide}>
                 <div className={styles.menu__content}>
-                    <Link href="/settings">
+                    <Link href="/settings" onClick={() => setIsActive(false)}>
                         <span>Settings</span>
                     </Link>
                     <button className={styles.menu__language} onClick={handleToggleTheme}>

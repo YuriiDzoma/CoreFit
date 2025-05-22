@@ -1,5 +1,3 @@
-import React from "react";
-
 export const getLanguages = async (value: string) => {
     const eng = {
         base: {
@@ -22,6 +20,9 @@ export const getLanguages = async (value: string) => {
             haveAcc: 'If you have an account',
             allUsers: 'All users',
             edit: 'Edit',
+            english: "English",
+            russian: "Russian",
+            ukrainian: "Ukrainian",
         }
     };
 
@@ -46,6 +47,9 @@ export const getLanguages = async (value: string) => {
             haveAcc: 'Если у вас есть аккаунт',
             allUsers: 'Все пользователи',
             edit: 'Редактировать',
+            english: "Английский",
+            russian: "Руский",
+            ukrainian: "Украинский",
         }
     };
 
@@ -70,12 +74,15 @@ export const getLanguages = async (value: string) => {
             haveAcc: 'Якщо у вас є обліковий запис',
             allUsers: 'Всі користувачі',
             edit: 'Редагувати',
+            english: "Англійська",
+            russian: "Російська",
+            ukrainian: "Українська",
         }
     };
 
     switch (value) {
-        case 'english' : return eng;
-        case 'russian' : return rus;
-        case 'ukrainian' : return ua;
+        case 'eng' : return eng;
+        case 'rus' : return rus;
+        case 'ukr' : return ua;
     }
 }

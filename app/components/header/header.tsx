@@ -10,7 +10,7 @@ import Menu from "./menu";
 
 
 const Header = ({ session }: { session: Session | null }) => {
-    const { base } = useAppSelector(getText)
+    const { base } = useAppSelector(getText);
     const { width } = useWindowSize();
     const isDark = useAppSelector(getIsDarkTheme);
 

@@ -1,8 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
-import React from "react";
 
 const initialState = {
-    language: 'english',
+    language: 'eng',
     text: {
         base: {
             login: 'Login',
@@ -23,7 +22,10 @@ const initialState = {
             notHaveAcc: 'If you don\'t have an account',
             haveAcc: 'If you have an account',
             allUsers: 'All users',
-            edit: 'Edit'
+            edit: 'Edit',
+            english: "English",
+            russian: "Russian",
+            ukrainian: "Ukrainian",
         }
     }
 };
@@ -42,4 +44,5 @@ export default languageSlice.reducer;
 
 export const {
     setText,
+    setLanguage,
 } = languageSlice.actions;

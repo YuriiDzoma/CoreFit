@@ -1,0 +1,51 @@
+.settings {
+  h2 {
+    text-align: center;
+    color: var(--title-color);
+    font-size: 18px;
+  }
+}
+
+.languages {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  row-gap: 16px;
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+
+    span {
+      font-size: 16px;
+    }
+  }
+
+  &__title {
+    min-width: 100px;
+    text-align: start;
+  }
+
+  &__checkbox, &__checkboxActive {
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    display: block;
+    border-radius: 50%;
+    position: relative;
+  }
+
+  &__checkboxActive:before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+  }
+}
