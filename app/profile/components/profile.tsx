@@ -4,8 +4,9 @@ import Image from "next/image";
 import useWindowSize from "../../hooks/useWindowSize";
 import {getUserId} from "../../../store/selectors";
 import {useAppSelector} from "../../hooks/redux";
+import {ProfileType} from "../../../types/user";
 
-const Profile = ({profile}) => {
+const Profile = ({profile}: {profile: ProfileType}) => {
     const { width } = useWindowSize();
     const currentId = useAppSelector(getUserId);
 

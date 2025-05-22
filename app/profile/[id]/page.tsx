@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { fetchUserProfileById } from '@/lib/userData';
-import {User} from "../../../types/user";
+import {ProfileType} from "../../../types/user";
 import Profile from "../components/profile";
 
 export default function OtherUserProfilePage() {
     const { id } = useParams<{ id: string }>();
-    const [profile, setProfile] = useState<User | null>(null);
+    const [profile, setProfile] = useState<ProfileType | null>(null);
 
     useEffect(() => {
         if (id) {
@@ -20,7 +20,8 @@ export default function OtherUserProfilePage() {
 
     return (
         <div>
-            <Profile profile={profile} />
+            {profile && <Profile profile={profile}/>}
+
         </div>
     );
 }

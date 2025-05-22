@@ -7,11 +7,11 @@ import styles from './userList.module.scss'
 import {UsersPageSkeleton} from "../../../ui/skeleton/skeleton";
 import {fetchUsers} from "../../../lib/userData";
 import Link from 'next/link';
-import {User} from "../../../types/user";
+import {ProfileType} from "../../../types/user";
 
 
 export default function UserList() {
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<ProfileType[]>([]);
     const [loading, setLoading] = useState(true);
     const { base } = useAppSelector(getText);
 

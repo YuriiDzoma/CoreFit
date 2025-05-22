@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/client';
-import {User} from "../types/user";
+import {ProfileType, User} from "../types/user";
 
-export const fetchUsers = async (): Promise<User[]> => {
+export const fetchUsers = async (): Promise<ProfileType[]> => {
     const supabase = createClient();
     const { data, error } = await supabase
         .from('profiles')
@@ -12,11 +12,14 @@ export const fetchUsers = async (): Promise<User[]> => {
         return [];
     }
 
-    return data || [];
+    return data ?? [];
 };
 
-export const fetchUserProfileById = async (id: string): Promise<User | null> => {
+
+
+export const fetchUserProfileById = async (id: string): Promise<ProfileType | null> => {
     const supabase = createClient();
+
     const { data, error } = await supabase
         .from('profiles')
         .select('id, username, avatar_url, created_at')
@@ -28,10 +31,11 @@ export const fetchUserProfileById = async (id: string): Promise<User | null> => 
         return null;
     }
 
-    return data;
+    return data ?? null;
 };
 
-export const fetchOwnProfile = async (): Promise<User | null> => {
+
+export const fetchOwnProfile = async (): Promise<ProfileType | null> => {
     const supabase = createClient();
     const {
         data: { user },
