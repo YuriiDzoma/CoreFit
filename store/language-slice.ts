@@ -44,5 +44,4 @@ export default languageSlice.reducer;
 
 export const {
     setText,
-    setLanguage,
 } = languageSlice.actions;
