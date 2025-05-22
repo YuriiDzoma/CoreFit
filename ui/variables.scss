@@ -1,0 +1,24 @@
+
+
+[data-theme='dark'] {
+  --skeleton-bg: #2e364a;
+  --text-color: #fff;
+  --bg-color: #0F172A;
+  --border-color: #204879;
+
+  --scrollbar-track: #BFCBDA;
+  --scrollbar-thumb: #0C1D36;
+
+  //--button-border: #204879;
+  --button-bg: #0F172A;
+  --button-hover: #203045;
+
+  --submit-bg: #203045;
+  --submit-hover: #102a4b;
+}
+
+[data-theme='light'] {
+  --skeleton-bg: #2e364a;
+  --text-color: #000000;
+  --bg-color: #121212;
+}

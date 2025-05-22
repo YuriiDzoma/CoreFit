@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { fetchUserProfileById } from '@/lib/userData';
 import {User} from "../../../types/user";
+import Profile from "../components/profile";
 
 export default function OtherUserProfilePage() {
     const { id } = useParams<{ id: string }>();
@@ -19,10 +20,7 @@ export default function OtherUserProfilePage() {
 
     return (
         <div>
-            <h2>Профіль користувача</h2>
-            <img src={profile.avatar_url} alt="avatar" width={100} />
-            <p>{profile.username}</p>
-            <p>{new Date(profile.created_at).toLocaleString()}</p>
+            <Profile profile={profile} />
         </div>
     );
 }

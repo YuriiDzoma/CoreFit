@@ -41,3 +41,19 @@ export const fetchOwnProfile = async (): Promise<User | null> => {
     if (error || !user) return null;
     return fetchUserProfileById(user.id);
 };
+
+export const fetchUserTheme = async (id: string): Promise<'dark' | 'light'> => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('isDarkTheme')
+        .eq('id', id)
+        .single();
+
+    if (error || data?.isDarkTheme === undefined) {
+        console.warn('Fallback to dark theme due to missing isDarkTheme');
+        return 'dark'; // fallback
+    }
+
+    return data.isDarkTheme ? 'dark' : 'light';
+};

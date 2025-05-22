@@ -1,3 +1,5 @@
+
+
 .usersPage {
   display: flex;
   flex-direction: column;
@@ -7,8 +9,11 @@
     height: 20px;
     width: 30%;
     margin: 0 auto;
-    background-color: #2e364a;
+  }
+
+  span {
     border-radius: 4px;
+    background-color: var(--skeleton-bg);
   }
 }
 
@@ -16,15 +21,23 @@
   display: flex;
   flex-direction: column;
   row-gap: 8px;
+
+  span {
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
 }
 
 .user {
   display: flex;
   column-gap: 16px;
 
-  &__img {
-    background-color: #2e364a;
+  span {
     border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__img {
     width: 60px;
     height: 60px;
   }
@@ -32,7 +45,41 @@
   &__name {
     height: 16px;
     width: 50%;
-    background-color: #2e364a;
+  }
+}
+
+.profile {
+  margin-top: 4px;
+  display: flex;
+  column-gap: 16px;
+
+  &__img {
+    width: 96px;
+    min-width: 96px;
+    height: 96px;
+  }
+
+  &__name {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    row-gap: 8px;
+  }
+
+  &__txt {
+    margin: 8px 0;
+    height: 20px;
+    width: 50%;
+  }
+
+  &__txtSecond {
+    height: 16px;
+    width: 50%;
+  }
+
+  span {
+    display: block;
     border-radius: 4px;
+    background-color: var(--skeleton-bg);
   }
 }

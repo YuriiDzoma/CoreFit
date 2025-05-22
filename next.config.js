@@ -8,6 +8,9 @@ const withPWA = require('next-pwa')({
 const nextConfig = {
     reactStrictMode: true,
     productionBrowserSourceMaps: false,
+    images: {
+        domains: ['lh3.googleusercontent.com'],
+    },
 };
 
 

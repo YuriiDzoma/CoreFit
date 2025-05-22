@@ -4,13 +4,15 @@ import styles from './header.module.scss'
 import Link from "next/link";
 import useWindowSize from "../../hooks/useWindowSize";
 import {useAppSelector} from "../../hooks/redux";
-import {getText} from "../../../store/selectors";
+import {getIsDarkTheme, getText} from "../../../store/selectors";
 import type { Session } from '@supabase/supabase-js';
+import Menu from "./menu";
 
 
 const Header = ({ session }: { session: Session | null }) => {
     const { base } = useAppSelector(getText)
     const { width } = useWindowSize();
+
     return (
         <div className={styles.header}>
             <Link className={styles.logo} href={'/'}>
@@ -27,8 +29,8 @@ const Header = ({ session }: { session: Session | null }) => {
                     <span>{base.login}</span>
                 </Link>
             )}
+            {(width < 768 && session) && <Menu /> }
         </div>
-
     )
 }
 

@@ -1,26 +1,40 @@
-'use client';
+import React from "react";
+import styles from './profiles.module.scss'
+import Image from "next/image";
+import useWindowSize from "../../hooks/useWindowSize";
+import {getUserId} from "../../../store/selectors";
+import {useAppSelector} from "../../hooks/redux";
 
-import React, { useEffect, useState } from 'react';
-import {User} from "../../../types/user";
-import {fetchOwnProfile} from "../../../lib/userData";
-
-
-
-export default function Profile() {
-    const [profile, setProfile] = useState<User | null>(null);
-
-    useEffect(() => {
-        fetchOwnProfile().then(setProfile);
-    }, []);
-
-    if (!profile) return <p>Loading or not found...</p>;
+const Profile = ({profile}) => {
+    const { width } = useWindowSize();
+    const currentId = useAppSelector(getUserId);
 
     return (
-        <div>
-            <h2>Мій профіль</h2>
-            <img src={profile.avatar_url} alt="avatar" width={100} />
-            <p>{profile.username}</p>
-            <p>{new Date(profile.created_at).toLocaleString()}</p>
+        <div className={styles.profile}>
+            <div className={styles.profile__header}>
+                <Image
+                    src={profile.avatar_url}
+                    width={width < 768 ? 96 : 150}
+                    height={width < 768 ? 96 : 150}
+                    alt="avatar"
+                />
+                <div>
+                    <p>{profile.username}</p>
+                    <span>{new Date(profile.created_at).toLocaleString()}</span>
+                </div>
+                {currentId === profile.id && (
+                    <button className={styles.settings}>
+                        <Image
+                            src="/icons/settings.svg"
+                            width={24}
+                            height={24}
+                            alt="settings"
+                        />
+                    </button>
+                )}
+            </div>
         </div>
-    );
+    )
 }
+
+export default Profile;

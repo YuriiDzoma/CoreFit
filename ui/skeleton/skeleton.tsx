@@ -28,3 +28,15 @@ export function UsersSkeleton() {
         </ul>
     )
 }
+
+export function ProfileSkeleton() {
+    return (
+        <div className={styles.profile}>
+            <span className={styles.profile__img}/>
+            <div className={styles.profile__name}>
+                <span className={styles.profile__txt}/>
+                <span className={styles.profile__txtSecond}/>
+            </div>
+        </div>
+    )
+}

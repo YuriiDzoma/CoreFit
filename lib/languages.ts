@@ -21,6 +21,7 @@ export const getLanguages = async (value: string) => {
             notHaveAcc: 'If you don\'t have an account',
             haveAcc: 'If you have an account',
             allUsers: 'All users',
+            edit: 'Edit',
         }
     };
 
@@ -44,6 +45,7 @@ export const getLanguages = async (value: string) => {
             notHaveAcc: 'Если у вас нет учетной записи',
             haveAcc: 'Если у вас есть аккаунт',
             allUsers: 'Все пользователи',
+            edit: 'Редактировать',
         }
     };
 
@@ -67,6 +69,7 @@ export const getLanguages = async (value: string) => {
             notHaveAcc: 'Якщо у вас немає облікового запису',
             haveAcc: 'Якщо у вас є обліковий запис',
             allUsers: 'Всі користувачі',
+            edit: 'Редагувати',
         }
     };
 

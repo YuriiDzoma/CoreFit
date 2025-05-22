@@ -23,6 +23,7 @@ const initialState = {
             notHaveAcc: 'If you don\'t have an account',
             haveAcc: 'If you have an account',
             allUsers: 'All users',
+            edit: 'Edit'
         }
     }
 };

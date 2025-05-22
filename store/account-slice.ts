@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+    currentId: null,
     isAuth: false,
     isDarkTheme: true,
     language: 'eng',
@@ -10,6 +11,9 @@ export const accountSlice = createSlice({
     name: 'account',
     initialState,
     reducers: {
+        setCurrentUserId: (state, {payload}) => {
+            state.currentId = payload;
+        },
         setIsDarkTheme: (state, {payload}) => {
             state.isDarkTheme = payload;
         },
@@ -19,5 +23,5 @@ export const accountSlice = createSlice({
     },
 });
 
-export const { setIsDarkTheme, setLanguage } = accountSlice.actions;
+export const { setIsDarkTheme, setLanguage, setCurrentUserId } = accountSlice.actions;
 export default accountSlice.reducer;

@@ -22,4 +22,8 @@
 .userLink {
   display: flex;
   column-gap: 16px;
+
+  p {
+    margin-top: 8px;
+  }
 }

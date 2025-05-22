@@ -1,0 +1,38 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  align-items: flex-start;
+  position: relative;
+
+  &__header {
+    display: flex;
+    column-gap: 16px;
+    margin-top: 4px;
+
+
+    img {
+      border-radius: 4px;
+    }
+
+    p, input {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+
+    input {
+      background-color: transparent;
+      color: #fff;
+    }
+
+    span {
+      opacity: 0.4;
+    }
+  }
+}
+
+.settings {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+}

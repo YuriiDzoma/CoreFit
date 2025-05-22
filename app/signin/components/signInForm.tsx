@@ -2,7 +2,7 @@
 import React from "react";
 import {useForm} from "react-hook-form";
 import InputBox from "../../components/inputBox/inputBox";
-import {emailOptions, firstNameOptions, passwordOptions} from "../../settings/validations";
+import {emailOptions, firstNameOptions, passwordOptions} from "../../../lib/validations";
 import Link from "next/link";
 import {useDispatch} from "react-redux";
 import {useAppSelector} from "../../hooks/redux";
