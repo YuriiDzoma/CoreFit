@@ -29,7 +29,7 @@ const AppShell = ({ children }: { children: React.ReactNode }) => {
 
                 const theme = await fetchUserTheme(session.user.id);
                 document.documentElement.setAttribute('data-theme', theme);
-                dispatch(setIsDarkTheme(theme))
+                dispatch(setIsDarkTheme(theme === "dark"))
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }

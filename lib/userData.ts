@@ -61,3 +61,19 @@ export const fetchUserTheme = async (id: string): Promise<'dark' | 'light'> => {
 
     return data.isDarkTheme ? 'dark' : 'light';
 };
+
+export const toggleThemeInDB = async (userId: string, currentTheme: boolean): Promise<boolean> => {
+    const supabase = createClient();
+
+    const { error } = await supabase
+        .from('profiles')
+        .update({ isDarkTheme: !currentTheme })
+        .eq('id', userId);
+
+    if (error) {
+        console.error('Failed to toggle theme in DB:', error);
+        return currentTheme; // повертаємо поточну, якщо не вдалось
+    }
+
+    return !currentTheme;
+};

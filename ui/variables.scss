@@ -2,6 +2,7 @@
 
 [data-theme='dark'] {
   --skeleton-bg: #2e364a;
+  --title-color: #f3e8dd;
   --text-color: #fff;
   --bg-color: #0F172A;
   --border-color: #204879;
@@ -18,7 +19,19 @@
 }
 
 [data-theme='light'] {
-  --skeleton-bg: #2e364a;
-  --text-color: #000000;
-  --bg-color: #121212;
+  --skeleton-bg: #fff;
+  --title-color: #1A1C28;
+  --text-color: #19355A;
+  --bg-color: #ECEDF2;
+  --border-color: #204879;
+
+  --scrollbar-track: #fff;
+  --scrollbar-thumb: #fff;
+
+  //--button-border: #204879;
+  --button-bg: #ECEDF2;
+  --button-hover: #fff;
+
+  --submit-bg: #fff;
+  --submit-hover: #fff;
 }

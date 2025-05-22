@@ -12,12 +12,13 @@ import Menu from "./menu";
 const Header = ({ session }: { session: Session | null }) => {
     const { base } = useAppSelector(getText)
     const { width } = useWindowSize();
+    const isDark = useAppSelector(getIsDarkTheme);
 
     return (
         <div className={styles.header}>
             <Link className={styles.logo} href={'/'}>
                 <Image
-                    src="/logos/logo.png"
+                    src={isDark ? "/logos/logo.png" : "/logos/logo-white.png"}
                     width={width < 768 ? 32 : 52}
                     height={width < 768 ? 32 : 52}
                     alt="logo"
