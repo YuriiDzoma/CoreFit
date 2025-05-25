@@ -4,7 +4,7 @@ import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {getIsDarkTheme, getUserId} from "../../../store/selectors";
 import React, {useState} from "react";
-import {toggleThemeInDB} from "../../../lib/userData";
+import {updateUserProfile} from "../../../lib/userData";
 import { setIsDarkTheme } from '@/store/account-slice';
 
 
@@ -17,9 +17,10 @@ const Menu = () => {
     const handleToggleTheme = async () => {
         if (!userId) return;
 
-        const updatedTheme = await toggleThemeInDB(userId, isDark);
-        const themeString = updatedTheme ? 'dark' : 'light';
-        dispatch(setIsDarkTheme(updatedTheme));
+        const updatedTheme = await updateUserProfile(userId, { isDarkTheme: !isDark });
+        console.log(updatedTheme)
+        const themeString = updatedTheme?.isDarkTheme ? 'dark' : 'light';
+        dispatch(setIsDarkTheme(updatedTheme?.isDarkTheme));
         document.documentElement.setAttribute('data-theme', themeString);
     };
 

@@ -5,6 +5,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import {getIsDarkTheme, getUserId} from "../../../store/selectors";
 import {useAppSelector} from "../../hooks/redux";
 import {ProfileType} from "../../../types/user";
+import Link from "next/link";
 
 const Profile = ({profile}: {profile: ProfileType}) => {
     const { width } = useWindowSize();
@@ -25,14 +26,14 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                     <span>{new Date(profile.created_at).toLocaleString()}</span>
                 </div>
                 {currentId === profile.id && (
-                    <button className={styles.settings}>
+                    <Link className={styles.settings} href="/settings" >
                         <Image
                             src={isDark ? "/icons/settings.svg" : "/icons/settingsDark.svg"}
                             width={24}
                             height={24}
                             alt="settings"
                         />
-                    </button>
+                    </Link>
                 )}
             </div>
         </div>

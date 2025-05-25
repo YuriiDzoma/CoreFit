@@ -56,17 +56,3 @@ export const countryOptions = {
         message: "Country should be at-least 6 characters"
     },
 }
-
-export const cityOptions = {
-    minLength: {
-        value: 3,
-        message: "City should be at-least 6 characters"
-    },
-}
-
-export const streetOptions = {
-    minLength: {
-        value: 3,
-        message: "Street should be at-least 6 characters"
-    },
-}

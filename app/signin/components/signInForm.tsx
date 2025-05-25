@@ -2,22 +2,22 @@
 import React from "react";
 import {useForm} from "react-hook-form";
 import InputBox from "../../components/inputBox/inputBox";
-import {emailOptions, firstNameOptions, passwordOptions} from "../../../lib/validations";
+import {emailOptions, firstNameOptions, lastNameOptions, passwordOptions} from "../../../lib/validations";
 import Link from "next/link";
 import {useDispatch} from "react-redux";
 import {useAppSelector} from "../../hooks/redux";
 import {getText} from "../../../store/selectors";
 
 
+type signInForm = {
+    name: string;
+    email: string;
+    password: string;
+};
+
 const SignInForm = () => {
     const { base } = useAppSelector(getText)
     const dispatch = useDispatch();
-    type signInForm = {
-        name: string;
-        email: string;
-        password: string;
-    };
-
     const { register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<signInForm>();
 
     const onSubmit = async (data: signInForm) => {
@@ -44,6 +44,13 @@ const SignInForm = () => {
                 placeholder={base.plHolName}
                 label={base.lblName}
                 options={register("name", firstNameOptions)}
+            />
+            <InputBox
+                errors={errors}
+                name="name"
+                placeholder={base.plHolLastName}
+                label={base.lblLastName}
+                options={register("name", lastNameOptions)}
             />
             <InputBox
                 errors={errors}

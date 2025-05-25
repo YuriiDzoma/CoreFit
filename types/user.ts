@@ -4,6 +4,7 @@ export type User = {
     avatar_url: string;
     created_at: string;
     email: string;
+    language: string;
     isDarkTheme: boolean;
 };
 

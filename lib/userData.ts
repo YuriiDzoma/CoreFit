@@ -74,33 +74,24 @@ export const fetchUserSettings = async (userId: string): Promise<UserSettings> =
     };
 };
 
-export const toggleThemeInDB = async (userId: string, currentTheme: boolean): Promise<boolean> => {
+export const updateUserProfile = async (
+    userId: string,
+    updates: Partial<Pick<User, 'username' | 'language' | 'isDarkTheme' | 'email'>>
+): Promise<User | null> => {
     const supabase = createClient();
 
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('profiles')
-        .update({ isDarkTheme: !currentTheme })
-        .eq('id', userId);
+        .update(updates)
+        .eq('id', userId)
+        .select()
+        .single();
 
     if (error) {
-        console.error('Failed to toggle theme in DB:', error);
-        return currentTheme; // повертаємо поточну, якщо не вдалось
+        console.error('Error updating profile:', error);
+        return null;
     }
 
-    return !currentTheme;
+    return data as User;
 };
 
-export const updateUserLanguage = async (userId: string, language: string): Promise<boolean> => {
-    const supabase = createClient();
-    const { error } = await supabase
-        .from('profiles')
-        .update({ language })
-        .eq('id', userId);
-
-    if (error) {
-        console.error('Error updating language:', error);
-        return false;
-    }
-
-    return true;
-};
