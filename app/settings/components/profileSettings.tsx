@@ -1,36 +1,55 @@
 'use client';
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styles from './settings.module.scss';
 import {useAppSelector} from "../../hooks/redux";
 import {getText} from "../../../store/selectors";
 import {useForm} from "react-hook-form";
-import {emailOptions, firstNameOptions, lastNameOptions} from "../../../lib/validations";
+import {firstNameOptions, lastNameOptions} from "../../../lib/validations";
 import InputBox from "../../components/inputBox/inputBox";
+import {fetchOwnProfile, updateUserProfile} from "../../../lib/userData";
 
 type profileSettingsForm = {
-    name: string;
-    email: string;
+    firstName: string;
+    lastName: string;
 };
 
 const ProfileSettings = () => {
-    const {settings, base} = useAppSelector(getText);
+    const { settings, base } = useAppSelector(getText);
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<profileSettingsForm>();
 
-    const { register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<profileSettingsForm>();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadProfile = async () => {
+            const profile = await fetchOwnProfile();
+            if (profile) {
+                const [firstName, lastName] = profile.username?.split(' ') ?? ['', ''];
+                reset({
+                    firstName,
+                    lastName,
+                });
+            }
+            setLoading(false);
+        };
+        loadProfile();
+    }, [reset]);
 
     const onSubmit = async (data: profileSettingsForm) => {
-        try {
-            console.log(data);
-            // const response = await login(data.email, data.password);
-            // if (response?.success) {
-            //     dispatch(setEmail(data.email));
-            //     navigate("/");
-            // } else if (response?.errors?.[0]?.code === "authentication_failed") {
-            //     setError("All");
-            // }
-        } finally {
-            console.log('success');
+        const profile = await fetchOwnProfile();
+        if (!profile) return;
+
+        const fullName = `${data.firstName} ${data.lastName}`.trim();
+
+        const updated = await updateUserProfile(profile.id, {
+            username: fullName,
+        });
+
+        if (updated) {
+            console.log('Профіль оновлено:', updated);
         }
     };
+
+    if (loading) return <p>Loading...</p>;
 
     return (
         <div className={styles.profile}>
@@ -38,35 +57,24 @@ const ProfileSettings = () => {
             <form className={'form'} onSubmit={handleSubmit(onSubmit)}>
                 <InputBox
                     errors={errors}
-                    name="name"
+                    name="firstName"
                     placeholder={base.plHolName}
                     label={base.lblName}
-                    options={register("name", firstNameOptions)}
+                    options={register("firstName", firstNameOptions)}
                 />
                 <InputBox
                     errors={errors}
-                    name="name"
+                    name="lastName"
                     placeholder={base.plHolLastName}
                     label={base.lblLastName}
-                    options={register("name", lastNameOptions)}
+                    options={register("lastName", lastNameOptions)}
                 />
-                {/*<InputBox*/}
-                {/*    errors={errors}*/}
-                {/*    name="email"*/}
-                {/*    type="text"*/}
-                {/*    placeholder={base.plHolEmail}*/}
-                {/*    label={base.lblEmail}*/}
-                {/*    options={{*/}
-                {/*        ...register("email", {*/}
-                {/*            ...emailOptions,*/}
-                {/*            onChange: () => clearErrors(),*/}
-                {/*        }),*/}
-                {/*    }}*/}
-                {/*/>*/}
-                <button className={`submit`}>{base.save}</button>
+                <button className={`submit`} type="submit">
+                    {base.save}
+                </button>
             </form>
         </div>
-    )
-}
+    );
+};
 
 export default ProfileSettings;
