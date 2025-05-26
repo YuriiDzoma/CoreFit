@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/client';
+import {FriendRecord} from "../types/friends";
 
 export const sendFriendRequest = async (toUserId: string): Promise<boolean> => {
     const supabase = createClient();
@@ -93,3 +94,19 @@ export const cancelFriendRequest = async (friendId: string): Promise<boolean> =>
     return true;
 };
 
+export const fetchIncomingFriendRequests = async (userId: string): Promise<FriendRecord[]> => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('friends')
+        .select('*')
+        .eq('friend_id', userId)
+        .eq('status', 'pending');
+
+    if (error) {
+        console.error('Error fetching incoming friend requests:', error);
+        return [];
+    }
+
+    return data;
+};
