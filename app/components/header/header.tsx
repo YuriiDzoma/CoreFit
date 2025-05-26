@@ -7,6 +7,7 @@ import {useAppSelector} from "../../hooks/redux";
 import {getIsDarkTheme, getText} from "../../../store/selectors";
 import type { Session } from '@supabase/supabase-js';
 import Menu from "./menu";
+import HeaderNavigation from "./headerNavigation";
 
 
 const Header = ({ session }: { session: Session | null }) => {
@@ -30,7 +31,7 @@ const Header = ({ session }: { session: Session | null }) => {
                     <span>{base.login}</span>
                 </Link>
             )}
-            {(width < 768 && session) && <Menu /> }
+            {(width < 768 && session) ? <Menu /> : <HeaderNavigation /> }
         </div>
     )
 }

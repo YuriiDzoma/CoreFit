@@ -76,8 +76,47 @@
 }
 
 .shadowActive {
-
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+.headerNav {
+  display: flex;
+  align-items: center;
+  column-gap: 24px;
+
+  .link, .linkActive {
+    font-weight: 500;
+    letter-spacing: 1px;
+    position: relative;
+
+    span {
+      transition: all .2s;
+      color: var(--title-color);
+    }
+
+    &:after {
+      transition: all .15s;
+      position: absolute;
+      content: "";
+      display: block;
+      height: 2px;
+      width: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -4px;
+      background-color: var(--border-color);
+    }
+  }
+
+  .link:hover, .linkActive {
+    span {
+      color: var(--text-color);
+    }
+
+    &:after {
+      width: 105%;
+    }
+  }
 }
 
 @media only screen and (max-width: 768px) {

@@ -19,7 +19,7 @@ const TrainingMenu = () => {
                 <span>Complexes</span>
             </Link>
 
-            <Link href="/training/programs" className={getLinkClass('/training/programs')}>
+            <Link href="/training" className={getLinkClass('/training')}>
                 <span>Programs</span>
             </Link>
 
