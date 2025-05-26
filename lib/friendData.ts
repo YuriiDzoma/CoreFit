@@ -1,12 +1,9 @@
 import { createClient } from '@/utils/supabase/client';
-import {FriendRecord} from "../types/friends";
+import { FriendRecord } from "../types/friends";
 
 export const sendFriendRequest = async (toUserId: string): Promise<boolean> => {
     const supabase = createClient();
-    const {
-        data: { user },
-        error: authError,
-    } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) return false;
 
@@ -24,37 +21,42 @@ export const sendFriendRequest = async (toUserId: string): Promise<boolean> => {
     return true;
 };
 
-export const getAllFriendsOfUser = async (userId: string): Promise<FriendRecord[]> => {
+export const acceptFriendRequest = async (requestId: string): Promise<boolean> => {
     const supabase = createClient();
+
     const { data, error } = await supabase
         .from('friends')
-        .select('*')
-        .or(`user_id.eq.${userId},friend_id.eq.${userId}`)
-        .eq('status', 'accepted');
+        .update({ status: 'accepted' }) // <-- без "accept"
+        .eq('id', requestId)
+        .select(); // Поверне оновлений запис
 
     if (error) {
-        console.error('Error fetching friends:', error);
-        return [];
-    }
-
-    return data;
-};
-
-export const respondToFriendRequest = async (requestId: string, accept: boolean): Promise<boolean> => {
-    const supabase = createClient();
-
-    const { error } = await supabase
-        .from('friends')
-        .update({ status: accept ? 'accepted' : 'declined' })
-        .eq('id', requestId);
-
-    if (error) {
-        console.error('Error responding to friend request:', error);
+        console.error('❌ Error accepting friend request:', error);
         return false;
     }
 
+    console.log('✅ Friend request accepted:', data);
     return true;
 };
+
+export const declineFriendRequest = async (requestId: string): Promise<boolean> => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('friends')
+        .update({ status: 'declined' })
+        .eq('id', requestId)
+        .select();
+
+    if (error) {
+        console.error('❌ Error declining friend request:', error);
+        return false;
+    }
+
+    console.log('❎ Friend request declined:', data);
+    return true;
+};
+
 
 export const getSentFriendRequests = async (userId: string) => {
     const supabase = createClient();
@@ -77,17 +79,26 @@ export const cancelFriendRequest = async (friendId: string): Promise<boolean> =>
 
     if (!user) return false;
 
-    const { error } = await supabase
+    const { data: record, error: findError } = await supabase
+        .from('friends')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('friend_id', friendId)
+        .eq('status', 'pending')
+        .single();
+
+    if (findError || !record) {
+        console.error('❌ Cannot find request to cancel:', findError);
+        return false;
+    }
+
+    const { error: deleteError } = await supabase
         .from('friends')
         .delete()
-        .match({
-            user_id: user.id,
-            friend_id: friendId,
-            status: 'pending',
-        });
+        .eq('id', record.id);
 
-    if (error) {
-        console.error('❌ Error cancelling request:', error);
+    if (deleteError) {
+        console.error('❌ Error deleting by id:', deleteError);
         return false;
     }
 
@@ -105,6 +116,22 @@ export const fetchIncomingFriendRequests = async (userId: string): Promise<Frien
 
     if (error) {
         console.error('Error fetching incoming friend requests:', error);
+        return [];
+    }
+
+    return data;
+};
+
+export const getAllFriendsOfUser = async (userId: string): Promise<FriendRecord[]> => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('friends')
+        .select('*')
+        .or(`user_id.eq.${userId},friend_id.eq.${userId}`)
+        .eq('status', 'accepted');
+
+    if (error) {
+        console.error('Error fetching friends:', error);
         return [];
     }
 

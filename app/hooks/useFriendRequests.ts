@@ -14,6 +14,8 @@ export const useFriendRequests = (currentUserId: string | null) => {
         const fetchInitial = async () => {
             const data = await fetchIncomingFriendRequests(currentUserId);
             setRequests(data);
+
+            console.log(data)
         };
 
         fetchInitial();
@@ -32,11 +34,14 @@ export const useFriendRequests = (currentUserId: string | null) => {
                     const newRecord = payload.new as FriendRecord;
                     const oldRecord = payload.old as FriendRecord;
 
+                    console.log(payload);
 
                     if (payload.eventType === 'INSERT' && newRecord?.status === 'pending') {
                         setRequests((prev) => [...prev, newRecord]);
                     } else if (payload.eventType === 'DELETE') {
-                        setRequests((prev) => prev.filter(r => r.id !== oldRecord?.id));
+                        if (oldRecord?.id) {
+                            setRequests((prev) => prev.filter(r => r.id !== oldRecord.id));
+                        }
                     } else if (payload.eventType === 'UPDATE') {
                         if (newRecord?.status !== 'pending') {
                             setRequests((prev) => prev.filter(r => r.id !== newRecord.id));
