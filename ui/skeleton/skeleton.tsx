@@ -40,3 +40,22 @@ export function ProfileSkeleton() {
         </div>
     )
 }
+
+export function ProfileSettingsSkeleton() {
+    return (
+        <div className={styles.profileSettings}>
+            <span className={styles.profileSettings__title} />
+            <ul>
+                <li>
+                    <span className={styles.profileSettings__label}/>
+                    <span className={styles.profileSettings__field}/>
+                </li>
+                <li>
+                    <span className={styles.profileSettings__label}/>
+                    <span className={styles.profileSettings__field}/>
+                </li>
+            </ul>
+            <span className={styles.profileSettings__btn}/>
+        </div>
+    )
+}

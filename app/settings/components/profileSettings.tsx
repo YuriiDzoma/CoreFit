@@ -7,6 +7,7 @@ import {useForm} from "react-hook-form";
 import {firstNameOptions, lastNameOptions} from "../../../lib/validations";
 import InputBox from "../../components/inputBox/inputBox";
 import {fetchOwnProfile, updateUserProfile} from "../../../lib/userData";
+import {ProfileSettingsSkeleton} from "../../../ui/skeleton/skeleton";
 
 type profileSettingsForm = {
     firstName: string;
@@ -40,16 +41,12 @@ const ProfileSettings = () => {
 
         const fullName = `${data.firstName} ${data.lastName}`.trim();
 
-        const updated = await updateUserProfile(profile.id, {
+        await updateUserProfile(profile.id, {
             username: fullName,
         });
-
-        if (updated) {
-            console.log('Профіль оновлено:', updated);
-        }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <ProfileSettingsSkeleton />;
 
     return (
         <div className={styles.profile}>

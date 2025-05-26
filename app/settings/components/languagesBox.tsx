@@ -33,12 +33,14 @@ export const LanguagesBox = () => {
     return (
         <div className={styles.languages}>
             <p className={styles.languages__title}>{settings.language}</p>
-            {languages && languages.map((lan, index) => (
-                <button key={index} className={styles.languages__btn} onClick={() => handleChangeLanguage(lan.value)}>
-                    <span className={styles.languages__name}>{lan.name}</span>
-                    <span className={currentLanguage === lan.value ? styles.languages__checkboxActive : styles.languages__checkbox}/>
-                </button>
-            ))}
+            <div className={styles.languages__list}>
+                {languages && languages.map((lan, index) => (
+                    <button key={index} className={styles.languages__btn} onClick={() => handleChangeLanguage(lan.value)}>
+                        <span className={styles.languages__name}>{lan.name}</span>
+                        <span className={currentLanguage === lan.value ? styles.languages__checkboxActive : styles.languages__checkbox}/>
+                    </button>
+                ))}
+            </div>
         </div>
     )
 }
