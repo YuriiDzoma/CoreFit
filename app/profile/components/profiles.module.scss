@@ -36,3 +36,11 @@
   right: 4px;
   top: 4px;
 }
+
+.friends {
+  margin-top: 8px;
+
+  h2, h2 span {
+    color: var(--title-color);
+  }
+}

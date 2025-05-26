@@ -30,7 +30,22 @@
 
 .user {
   display: flex;
-  column-gap: 16px;
+  column-gap: 8px;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  &__info {
+    display: flex;
+    column-gap: 16px;
+  }
+
+  &__btn {
+    margin-top: 8px;
+    height: 28px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+    width: 124px;
+  }
 
   span {
     border-radius: 4px;
@@ -38,13 +53,17 @@
   }
 
   &__img {
+    display: block;
     width: 60px;
+    min-width: 60px;
     height: 60px;
   }
 
   &__name {
+    margin-top: 8px;
+    display: block;
     height: 16px;
-    width: 50%;
+    width: 100px;
   }
 }
 

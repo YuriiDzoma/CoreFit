@@ -1,3 +1,3 @@
 export default function Home() {
-  return <p>upd 2.32</p>;
+  return <p>upd 0.2.45</p>;
 }

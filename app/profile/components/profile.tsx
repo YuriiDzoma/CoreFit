@@ -6,6 +6,7 @@ import {getIsDarkTheme, getUserId} from "../../../store/selectors";
 import {useAppSelector} from "../../hooks/redux";
 import {ProfileType} from "../../../types/user";
 import Link from "next/link";
+import Friends from "./Friends";
 
 const Profile = ({profile}: {profile: ProfileType}) => {
     const { width } = useWindowSize();
@@ -36,6 +37,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                     </Link>
                 )}
             </div>
+            <Friends />
         </div>
     )
 }

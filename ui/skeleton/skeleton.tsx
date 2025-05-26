@@ -14,16 +14,25 @@ export function UsersSkeleton() {
     return (
         <ul className={styles.users}>
             <li className={styles.user}>
-                <span className={styles.user__img}/>
-                <span className={styles.user__name}/>
+                <div className={styles.user__info}>
+                    <span className={styles.user__img}/>
+                    <span className={styles.user__name}/>
+                </div>
+                <span className={styles.user__btn}/>
             </li>
             <li className={styles.user}>
-                <span className={styles.user__img}/>
-                <span className={styles.user__name}/>
+                <div className={styles.user__info}>
+                    <span className={styles.user__img}/>
+                    <span className={styles.user__name}/>
+                </div>
+                <span className={styles.user__btn}/>
             </li>
             <li className={styles.user}>
-                <span className={styles.user__img}/>
-                <span className={styles.user__name}/>
+                <div className={styles.user__info}>
+                    <span className={styles.user__img}/>
+                    <span className={styles.user__name}/>
+                </div>
+                <span className={styles.user__btn}/>
             </li>
         </ul>
     )
