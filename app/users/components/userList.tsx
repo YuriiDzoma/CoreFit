@@ -13,6 +13,7 @@ import {
     cancelFriendRequest,
     getAllFriendsOfUser,
 } from '@/lib/friendData';
+import {getOutgoingPendingRequests, removeFriendship} from "../../../lib/friendData";
 
 export default function UserList() {
     const userId = useAppSelector(getUserId);
@@ -31,29 +32,26 @@ export default function UserList() {
                 return;
             }
 
-            const [fetchedUsers, allRelations] = await Promise.all([
+            const [fetchedUsers, pendingRaw, acceptedRelations] = await Promise.all([
                 fetchUsers(),
-                getAllFriendsOfUser(userId),
+                getOutgoingPendingRequests(userId),      // <-- нова функція
+                getAllFriendsOfUser(userId),             // <-- тільки accepted
             ]);
 
             setUsers(fetchedUsers);
+            setPendingIds(pendingRaw);
 
-            const pending: string[] = [];
-            const accepted: string[] = [];
-
-            allRelations.forEach((r) => {
-                const otherId = r.user_id === userId ? r.friend_id : r.user_id;
-                if (r.status === 'pending') pending.push(otherId);
-                else if (r.status === 'accepted') accepted.push(otherId);
-            });
-
-            setPendingIds(pending);
+            const accepted = acceptedRelations.map(r =>
+                r.user_id === userId ? r.friend_id : r.user_id
+            );
             setFriendIds(accepted);
+
             setLoading(false);
         };
 
         init();
     }, [userId]);
+
 
     const cancelFriend = async (friendId: string) => {
         const res = await cancelFriendRequest(friendId);
@@ -72,7 +70,7 @@ export default function UserList() {
     };
 
     const removeFriend = async (friendId: string) => {
-        const res = await cancelFriendRequest(friendId);
+        const res = await removeFriendship(friendId);
         if (res) {
             setFriendIds((prev) => prev.filter((id) => id !== friendId));
         }
@@ -120,7 +118,6 @@ export default function UserList() {
                         </li>
                     );
                 })}
-
             </ul>
         </div>
     );

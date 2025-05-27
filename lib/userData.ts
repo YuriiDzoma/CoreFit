@@ -95,3 +95,19 @@ export const updateUserProfile = async (
     return data as User;
 };
 
+export const fetchProfilesByIds = async (ids: string[]): Promise<Record<string, ProfileType>> => {
+    if (ids.length === 0) return {};
+
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .in('id', ids);
+
+    if (error || !data) {
+        console.error('❌ Error fetching multiple profiles:', error);
+        return {};
+    }
+
+    return Object.fromEntries(data.map((u) => [u.id, u]));
+};

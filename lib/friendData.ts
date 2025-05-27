@@ -42,36 +42,20 @@ export const acceptFriendRequest = async (requestId: string): Promise<boolean> =
 export const declineFriendRequest = async (requestId: string): Promise<boolean> => {
     const supabase = createClient();
 
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from('friends')
-        .update({ status: 'declined' })
+        .delete()
         .eq('id', requestId)
-        .select();
+        .eq('status', 'pending'); // додатковий захист
 
     if (error) {
         console.error('❌ Error declining friend request:', error);
         return false;
     }
 
-    console.log('❎ Friend request declined:', data);
     return true;
 };
 
-
-export const getSentFriendRequests = async (userId: string) => {
-    const supabase = createClient();
-    const { data, error } = await supabase
-        .from('friends')
-        .select('friend_id, status')
-        .eq('user_id', userId);
-
-    if (error) {
-        console.error('Error fetching sent friend requests:', error);
-        return [];
-    }
-
-    return data;
-};
 
 export const cancelFriendRequest = async (friendId: string): Promise<boolean> => {
     const supabase = createClient();
@@ -130,10 +114,43 @@ export const getAllFriendsOfUser = async (userId: string): Promise<FriendRecord[
         .or(`user_id.eq.${userId},friend_id.eq.${userId}`)
         .eq('status', 'accepted');
 
+
     if (error) {
         console.error('Error fetching friends:', error);
         return [];
     }
 
     return data;
+};
+
+export const removeFriendship = async (otherUserId: string): Promise<boolean> => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+
+    const { error } = await supabase
+        .from('friends')
+        .delete()
+        .or(`and(user_id.eq.${user.id},friend_id.eq.${otherUserId}),and(user_id.eq.${otherUserId},friend_id.eq.${user.id})`)
+        .eq('status', 'accepted');
+
+    if (error) {
+        console.error('❌ Error removing friendship:', error);
+        return false;
+    }
+
+    return true;
+};
+
+export const getOutgoingPendingRequests = async (userId: string): Promise<string[]> => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('friends')
+        .select('friend_id')
+        .eq('user_id', userId)
+        .eq('status', 'pending');
+
+    if (error || !data) return [];
+
+    return data.map(r => r.friend_id);
 };

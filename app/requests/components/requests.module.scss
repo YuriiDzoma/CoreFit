@@ -1,0 +1,26 @@
+.requestsList {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.request {
+  display: flex;
+  justify-content: space-between;
+
+  &__info {
+    display: flex;
+    column-gap: 16px;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+
+    span {
+      font-size: 16px;
+    }
+  }
+}
