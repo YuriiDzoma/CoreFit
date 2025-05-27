@@ -7,13 +7,20 @@ import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 interface FriendRequestState {
     requests: FriendRecord[];
     setRequests: (requests: FriendRecord[]) => void;
+    removeRequest: (id: string) => void;
     subscribeToRealtime: (userId: string) => void;
+
 }
 
 export const useFriendRequestStore = create<FriendRequestState>((set, get) => ({
     requests: [],
 
     setRequests: (requests) => set({ requests }),
+
+    removeRequest: (id: string) => {
+        const current = get().requests;
+        set({ requests: current.filter((r) => r.id !== id) });
+    },
 
     subscribeToRealtime: (userId) => {
         const supabase = createClient();

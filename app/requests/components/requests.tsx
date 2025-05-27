@@ -11,47 +11,38 @@ import { fetchProfilesByIds } from '@/lib/userData';
 import React, { useEffect, useState } from 'react';
 import { ProfileType } from '@/types/user';
 import Image from 'next/image';
-import {useFriendRequests} from "../../hooks/useFriendRequests";
+import { useFriendRequestStore } from '@/store/useFriendRequestStore';
 
 const Requests = () => {
     const userId = useAppSelector(getUserId);
     const { base } = useAppSelector(getText);
 
-    const { requests, setRequests, subscribeToChanges } = useFriendRequests(userId);
+    const { requests, removeRequest, subscribeToRealtime } = useFriendRequestStore();
     const [usersMap, setUsersMap] = useState<Record<string, ProfileType>>({});
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (!userId) return;
 
-        const ids = requests.map((r) => r.user_id);
+        subscribeToRealtime(userId);
+
+        const ids = requests.map(r => r.user_id);
         fetchProfilesByIds(ids).then((map) => setUsersMap(map));
-
-        const unsubscribe = subscribeToChanges((newUserId) => {
-            if (!usersMap[newUserId]) {
-                fetchProfilesByIds([newUserId]).then((map) => {
-                    setUsersMap((prev) => ({ ...prev, ...map }));
-                });
-            }
-        });
-
-        return unsubscribe;
     }, [userId, requests]);
 
     const handleAccept = async (id: string) => {
         setIsLoading(true);
         await acceptFriendRequest(id);
-        setRequests(prev => prev.filter(req => req.id !== id));
+        removeRequest(id);
         setIsLoading(false);
     };
 
     const handleDecline = async (id: string) => {
         setIsLoading(true);
         await declineFriendRequest(id);
-        setRequests(prev => prev.filter(req => req.id !== id));
+        removeRequest(id);
         setIsLoading(false);
     };
-
 
     if (!userId) return null;
     if (isLoading) return <p>LOADING...</p>;
