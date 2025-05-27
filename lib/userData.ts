@@ -111,3 +111,21 @@ export const fetchProfilesByIds = async (ids: string[]): Promise<Record<string, 
 
     return Object.fromEntries(data.map((u) => [u.id, u]));
 };
+
+export const fetchLimitedFriendProfiles = async (friendIds: string[], limit = 12): Promise<ProfileType[]> => {
+    if (friendIds.length === 0) return [];
+
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .in('id', friendIds)
+        .limit(limit);
+
+    if (error) {
+        console.error('❌ Error fetching limited profiles:', error);
+        return [];
+    }
+
+    return data ?? [];
+};

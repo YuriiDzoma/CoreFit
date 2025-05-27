@@ -1,51 +1,59 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
+import React, { useEffect, useState } from 'react';
 import { getAllFriendsOfUser } from '@/lib/friendData';
+import { fetchLimitedFriendProfiles } from '@/lib/userData';
 import { ProfileType } from '@/types/user';
 import styles from './profiles.module.scss';
 import { getUserId } from '@/store/selectors';
 import { useAppSelector } from '@/app/hooks/redux';
+import Image from "next/image";
+import Link from "next/link";
+import {ProfileFriendsSkeleton} from "../../../ui/skeleton/skeleton";
 
 const Friends = () => {
     const userId = useAppSelector(getUserId);
     const [friends, setFriends] = useState<ProfileType[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             if (!userId) return;
 
-            const supabase = createClient();
-            const records = await getAllFriendsOfUser(userId);
-
-            const friendIds = records.map(r =>
+            const friendLinks = await getAllFriendsOfUser(userId);
+            const friendIds = friendLinks.map(r =>
                 r.user_id === userId ? r.friend_id : r.user_id
             );
 
-            const { data: profiles } = await supabase
-                .from('profiles')
-                .select('*')
-                .in('id', friendIds);
-
-            if (profiles) {
-                setFriends(profiles);
-            }
+            const limitedFriends = await fetchLimitedFriendProfiles(friendIds, 12);
+            setFriends(limitedFriends);
+            setLoading(false);
         };
-
         fetchData();
     }, [userId]);
 
+    if (loading) return <ProfileFriendsSkeleton />;
+
     return (
         <div className={styles.friends}>
-            <h2>
-                Friends: <span>{friends.length}</span>
-            </h2>
+            {friends?.length > 0 && (
+                <div className={styles.friends__header}>
+                    <h2>Friends: <span>{friends.length}</span></h2>
+                    <Link href={'/friends'}>
+                        <span>See all friends</span>
+                    </Link>
+                </div>
+            )}
             <ul>
                 {friends.map(friend => (
                     <li key={friend.id}>
-                        <img src={friend.avatar_url} alt={friend.username} width={32} height={32} />
-                        <span>{friend.username}</span>
+                        <Image
+                            src={friend.avatar_url}
+                            width={64}
+                            height={64}
+                            alt={friend.username}
+                        />
+                        <span className={styles.friends__name}>{friend.username}</span>
                     </li>
                 ))}
             </ul>

@@ -39,6 +39,45 @@
 
 .friends {
   margin-top: 8px;
+  width: 100%;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    span, h2 {
+      font-size: 16px;
+      color: var(--title-color);
+    }
+  }
+
+  ul {
+    margin-top: 8px;
+    display: flex;
+    column-gap: 16px;
+    row-gap: 8px;
+    flex-wrap: wrap;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    max-height: 180px;
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+  }
+
+  &__name {
+    max-width: 64px;
+    font-size: 12px;
+    text-align: center;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    max-height: 28px;
+  }
 
   h2, h2 span {
     color: var(--title-color);

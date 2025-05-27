@@ -68,3 +68,32 @@ export function ProfileSettingsSkeleton() {
         </div>
     )
 }
+
+export function ProfileFriendsSkeleton() {
+    return (
+        <div className={styles.profileFriends}>
+            <div className={styles.profileFriends__header}>
+                <span className={styles.profileFriends__title}/>
+                <span className={styles.profileFriends__link}/>
+            </div>
+            <ul>
+                <li>
+                    <span className={styles.profileFriends__img}/>
+                    <span className={styles.profileFriends__name}/>
+                </li>
+                <li>
+                    <span className={styles.profileFriends__img}/>
+                    <span className={styles.profileFriends__name}/>
+                </li>
+                <li>
+                    <span className={styles.profileFriends__img}/>
+                    <span className={styles.profileFriends__name}/>
+                </li>
+                <li>
+                    <span className={styles.profileFriends__img}/>
+                    <span className={styles.profileFriends__name}/>
+                </li>
+            </ul>
+        </div>
+    )
+}

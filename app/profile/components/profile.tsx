@@ -37,7 +37,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                     </Link>
                 )}
             </div>
-            <Friends />
+
         </div>
     )
 }
