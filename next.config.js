@@ -9,7 +9,7 @@ const nextConfig = {
     reactStrictMode: true,
     productionBrowserSourceMaps: false,
     images: {
-        domains: ['lh3.googleusercontent.com'],
+        domains: ['ui-avatars.com', 'lh3.googleusercontent.com'],
     },
 };
 

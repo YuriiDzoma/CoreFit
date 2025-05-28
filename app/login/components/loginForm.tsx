@@ -9,10 +9,12 @@ import {getText} from "../../../store/selectors";
 import {useDispatch} from "react-redux";
 import GoogleLogin from "./googleLogin";
 import styles from './login.module.scss'
+import {useRouter} from "next/navigation";
+import {login} from "../../../lib/userData";
 
 const Login = () => {
     const { base } = useAppSelector(getText)
-    const dispatch = useDispatch();
+    const router = useRouter();
     type LoginForm = {
         email: string;
         password: string;
@@ -22,18 +24,19 @@ const Login = () => {
 
     const onSubmit = async (data: LoginForm) => {
         try {
-            console.log(data)
-            // const response = await login(data.email, data.password);
-            // if (response?.success) {
-            //     dispatch(setEmail(data.email));
-            //     navigate("/");
-            // } else if (response?.errors?.[0]?.code === "authentication_failed") {
-            //     setError("All");
-            // }
-        } finally {
-            console.log('success')
+            const response = await login(data.email, data.password);
+
+            if (response?.success) {
+                // TODO: редірект або оновлення стану
+                router.push('/'); // або navigate("/") якщо використовуєш щось інше
+            } else {
+                setError("email", { message: response?.error || "Login failed" });
+            }
+        } catch (e) {
+            setError("email", { message: "Unexpected error" });
         }
     };
+
 
     return (
         <form className={'form'} onSubmit={handleSubmit(onSubmit)}>

@@ -21,6 +21,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                     width={width < 768 ? 96 : 150}
                     height={width < 768 ? 96 : 150}
                     alt="avatar"
+                    unoptimized
                 />
                 <div>
                     <p>{profile.username}</p>
@@ -33,6 +34,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                             width={24}
                             height={24}
                             alt="settings"
+                            unoptimized
                         />
                     </Link>
                 )}

@@ -142,7 +142,7 @@ export const registerUserWithEmail = async (
         options: {
             data: {
                 full_name: fullName,
-                avatar_url: ``
+                avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`
             },
         },
     });
@@ -152,4 +152,16 @@ export const registerUserWithEmail = async (
     return {};
 };
 
+
+export const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        console.error("Login failed:", error.message);
+        return { success: false, error: error.message };
+    }
+
+    return { success: true };
+};
 

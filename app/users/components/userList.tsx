@@ -14,6 +14,7 @@ import {
     getAllFriendsOfUser,
 } from '@/lib/friendData';
 import {getOutgoingPendingRequests, removeFriendship} from "../../../lib/friendData";
+import User from "./user";
 
 export default function UserList() {
     const userId = useAppSelector(getUserId);
@@ -34,8 +35,8 @@ export default function UserList() {
 
             const [fetchedUsers, pendingRaw, acceptedRelations] = await Promise.all([
                 fetchUsers(),
-                getOutgoingPendingRequests(userId),      // <-- нова функція
-                getAllFriendsOfUser(userId),             // <-- тільки accepted
+                getOutgoingPendingRequests(userId),
+                getAllFriendsOfUser(userId),
             ]);
 
             setUsers(fetchedUsers);
@@ -82,40 +83,17 @@ export default function UserList() {
         <div className={styles.users}>
             <h2>{base.allUsers}</h2>
             <ul>
-                {users.map((user) => {
+                {userId && users && users.map((user) => {
                     return (
-                        <li key={user.id}>
-                            <Link href={`/profile/${user.id}`} className={styles.userLink}>
-                                <div className={styles.userLink__info}>
-                                    <img src={user.avatar_url} alt={user.username} />
-                                    <p>{user.username}</p>
-                                </div>
-                            </Link>
-
-                            {user.id === userId ? null : pendingIds.includes(user.id) ? (
-                                <button
-                                    className={`${styles.userLink__btn} button ${styles.pending}`}
-                                    onClick={() => cancelFriend(user.id)}
-                                >
-                                    <span>Cancel request</span>
-                                </button>
-                            ) : friendIds.includes(user.id) ? (
-                                <button
-                                    className={`${styles.userLink__btn} button ${styles.accepted}`}
-                                    onClick={() => removeFriend(user.id)}
-                                >
-                                    <span>Remove friend</span>
-                                </button>
-                            ) : (
-                                <button
-                                    className={`${styles.userLink__btn} button`}
-                                    onClick={() => addFriend(user)}
-                                    disabled={pendingIds.includes(user.id)}
-                                >
-                                    <span>Add to friends</span>
-                                </button>
-                            )}
-                        </li>
+                        <User key={user.id}
+                              user={user}
+                              userId={userId}
+                              pendingIds={pendingIds}
+                              friendIds={friendIds}
+                              cancelFriend={cancelFriend}
+                              addFriend={addFriend}
+                              removeFriend={removeFriend}
+                        />
                     );
                 })}
             </ul>
