@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     currentId: null,
     isAuth: false,
-    isDarkTheme: true,
+    dark: true,
     language: 'eng',
 };
 
@@ -15,7 +15,7 @@ export const accountSlice = createSlice({
             state.currentId = payload;
         },
         setIsDarkTheme: (state, {payload}) => {
-            state.isDarkTheme = payload;
+            state.dark = payload;
         },
         setLanguage: (state, {payload}) => {
             state.language = payload;

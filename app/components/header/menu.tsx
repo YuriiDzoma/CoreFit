@@ -17,10 +17,10 @@ const Menu = () => {
     const handleToggleTheme = async () => {
         if (!userId) return;
 
-        const updatedTheme = await updateUserProfile(userId, { isDarkTheme: !isDark });
+        const updatedTheme = await updateUserProfile(userId, { dark: !isDark });
         console.log(updatedTheme)
-        const themeString = updatedTheme?.isDarkTheme ? 'dark' : 'light';
-        dispatch(setIsDarkTheme(updatedTheme?.isDarkTheme));
+        const themeString = updatedTheme?.dark ? 'dark' : 'light';
+        dispatch(setIsDarkTheme(updatedTheme?.dark));
         document.documentElement.setAttribute('data-theme', themeString);
     };
 

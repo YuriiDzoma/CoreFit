@@ -23,12 +23,16 @@ const Requests = () => {
 
     useEffect(() => {
         if (!userId) return;
-
         subscribeToRealtime(userId);
+    }, [userId]); // ✅ лише один раз
 
+    useEffect(() => {
         const ids = requests.map(r => r.user_id);
+        if (ids.length === 0) return;
+
         fetchProfilesByIds(ids).then((map) => setUsersMap(map));
-    }, [userId, requests]);
+    }, [requests]);
+
 
     const handleAccept = async (id: string) => {
         setIsLoading(true);

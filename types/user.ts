@@ -5,7 +5,7 @@ export type User = {
     created_at: string;
     email: string;
     language: string;
-    isDarkTheme: boolean;
+    dark: boolean;
 };
 
 export type ProfileType = {

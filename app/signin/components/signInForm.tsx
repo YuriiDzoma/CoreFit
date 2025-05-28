@@ -4,35 +4,38 @@ import {useForm} from "react-hook-form";
 import InputBox from "../../components/inputBox/inputBox";
 import {emailOptions, firstNameOptions, lastNameOptions, passwordOptions} from "../../../lib/validations";
 import Link from "next/link";
-import {useDispatch} from "react-redux";
 import {useAppSelector} from "../../hooks/redux";
 import {getText} from "../../../store/selectors";
+import { registerUserWithEmail } from '@/lib/userData';
+
+import { useRouter } from "next/navigation";
 
 
 type signInForm = {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
 };
 
+
 const SignInForm = () => {
     const { base } = useAppSelector(getText)
-    const dispatch = useDispatch();
     const { register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<signInForm>();
 
+    const router = useRouter();
+
     const onSubmit = async (data: signInForm) => {
-        try {
-            console.log(data)
-            // const response = await login(data.email, data.password);
-            // if (response?.success) {
-            //     dispatch(setEmail(data.email));
-            //     navigate("/");
-            // } else if (response?.errors?.[0]?.code === "authentication_failed") {
-            //     setError("All");
-            // }
-        } finally {
-            console.log('success')
+        const fullName = `${data.firstName.trim()} ${data.lastName.trim()}`;
+
+        const { error } = await registerUserWithEmail(fullName, data.email, data.password);
+
+        if (error) {
+            setError("email", { message: error });
+            return;
         }
+
+        router.push('/');
     };
 
     return (
@@ -40,17 +43,17 @@ const SignInForm = () => {
             <h2 className={'title'}>{base.authorization}</h2>
             <InputBox
                 errors={errors}
-                name="name"
+                name="firstName"
                 placeholder={base.plHolName}
                 label={base.lblName}
-                options={register("name", firstNameOptions)}
+                options={register("firstName", firstNameOptions)}
             />
             <InputBox
                 errors={errors}
-                name="name"
+                name="lastName"
                 placeholder={base.plHolLastName}
                 label={base.lblLastName}
-                options={register("name", lastNameOptions)}
+                options={register("lastName", lastNameOptions)}
             />
             <InputBox
                 errors={errors}

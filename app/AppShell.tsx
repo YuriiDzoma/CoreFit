@@ -33,10 +33,10 @@ const AppShell = ({children}: { children: React.ReactNode }) => {
                 const settings = await fetchUserSettings(userId);
 
                 lang = settings.language;
-                theme = settings.isDarkTheme ? 'dark' : 'light';
+                theme = settings.dark ? 'dark' : 'light';
 
                 document.documentElement.setAttribute('data-theme', theme);
-                dispatch(setIsDarkTheme(settings.isDarkTheme));
+                dispatch(setIsDarkTheme(settings.dark));
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }

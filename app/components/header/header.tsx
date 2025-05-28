@@ -9,7 +9,6 @@ import type { Session } from '@supabase/supabase-js';
 import Menu from './menu';
 import HeaderNavigation from './headerNavigation';
 
-// ✅ новий Zustand store
 import { useFriendRequestStore } from '@/store/useFriendRequestStore';
 import { useEffect } from 'react';
 
@@ -23,7 +22,7 @@ const Header = ({ session }: { session: Session | null }) => {
 
     useEffect(() => {
         if (userId) {
-            subscribeToRealtime(userId); // ✅ Підключаємо WebSocket для RLS подій
+            subscribeToRealtime(userId);
         }
     }, [userId]);
 

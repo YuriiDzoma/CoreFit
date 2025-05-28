@@ -2,7 +2,7 @@ import { createClient } from '@/utils/supabase/client';
 import {ProfileType, User} from "../types/user";
 
 type UserSettings = {
-    isDarkTheme: boolean;
+    dark: boolean;
     language: string;
 };
 
@@ -19,7 +19,6 @@ export const fetchUsers = async (): Promise<ProfileType[]> => {
 
     return data ?? [];
 };
-
 
 
 export const fetchUserProfileById = async (id: string): Promise<ProfileType | null> => {
@@ -56,27 +55,27 @@ export const fetchUserSettings = async (userId: string): Promise<UserSettings> =
 
     const { data, error } = await supabase
         .from('profiles')
-        .select('isDarkTheme, language')
+        .select('dark, language')
         .eq('id', userId)
         .single();
 
     if (error || !data) {
         console.warn('Failed to fetch user settings, fallback applied', error);
         return {
-            isDarkTheme: true,
+            dark: true,
             language: 'english',
         };
     }
 
     return {
-        isDarkTheme: data.isDarkTheme ?? true,
+        dark: data.dark ?? true,
         language: data.language ?? 'english',
     };
 };
 
 export const updateUserProfile = async (
     userId: string,
-    updates: Partial<Pick<User, 'username' | 'language' | 'isDarkTheme' | 'email'>>
+    updates: Partial<Pick<User, 'username' | 'language' | 'dark' | 'email'>>
 ): Promise<User | null> => {
     const supabase = createClient();
 
@@ -129,3 +128,28 @@ export const fetchLimitedFriendProfiles = async (friendIds: string[], limit = 12
 
     return data ?? [];
 };
+
+export const registerUserWithEmail = async (
+    fullName: string,
+    email: string,
+    password: string
+): Promise<{ error?: string }> => {
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            data: {
+                full_name: fullName,
+                avatar_url: ``
+            },
+        },
+    });
+
+    if (error) return { error: error.message };
+
+    return {};
+};
+
+
