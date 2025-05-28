@@ -106,7 +106,7 @@ export const fetchProfilesByIds = async (ids: string[]): Promise<Record<string, 
     if (error || !data) {
         console.error('❌ Error fetching multiple profiles:', error);
         return {};
-    }
+    }dark,
 
     return Object.fromEntries(data.map((u) => [u.id, u]));
 };

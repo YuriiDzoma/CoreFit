@@ -24,7 +24,7 @@ const Requests = () => {
     useEffect(() => {
         if (!userId) return;
         subscribeToRealtime(userId);
-    }, [userId]); // ✅ лише один раз
+    }, [userId]);
 
     useEffect(() => {
         const ids = requests.map(r => r.user_id);
