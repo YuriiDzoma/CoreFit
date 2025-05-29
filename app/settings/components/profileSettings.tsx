@@ -8,6 +8,7 @@ import {firstNameOptions, lastNameOptions} from "../../../lib/validations";
 import InputBox from "../../components/inputBox/inputBox";
 import {fetchOwnProfile, updateUserProfile} from "../../../lib/userData";
 import {ProfileSettingsSkeleton} from "../../../ui/skeleton/skeleton";
+import Preloader from "../../../ui/preloader/Preloader";
 
 type profileSettingsForm = {
     firstName: string;
@@ -16,6 +17,7 @@ type profileSettingsForm = {
 
 const ProfileSettings = () => {
     const { settings, base } = useAppSelector(getText);
+    const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const { register, handleSubmit, formState: { errors }, reset } = useForm<profileSettingsForm>();
 
     const [loading, setLoading] = useState(true);
@@ -36,6 +38,7 @@ const ProfileSettings = () => {
     }, [reset]);
 
     const onSubmit = async (data: profileSettingsForm) => {
+        setIsPreloader(true);
         const profile = await fetchOwnProfile();
         if (!profile) return;
 
@@ -44,6 +47,7 @@ const ProfileSettings = () => {
         await updateUserProfile(profile.id, {
             username: fullName,
         });
+        setIsPreloader(false);
     };
 
     if (loading) return <ProfileSettingsSkeleton />;
@@ -70,6 +74,7 @@ const ProfileSettings = () => {
                     {base.save}
                 </button>
             </form>
+            {isPreloader && <Preloader />}
         </div>
     );
 };

@@ -6,6 +6,7 @@ import {getIsDarkTheme, getUserId} from "../../../store/selectors";
 import React, {useState} from "react";
 import {updateUserProfile} from "../../../lib/userData";
 import { setIsDarkTheme } from '@/store/account-slice';
+import Preloader from "../../../ui/preloader/Preloader";
 
 
 const Menu = () => {
@@ -13,15 +14,18 @@ const Menu = () => {
     const userId = useAppSelector(getUserId);
     const dispatch = useAppDispatch();
     const [isActive, setIsActive] = useState<boolean>(false);
+    const [isPreloader, setIsPreloader] = useState<boolean>(false);
 
     const handleToggleTheme = async () => {
         if (!userId) return;
+        setIsPreloader(true);
 
         const updatedTheme = await updateUserProfile(userId, { dark: !isDark });
         console.log(updatedTheme)
         const themeString = updatedTheme?.dark ? 'dark' : 'light';
         dispatch(setIsDarkTheme(updatedTheme?.dark));
         document.documentElement.setAttribute('data-theme', themeString);
+        setIsPreloader(false);
     };
 
     return (
@@ -66,8 +70,9 @@ const Menu = () => {
             </div>
             <button className={isActive ? styles.shadowActive : styles.shadow}
                     disabled={!isActive}
-                    onClick={() => setIsActive(false)}/>
-
+                    onClick={() => setIsActive(false)}
+            />
+            {isPreloader && <Preloader />}
         </div>
     )
 }

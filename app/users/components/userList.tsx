@@ -15,13 +15,15 @@ import {
 } from '@/lib/friendData';
 import {getOutgoingPendingRequests, removeFriendship} from "../../../lib/friendData";
 import User from "./user";
+import Preloader from "../../../ui/preloader/Preloader";
 
 export default function UserList() {
     const userId = useAppSelector(getUserId);
     const { base } = useAppSelector(getText);
 
     const [users, setUsers] = useState<ProfileType[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [isPreloader, setIsPreloader] = useState<boolean>(false);
 
     const [pendingIds, setPendingIds] = useState<string[]>([]);
     const [friendIds, setFriendIds] = useState<string[]>([]);
@@ -55,26 +57,32 @@ export default function UserList() {
 
 
     const cancelFriend = async (friendId: string) => {
+        setIsPreloader(true);
         const res = await cancelFriendRequest(friendId);
         if (res) {
             setPendingIds((prev) => prev.filter((id) => id !== friendId));
         }
+        setIsPreloader(false);
     };
 
     const addFriend = async (user: ProfileType) => {
+        setIsPreloader(true);
         setPendingIds((prev) => [...prev, user.id]);
 
         const res = await sendFriendRequest(user.id);
         if (!res) {
             setPendingIds((prev) => prev.filter((id) => id !== user.id));
         }
+        setIsPreloader(false);
     };
 
     const removeFriend = async (friendId: string) => {
+        setIsPreloader(true);
         const res = await removeFriendship(friendId);
         if (res) {
             setFriendIds((prev) => prev.filter((id) => id !== friendId));
         }
+        setIsPreloader(false);
     };
 
     if (loading) return <UsersPageSkeleton />;
@@ -97,6 +105,7 @@ export default function UserList() {
                     );
                 })}
             </ul>
+            {isPreloader && <Preloader />}
         </div>
     );
 }

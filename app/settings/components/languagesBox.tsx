@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import React, {useState} from "react";
 import styles from './settings.module.scss';
 import { getLanguage, getText, getUserId } from "../../../store/selectors";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
@@ -7,22 +7,25 @@ import { updateUserProfile } from "../../../lib/userData";
 import { getLanguages } from "../../../lib/languages";
 import { setText } from '@/store/language-slice';
 import { setLanguage } from '@/store/account-slice';
+import Preloader from "../../../ui/preloader/Preloader";
 
 export const LanguagesBox = () => {
     const {settings} = useAppSelector(getText);
     const userId = useAppSelector(getUserId);
     const dispatch = useAppDispatch();
     const currentLanguage = useAppSelector(getLanguage);
+    const [isPreloader, setIsPreloader] = useState<boolean>(false);
 
     const handleChangeLanguage = async (lang: string) => {
         if (!userId) return;
-
+        setIsPreloader(true);
         const success = await updateUserProfile(userId, {language: lang});
         if (success) {
             dispatch(setLanguage(lang));
             const translations = await getLanguages(lang);
             dispatch(setText(translations));
         }
+        setIsPreloader(false);
     };
     const languages = [
         {value: 'eng', name: settings.english},
@@ -41,6 +44,7 @@ export const LanguagesBox = () => {
                     </button>
                 ))}
             </div>
+            {isPreloader && <Preloader />}
         </div>
     )
 }
