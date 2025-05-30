@@ -19,13 +19,13 @@ export default function Wiki() {
 
     const fetchExercises = (value: string) => {
         const loadExercises = async () => {
-            const names = await fetchExercisesByGroup(value);
+            const names = await fetchExercisesByGroup(value, language);
             setExercises(names);
-            setIsPreloader(false);
         };
 
         loadExercises();
-    }
+    };
+
 
     useEffect(() => {
         fetchExercises('All');

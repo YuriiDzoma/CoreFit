@@ -1,44 +1,33 @@
 import { createClient } from '@/utils/supabase/client';
 
-export const fetchExercisesByGroup = async (group: string): Promise<string[]> => {
+export const fetchExercisesByGroup = async (
+    group: string,
+    lang: 'en' | 'ua' | 'ru'
+): Promise<string[]> => {
     const supabase = createClient();
 
-    if (group === 'All') {
-        const { data, error } = await supabase
-            .from('exercises')
-            .select('name_en');
+    const fieldMap = {
+        eng: 'name_en',
+        ukr: 'name_uk',
+        rus: 'name_ru',
+    };
 
-        if (error) {
-            console.error('Error fetching all exercises:', error.message);
-            return [];
-        }
+    const nameField = fieldMap[lang];
 
-        return data.map((exercise) => exercise.name_en);
-    }
-
-    const { data: groupData, error: groupError } = await supabase
-        .from('muscle_groups')
-        .select('id')
-        .eq('name', group)
-        .single();
-
-    if (groupError || !groupData) {
-        console.error('Error fetching muscle group id:', groupError?.message);
-        return [];
-    }
-
-    const { data, error } = await supabase
+    let query = supabase
         .from('exercises')
-        .select('name_en')
-        .eq('muscle_group_id', groupData.id);
+        .select(`${nameField}, muscle_groups(name)`);
+
+    if (group !== 'All') {
+        query = query.eq('muscle_groups.name', group);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
-        console.error('Error fetching exercises by group:', error.message);
+        console.error('Error fetching exercises:', error.message);
         return [];
     }
 
-    return data.map((exercise) => exercise.name_en);
+    return data.map((exercise) => exercise[nameField]);
 };
-
-
-

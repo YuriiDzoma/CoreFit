@@ -59,8 +59,9 @@
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    column-gap: 12px;
+    column-gap: 4px;
   }
+
   .link {
     &:hover {
       background-color: var(--bg-color);
