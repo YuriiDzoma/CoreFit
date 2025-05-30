@@ -1,26 +1,27 @@
 'use client';
 
 import styles from './wiki.module.scss'
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import WikiNav from "./wikiNav";
 import {useAppSelector} from "../../../hooks/redux";
 import {getLanguage} from "../../../../store/selectors";
 import {fetchExercisesByGroup} from "../../../../lib/trainingData";
+import Preloader from "../../../../ui/preloader/Preloader";
 
 export default function Wiki() {
     const language = useAppSelector(getLanguage);
 
-    console.log(language)
-
+    const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<string>('All')
     const [exercises, setExercises] = useState<string[]>([]);
 
+    console.log(language)
+
     const fetchExercises = (value: string) => {
-        console.log(value)
         const loadExercises = async () => {
             const names = await fetchExercisesByGroup(value);
-            console.log(names)
             setExercises(names);
+            setIsPreloader(false);
         };
 
         loadExercises();
@@ -31,8 +32,10 @@ export default function Wiki() {
     }, []);
 
     const handleChangeTab = (value: string) => {
+        setIsPreloader(true)
         setActiveTab(value);
         fetchExercises(value);
+
     }
 
     return (
@@ -46,6 +49,7 @@ export default function Wiki() {
                 </ul>
                 <WikiNav activeTab={activeTab} handleChangeTab={handleChangeTab} />
             </div>
+            {isPreloader && <Preloader />}
         </div>
     );
 }
