@@ -1,9 +1,27 @@
 import { createClient } from '@/utils/supabase/client';
 
+export const getMuscleGroupIdByName = async (group: string): Promise<string | null> => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('muscle_groups')
+        .select('id')
+        .eq('name', group)
+        .single(); // очікуємо один результат
+
+    if (error || !data) {
+        console.error('Error fetching muscle group id:', error?.message || 'Not found');
+        return null;
+    }
+
+    return data.id;
+};
+
+
 export const fetchExercisesByGroup = async (
     group: string,
-    lang: 'en' | 'ua' | 'ru'
-): Promise<string[]> => {
+    lang: 'eng' | 'ukr' | 'rus'
+): Promise<{ name: string; image: string }[]> => {
     const supabase = createClient();
 
     const fieldMap = {
@@ -16,18 +34,29 @@ export const fetchExercisesByGroup = async (
 
     let query = supabase
         .from('exercises')
-        .select(`${nameField}, muscle_groups(name)`);
+        .select(`${nameField}, image_url`);
 
     if (group !== 'All') {
-        query = query.eq('muscle_groups.name', group);
+        const groupId = await getMuscleGroupIdByName(group);
+        if (!groupId) return [];
+
+        query = query.eq('muscle_group_id', groupId);
     }
 
     const { data, error } = await query;
 
-    if (error) {
-        console.error('Error fetching exercises:', error.message);
+    if (error || !data) {
+        console.error('Error fetching exercises:', error?.message);
         return [];
     }
 
-    return data.map((exercise) => exercise[nameField]);
+    return data.map((exercise: Record<string, any>) => ({
+        name: exercise[nameField],
+        image: exercise.image_url,
+    }));
+
 };
+
+
+
+
