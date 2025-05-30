@@ -103,6 +103,12 @@ input[type="search"]::-webkit-search-results-decoration {
   -webkit-appearance: none;
 }
 
+html, body {
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+}
+
+
 input[type=number] {
   -moz-appearance: textfield;
 }
