@@ -212,3 +212,10 @@ body:has(.popup), body:has(.menuActive) {
     text-decoration: underline;
   }
 }
+
+.pageTitle {
+  font-size: 18px;
+  text-align: center;
+  color: var(--title-color);
+  margin-bottom: 16px;
+}
