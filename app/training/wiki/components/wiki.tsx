@@ -23,15 +23,9 @@ export default function Wiki() {
 
     const fetchExercises = (value: string) => {
         const loadExercises = async () => {
-            const languageMap = {
-                ua: 'ukr',
-                en: 'eng',
-                ru: 'rus',
-            } as const;
+            if (!language) return
+            const names = await fetchExercisesByGroup(value, language as 'eng' | 'ukr' | 'rus');
 
-            const mappedLanguage = languageMap[language as keyof typeof languageMap];
-
-            const names = await fetchExercisesByGroup(value, mappedLanguage);
             setExercises(names);
             setIsPreloader(false);
         };

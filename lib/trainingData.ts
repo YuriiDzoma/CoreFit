@@ -7,7 +7,7 @@ export const getMuscleGroupIdByName = async (group: string): Promise<string | nu
         .from('muscle_groups')
         .select('id')
         .eq('name', group)
-        .single(); // очікуємо один результат
+        .single();
 
     if (error || !data) {
         console.error('Error fetching muscle group id:', error?.message || 'Not found');
@@ -22,6 +22,8 @@ export const fetchExercisesByGroup = async (
     group: string,
     lang: 'eng' | 'ukr' | 'rus'
 ): Promise<{ name: string; image: string }[]> => {
+    console.log(group)
+    console.log(lang)
     const supabase = createClient();
 
     const fieldMap = {
