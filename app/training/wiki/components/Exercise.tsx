@@ -3,6 +3,7 @@ import {exerciseTypes} from "../../../../types/training";
 import styles from './wiki.module.scss';
 import useWindowSize from "../../../hooks/useWindowSize";
 import Image from "next/image";
+import Link from 'next/link';
 
 
 interface Props {
@@ -13,7 +14,7 @@ const Exercise = ({ item }: Props) => {
     const { width } = useWindowSize();
 
     return (
-        <li className={styles.exercise}>
+        <Link href={`/training/wiki/${item.id}`} className={styles.exercise}>
             <Image
                 src={item.image}
                 width={width < 768 ? 64 : 112}
@@ -22,7 +23,7 @@ const Exercise = ({ item }: Props) => {
                 unoptimized
             />
             <span>{item.name}</span>
-        </li>
+        </Link>
     );
 };
 

@@ -11,7 +11,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className={styles.menu}>
                 <TrainingMenu />
             </div>
-
         </div>
     );
 }

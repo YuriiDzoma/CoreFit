@@ -1,0 +1,38 @@
+.exerciseDetail {
+  height: 100%;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+  }
+}
+
+.title {
+  color: var(--title-color);
+  margin-bottom: 16px;
+}
+
+.image {
+  margin: 0 auto;
+  width: auto;
+  max-height: 200px;
+}
+
+.description {
+  margin: 16px 0;
+}
+
+.imgWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.videoWrapper {
+  iframe {
+    width: 100%;
+  }
+  padding-bottom: 16px;
+}
