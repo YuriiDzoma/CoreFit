@@ -10,7 +10,7 @@
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border: 2px solid var(--border-color);
-    transition: all .1s;
+    transition: all .2s;
     min-width: 110px;
     display: flex;
     align-content: center;
@@ -21,11 +21,11 @@
       letter-spacing: 1px;
       position: relative;
       color: var(--title-color);
-      transition: all .15s;
+      transition: all .2s;
       font-size: 18px;
 
       &:after {
-        transition: all .15s;
+        transition: all .2s;
         position: absolute;
         content: '';
         display: block;

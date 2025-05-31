@@ -7,18 +7,17 @@ import {useAppSelector} from "../../../hooks/redux";
 import {getLanguage} from "../../../../store/selectors";
 import {fetchExercisesByGroup} from "../../../../lib/trainingData";
 import Preloader from "../../../../ui/preloader/Preloader";
+import Exercise from "./Exercise";
+import {exerciseTypes} from "../../../../types/training";
+import {ExerciseListSkeleton} from "../../../../ui/skeleton/skeleton";
 
-interface exercisesTypes {
-    name: string,
-    image: string,
-}
 
 export default function Wiki() {
     const language = useAppSelector(getLanguage);
 
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<string>('All')
-    const [exercises, setExercises] = useState<exercisesTypes[]>([]);
+    const [exercises, setExercises] = useState<exerciseTypes[]>([]);
 
 
     const fetchExercises = (value: string) => {
@@ -41,19 +40,17 @@ export default function Wiki() {
         setIsPreloader(true)
         setActiveTab(value);
         fetchExercises(value);
-
     }
+
+    if (!exercises.length) return <ExerciseListSkeleton />
 
     return (
         <div>
             <h2 className={'pageTitle'}>Wiki Page</h2>
             <div className={styles.content}>
-                <ul>
-                    {exercises.map((item, index) => (
-                        <li key={index}>
-                            <span>{item.name}</span>
-                            <img src={item.image} alt={''} width={64} height={64} />
-                        </li>
+                <ul className={styles.exercisesList}>
+                    {exercises?.length && exercises.map((item, index) => (
+                        <Exercise key={index} item={item} />
                     ))}
                 </ul>
                 <WikiNav activeTab={activeTab} handleChangeTab={handleChangeTab} />

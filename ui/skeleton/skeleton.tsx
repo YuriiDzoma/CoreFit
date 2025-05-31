@@ -97,3 +97,61 @@ export function ProfileFriendsSkeleton() {
         </div>
     )
 }
+
+export function ExerciseListSkeleton() {
+    return (
+        <div>
+            <span className={styles.exercisesTitle}/>
+            <div className={styles.wiki}>
+                <div className={styles.exercisesList}>
+                    <div className={styles.exercisesList__row}>
+                        <span className={styles.exercisesList__img}/>
+                        <span className={styles.exercisesList__name}/>
+                    </div>
+                    <div className={styles.exercisesList__row}>
+                        <span className={styles.exercisesList__img}/>
+                        <span className={styles.exercisesList__name}/>
+                    </div>
+                    <div className={styles.exercisesList__row}>
+                        <span className={styles.exercisesList__img}/>
+                        <span className={styles.exercisesList__name}/>
+                    </div>
+                    <div className={styles.exercisesList__row}>
+                        <span className={styles.exercisesList__img}/>
+                        <span className={styles.exercisesList__name}/>
+                    </div>
+                    <div className={styles.exercisesList__row}>
+                        <span className={styles.exercisesList__img}/>
+                        <span className={styles.exercisesList__name}/>
+                    </div>
+                    <div className={styles.exercisesList__row}>
+                        <span className={styles.exercisesList__img}/>
+                        <span className={styles.exercisesList__name}/>
+                    </div>
+                    <div className={styles.exercisesList__row}>
+                        <span className={styles.exercisesList__img}/>
+                        <span className={styles.exercisesList__name}/>
+                    </div>
+                    <div className={styles.exercisesList__row}>
+                        <span className={styles.exercisesList__img}/>
+                        <span className={styles.exercisesList__name}/>
+                    </div>
+                    <div className={styles.exercisesList__row}>
+                        <span className={styles.exercisesList__img}/>
+                        <span className={styles.exercisesList__name}/>
+                    </div>
+                </div>
+                <ul className={styles.wiki__groups}>
+                    <li className={styles.wiki__group}/>
+                    <li className={styles.wiki__group}/>
+                    <li className={styles.wiki__group}/>
+                    <li className={styles.wiki__group}/>
+                    <li className={styles.wiki__group}/>
+                    <li className={styles.wiki__group}/>
+                    <li className={styles.wiki__group}/>
+                    <li className={styles.wiki__group}/>
+                </ul>
+            </div>
+        </div>
+    )
+}
