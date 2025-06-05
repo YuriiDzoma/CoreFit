@@ -1,3 +1,5 @@
+import React from "react";
+
 export const getLanguages = async (value: string) => {
     const eng = {
         base: {
@@ -30,7 +32,33 @@ export const getLanguages = async (value: string) => {
             english: "English",
             russian: "Russian",
             ukrainian: "Ukrainian",
-        }
+        },
+        training: {
+            programName: 'Name of program',
+            plHolProgramName: 'Enter the program name',
+            errorName: 'The name must contain at least 3 letters',
+            next: 'Next',
+            back: 'Back',
+            name: 'Name',
+            type: 'Type',
+            difficulty: 'Difficulty',
+            days: 'Days',
+            exercises: 'Exercises',
+            aerobicInfo: 'Aerobic - fitness, cardio training',
+            anaerobicInfo: 'Anaerobic - strength training',
+            crossfitInfo: 'CrossFit - mixed training, aerobic + anaerobic',
+            selectType: 'Select Program Type',
+            beginner: 'Beginner',
+            intermediate: 'Intermediate',
+            advanced: 'Advanced',
+            expert: 'Expert',
+            professional: 'Professional',
+            selectDifficulty: 'Select Difficulty Level',
+            day: 'day',
+            changeDay: 'How many training days per week?',
+            generalTraining: 'day general training',
+            splitTraining: 'day split workout',
+        },
     };
 
     const rus = {
@@ -64,6 +92,32 @@ export const getLanguages = async (value: string) => {
             english: "Английский",
             russian: "Руский",
             ukrainian: "Украинский",
+        },
+        training: {
+            programName: 'Название программы',
+            plHolProgramName: 'Введите название программы',
+            errorName: 'Имя должно содержать не менее 3 букв',
+            next: 'Следующий',
+            back: 'Назад',
+            name: 'Назва',
+            type: 'Тип',
+            difficulty: 'Сложность',
+            days: 'Дни',
+            exercises: 'Упражнения',
+            aerobicInfo: 'Aerobic - фитнес, кардио тренировки',
+            anaerobicInfo: 'Anaerobic - силовые тренировки',
+            crossfitInfo: 'CrossFit - смешанная тренировка, аэробная + анаэробная',
+            selectType: 'Выберите тип программы',
+            beginner: 'Начинающий',
+            intermediate: 'Средний',
+            advanced: 'Продвинутый',
+            expert: 'Эксперт',
+            professional: 'Профессиональный',
+            selectDifficulty: 'Выберите уровень сложности',
+            day: 'день',
+            changeDay: 'Сколько тренировочных дней в неделю?',
+            generalTraining: 'дневная общая тренировка',
+            splitTraining: 'дневная сплит тренировка',
         }
     };
 
@@ -98,6 +152,32 @@ export const getLanguages = async (value: string) => {
             english: "Англійська",
             russian: "Російська",
             ukrainian: "Українська",
+        },
+        training: {
+            programName: 'Назва програми',
+            plHolProgramName: 'Введіть назву програми',
+            errorName: 'Ім\'я повинно містити щонайменше 3 літери',
+            next: 'Далі',
+            back: 'Назад',
+            name: 'Назва',
+            type: 'Тип',
+            difficulty: 'Складність',
+            days: 'Дні',
+            exercises: 'Вправи',
+            aerobicInfo: 'Aerobic - фітнес, кардіот ренування',
+            anaerobicInfo: 'Anaerobic - силові тренування',
+            crossfitInfo: 'CrossFit - змішане тренування, аеробне + анаеробне',
+            selectType: 'Виберіть тип програми',
+            beginner: 'Початківець',
+            intermediate: 'Середній рівень',
+            advanced: 'Просунутий',
+            expert: 'Експерт',
+            professional: 'Професійний',
+            selectDifficulty: 'Виберіть рівень складності',
+            day: 'день',
+            changeDay: 'Скільки тренувальних днів на тиждень?',
+            generalTraining: 'денне загальне навчання',
+            splitTraining: 'денне спліт-тренування',
         }
     };
 

@@ -26,6 +26,18 @@ export const passwordOptions = {
     }
 }
 
+export const nameOptions = {
+    required: "Name is required",
+    minLength: {
+        value: 3,
+        message: "Name must be at least 3 characters",
+    },
+    pattern: {
+        value: /^(?!\d+$)[\p{L}\d\s'-]+$/u,
+        message: "Name must include letters and may contain digits",
+    },
+};
+
 export const firstNameOptions = {
     required: "First name",
     minLength: {

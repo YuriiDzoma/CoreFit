@@ -1,0 +1,89 @@
+.create {
+  &__title {
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+.stepper {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+  margin: 16px 0 24px;
+
+  circle {
+    color: var(--submit-bg);
+  }
+
+  span {
+    font-size: 12px;
+  }
+}
+
+.type {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  align-items: center;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+    width: 100%;
+    padding: 0 16px;
+    margin-bottom: 8px;
+
+    span {
+      font-size: 12px;
+      opacity: .6;
+    }
+  }
+
+  &__changer {
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+    width: 100%;
+    padding: 0 16px;
+
+    button {
+      height: 40px;
+      width: 100%;
+    }
+
+    .active {
+      background-color: var(--border-color);
+    }
+  }
+}
+
+.difficulty, .days {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  align-items: center;
+  padding: 0 16px;
+
+  &__content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  &__value {
+    font-size: 16px;
+  }
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  column-gap: 16px;
+  width: 100%;
+  padding: 0 16px;
+
+  button {
+    width: 100%;
+  }
+}

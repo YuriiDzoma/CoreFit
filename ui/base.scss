@@ -201,9 +201,10 @@ body:has(.popup), body:has(.menuActive) {
 }
 
 .title {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 20px;
   text-align: center;
+  color: var(--title-color);
 }
 
 .toSign {

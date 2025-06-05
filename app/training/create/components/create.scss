@@ -1,0 +1,21 @@
+@media only screen and (max-width: 400px) {
+  .MuiStepConnector-line {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .css-1eqxcs7-MuiStep-root {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+.MuiSlider-markLabel {
+  font-size: 10px !important;
+  color: var(--text-color) !important;
+}
+
+.MuiStepIcon-text {
+  fill: var(--text-color) !important;
+}
