@@ -254,12 +254,35 @@
     width: 140px;
   }
 }
-
-.exercisesTitle {
+.title {
   margin: 0 auto 16px;
   border-radius: 4px;
   background-color: var(--skeleton-bg);
   height: 21px;
-  width: 110px;
+  width: 120px;
   display: block;
+}
+
+.programList {
+  &__create {
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+    width: 100%;
+    height: 40px;
+    display: block;
+    margin: 16px 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+  }
+
+  &__item {
+    height: 52px;
+    width: 100%;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
 }

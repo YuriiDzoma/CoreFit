@@ -64,6 +64,8 @@ const initialState = {
             addExercises: 'Add exercises',
             cancel: 'Cancel',
             confirm: 'Confirm',
+            createProgram: 'Create new program',
+            myPrograms: 'My programs',
         },
     }
 };

@@ -101,7 +101,7 @@ export function ProfileFriendsSkeleton() {
 export function ExerciseListSkeleton() {
     return (
         <div>
-            <span className={styles.exercisesTitle}/>
+            <span className={styles.title}/>
             <div className={styles.wiki}>
                 <div className={styles.exercisesList}>
                     <div className={styles.exercisesList__row}>
@@ -152,6 +152,20 @@ export function ExerciseListSkeleton() {
                     <li className={styles.wiki__group}/>
                 </ul>
             </div>
+        </div>
+    )
+}
+
+export function ProgramsList() {
+    return (
+        <div>
+            <span className={styles.title}/>
+            <span className={styles.programList__create}/>
+            <ul className={styles.programList__list}>
+                <li  className={styles.programList__item}/>
+                <li  className={styles.programList__item}/>
+                <li  className={styles.programList__item}/>
+            </ul>
         </div>
     )
 }

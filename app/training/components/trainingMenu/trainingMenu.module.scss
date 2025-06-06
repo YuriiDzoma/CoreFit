@@ -46,7 +46,7 @@
       border-left: 2px solid transparent;
       border-top: 3px solid transparent;
       border-right: 2px solid transparent;
-      top: -2px;
+      top: -3px;
       background-color: transparent;
     }
 
@@ -56,10 +56,10 @@
   }
 
   .active span:after {
-    border-left: 2px solid var(--bg-color);
+    border-left: 4px solid var(--bg-color);
     border-top: 4px solid var(--bg-color);
-    border-right: 2px solid var(--bg-color);
-    width: calc(100% + 4px);
+    border-right: 6px solid var(--bg-color);
+    width: calc(100% + 6px);
   }
 }
 

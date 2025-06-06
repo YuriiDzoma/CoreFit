@@ -63,6 +63,8 @@ export const getLanguages = async (value: string) => {
             addExercises: 'Add exercises',
             cancel: 'Cancel',
             confirm: 'Confirm',
+            createProgram: 'Create new program',
+            myPrograms: 'My programs',
         },
     };
 
@@ -128,6 +130,8 @@ export const getLanguages = async (value: string) => {
             addExercises: 'Добавить упражнения',
             cancel: 'Отменить',
             confirm: 'Подтвердить',
+            createProgram: 'Создать новую программу',
+            myPrograms: 'Мои программы',
         }
     };
 
@@ -193,6 +197,8 @@ export const getLanguages = async (value: string) => {
             addExercises: 'Додати вправи',
             cancel: 'Відмінити',
             confirm: 'Підтвердити',
+            createProgram: 'Створити нову програму',
+            myPrograms: 'Мої програми',
         }
     };
 

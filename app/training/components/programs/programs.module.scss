@@ -1,6 +1,12 @@
 .programs {
   display: flex;
   flex-direction: column;
+
+  h3 {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
 }
 
 .createLink {
@@ -8,4 +14,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 40px;
+}
+
+.createButton {
+  span {
+    font-weight: 500;
+  }
+}
+
+.programItem {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+
+  span {
+    text-align: center;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  p {
+    text-align: center;
+    font-size: 12px;
+  }
+}
+
+.programList {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
 }
