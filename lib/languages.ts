@@ -58,6 +58,11 @@ export const getLanguages = async (value: string) => {
             changeDay: 'How many training days per week?',
             generalTraining: 'day general training',
             splitTraining: 'day split workout',
+            create: 'Create',
+            editExercises: 'Edit Exercises',
+            addExercises: 'Add exercises',
+            cancel: 'Cancel',
+            confirm: 'Confirm',
         },
     };
 
@@ -118,6 +123,11 @@ export const getLanguages = async (value: string) => {
             changeDay: 'Сколько тренировочных дней в неделю?',
             generalTraining: 'дневная общая тренировка',
             splitTraining: 'дневная сплит тренировка',
+            create: 'Создать',
+            editExercises: 'Редактировать упражнения',
+            addExercises: 'Добавить упражнения',
+            cancel: 'Отменить',
+            confirm: 'Подтвердить',
         }
     };
 
@@ -164,7 +174,7 @@ export const getLanguages = async (value: string) => {
             difficulty: 'Складність',
             days: 'Дні',
             exercises: 'Вправи',
-            aerobicInfo: 'Aerobic - фітнес, кардіот ренування',
+            aerobicInfo: 'Aerobic - фітнес, кардіо тренування',
             anaerobicInfo: 'Anaerobic - силові тренування',
             crossfitInfo: 'CrossFit - змішане тренування, аеробне + анаеробне',
             selectType: 'Виберіть тип програми',
@@ -178,6 +188,11 @@ export const getLanguages = async (value: string) => {
             changeDay: 'Скільки тренувальних днів на тиждень?',
             generalTraining: 'денне загальне навчання',
             splitTraining: 'денне спліт-тренування',
+            create: 'Створити',
+            editExercises: 'Редагувати вправи',
+            addExercises: 'Додати вправи',
+            cancel: 'Відмінити',
+            confirm: 'Підтвердити',
         }
     };
 

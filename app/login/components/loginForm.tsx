@@ -27,8 +27,7 @@ const Login = () => {
             const response = await login(data.email, data.password);
 
             if (response?.success) {
-                // TODO: редірект або оновлення стану
-                router.push('/'); // або navigate("/") якщо використовуєш щось інше
+                router.push('/');
             } else {
                 setError("email", { message: response?.error || "Login failed" });
             }

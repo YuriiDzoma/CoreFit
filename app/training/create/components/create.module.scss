@@ -2,6 +2,7 @@
   &__title {
     font-size: 16px;
     text-align: center;
+    width: 100%;
   }
 }
 
@@ -86,4 +87,121 @@
   button {
     width: 100%;
   }
+}
+
+.exercisesStep {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  align-items: start;
+  padding: 0 16px;
+  max-height: calc(100vw + 10px);
+  overflow-y: auto;
+}
+
+.daysWrapper {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+
+  h4 {
+    margin-bottom: 8px;
+  }
+
+  h4::first-letter {
+    text-transform: uppercase;
+  }
+
+}
+
+.popupWrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  background-color: #0000004d;
+  height: 100vh;
+  width: 100vw;
+}
+
+.popupCloser {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 11;
+  height: 100vh;
+  width: 100vw;
+}
+
+.popup {
+  position: fixed;
+  left: 8px;
+  top: 8px;
+  z-index: 12;
+  height: calc(100vh - 16px);
+  width: calc(100vw - 16px);
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-color);
+  padding: 8px;
+
+  &__content {
+    display: flex;
+    column-gap: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  &__actions {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    display: flex;
+    column-gap: 8px;
+    width: calc(100vw - 32px);
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.exercisesList {
+  max-height: calc(100vh - 84px);
+  padding-bottom: 40px;
+  overflow-y: auto;
+}
+
+.exerciseItem {
+  display: flex;
+  align-items: center;
+  position: relative;
+  column-gap: 8px;
+  padding-right: 4px;
+
+  span {
+    font-size: 12px;
+  }
+}
+
+.exerciseIndex {
+  position: absolute;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  left: 4px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--border-color);
+  border: 1px solid var(--scrollbar-track);
+
+  span {
+    font-weight: 500;
+    font-size: 16px;
+  }
+}
+
+.exerciseItem.active .exerciseText {
+  opacity: .4;
 }

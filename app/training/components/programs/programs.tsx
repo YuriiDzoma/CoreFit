@@ -37,7 +37,7 @@ const Programs = () => {
                 <ul className={styles.programList}>
                     {programs.map((p) => (
                         <li key={p.id} className={styles.programItem}>
-                            <Link href={`/training/programs/${p.id}`}>
+                            <Link href={`/training/${p.id}`}>
                                 <span>{p.title}</span>
                             </Link>
                             <p className={styles.meta}>

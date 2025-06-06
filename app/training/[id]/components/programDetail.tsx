@@ -1,45 +1,47 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import { fetchProgramDetail } from '@/lib/programData';
-import styles from './programDetail.module.scss';
-import {ProgramFull} from "../../../../types/training";
-import {useParams} from "next/navigation";
-
+import { ProgramFull } from '@/types/training';
 
 const ProgramDetail = () => {
     const { id } = useParams<{ id: string }>();
-    const [data, setData] = useState<null | ProgramFull>(null);
+    const [program, setProgram] = useState<ProgramFull | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const load = async () => {
-            const res = await fetchProgramDetail(id);
-            setData(res);
+        const loadProgram = async () => {
+            if (!id) return;
+            const result = await fetchProgramDetail(id);
+            setProgram(result);
             setLoading(false);
         };
 
-        load();
+        loadProgram();
     }, [id]);
 
     if (loading) return <p>Loading...</p>;
-    if (!data) return <p>Error loading program</p>;
+    if (!program) return <p>Program not found.</p>;
 
     return (
-        <div className={styles.program}>
-            <h2 className="title">{data.title}</h2>
-            <p className={styles.meta}>
-                <strong>Type:</strong> {data.type} • <strong>Level:</strong> {data.level}
-            </p>
+        <div>
+            <h2>{program.title}</h2>
+            <p>Type: {program.type}</p>
+            <p>Level: {program.level}</p>
 
-            {data.days.map((day) => (
-                <div key={day.day_number} className={styles.day}>
+            {program.days.map((day) => (
+                <div key={day.day_number}>
                     <h3>Day {day.day_number}</h3>
-                    <ul>
-                        {day.exercises.map((ex, i) => (
-                            <li key={i}>{ex}</li>
-                        ))}
-                    </ul>
+                    {day.exercises.length ? (
+                        <ul>
+                            {day.exercises.map((exId, idx) => (
+                                <li key={idx}>{exId}</li> // тут потім замінимо на назву
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No exercises for this day.</p>
+                    )}
                 </div>
             ))}
         </div>

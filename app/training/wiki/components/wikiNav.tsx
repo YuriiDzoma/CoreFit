@@ -7,9 +7,10 @@ import {getIsDarkTheme} from "../../../../store/selectors";
 interface WikiNavTypes {
     activeTab: string,
     handleChangeTab: (value: string) => void,
+    isCreate?: boolean,
 }
 
-const WikiNav = ( {activeTab, handleChangeTab}:WikiNavTypes ) => {
+const WikiNav = ( {activeTab, handleChangeTab, isCreate = false }:WikiNavTypes ) => {
     const isDark = useAppSelector(getIsDarkTheme);
 
     const navigation = [
@@ -24,15 +25,15 @@ const WikiNav = ( {activeTab, handleChangeTab}:WikiNavTypes ) => {
     ];
 
     return (
-        <div className={styles.nav}>
+        <div className={isCreate ? `${styles.navCreate}` : `${styles.nav}`}>
             {navigation && navigation.map((item, index) => (
                 <button key={index} className={activeTab === item.name ? styles.tabActive : styles.tab}
                         onClick={() => handleChangeTab(item.name)}
                 >
                     <Image
                         src={isDark ? item.iconLight : item.icon}
-                        width={32}
-                        height={32}
+                        width={isCreate ? 28 : 32}
+                        height={isCreate ? 28 : 32}
                         alt={item.name}
                         unoptimized
                     />

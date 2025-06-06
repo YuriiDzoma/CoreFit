@@ -29,29 +29,25 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
 
     const { data, error } = await supabase
         .from('programs')
-        .select(`id, title, type, level, days`)
+        .select(`id, title, type, level, days:program_days(day_number, exercises:program_exercises(exercise_id))`)
         .eq('id', id)
         .single();
 
     if (error || !data) {
-        console.error('Error fetching program detail:', error?.message);
+        console.error('Error fetching program:', error?.message);
         return null;
     }
 
-    const { data: daysData } = await supabase
-        .from('program_days')
-        .select('id, day_number, exercises')
-        .eq('program_id', id)
-        .order('day_number');
+    const normalizedDays = (data.days || []).map((day: any) => ({
+        day_number: day.day_number,
+        exercises: (day.exercises || []).map((ex: any) => ex.exercise_id),
+    }));
 
     return {
         id: data.id,
         title: data.title,
         type: data.type,
         level: data.level,
-        days: daysData?.map((d) => ({
-            day_number: d.day_number,
-            exercises: d.exercises || [],
-        })) || [],
+        days: normalizedDays,
     };
 };

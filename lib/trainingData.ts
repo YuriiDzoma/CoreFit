@@ -124,3 +124,65 @@ export const fetchExerciseById = async (
         type: record.type,
     };
 };
+
+export const createTrainingProgram = async (
+    userId: string,
+    title: string,
+    type: string,
+    level: string,
+    days: { dayNumber: number; exercises: string[] }[]
+): Promise<string | null> => {
+    const supabase = createClient();
+
+    // Створення програми
+    const { data: program, error: programError } = await supabase
+        .from('programs')
+        .insert([{ user_id: userId, title, type, level, days_count: days.length }])
+        .select()
+        .single();
+
+    if (programError || !program) {
+        console.error('Program insert error:', programError?.message);
+        return null;
+    }
+
+    // Створення днів
+    const daysToInsert = days.map((d) => ({
+        program_id: program.id,
+        day_number: d.dayNumber,
+        title: `Day ${d.dayNumber}`,
+    }));
+
+    const { data: insertedDays, error: daysError } = await supabase
+        .from('program_days')
+        .insert(daysToInsert)
+        .select();
+
+    if (daysError || !insertedDays) {
+        console.error('Program days insert error:', daysError?.message);
+        return null;
+    }
+
+    // Карта day_number -> day_id
+    const dayIdMap = new Map(insertedDays.map((d) => [d.day_number, d.id]));
+
+    // Створення вправ
+    const exercisesToInsert = days.flatMap((day) =>
+        day.exercises.map((exerciseId, index) => ({
+            day_id: dayIdMap.get(day.dayNumber),
+            exercise_id: exerciseId,
+            order_index: index + 1,
+        }))
+    );
+
+    const { error: exercisesError } = await supabase
+        .from('program_exercises')
+        .insert(exercisesToInsert);
+
+    if (exercisesError) {
+        console.error('Program exercises insert error:', exercisesError.message);
+        return null;
+    }
+
+    return program.id;
+};

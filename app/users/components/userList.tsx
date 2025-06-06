@@ -6,7 +6,6 @@ import { useAppSelector } from '@/app/hooks/redux';
 import styles from './userList.module.scss';
 import { UsersPageSkeleton } from '@/ui/skeleton/skeleton';
 import { fetchUsers } from '@/lib/userData';
-import Link from 'next/link';
 import { ProfileType } from '@/types/user';
 import {
     sendFriendRequest,

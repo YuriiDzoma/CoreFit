@@ -59,6 +59,11 @@ const initialState = {
             changeDay: 'How many training days per week?',
             generalTraining: 'day general training',
             splitTraining: 'day split workout',
+            create: 'Create',
+            editExercises: 'Edit Exercises',
+            addExercises: 'Add exercises',
+            cancel: 'Cancel',
+            confirm: 'Confirm',
         },
     }
 };
