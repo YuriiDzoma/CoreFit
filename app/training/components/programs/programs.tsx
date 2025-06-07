@@ -5,13 +5,15 @@ import Link from 'next/link';
 import {fetchUserPrograms} from "../../../../lib/programData";
 import {ProgramType} from "../../../../types/training";
 import {useAppSelector} from "../../../hooks/redux";
-import {getText} from "../../../../store/selectors";
+import {getIsDarkTheme, getText} from "../../../../store/selectors";
 import {ProgramsList} from "../../../../ui/skeleton/skeleton";
+import Image from "next/image";
 
 const Programs = () => {
     const [programs, setPrograms] = useState<ProgramType[]>([]);
     const [loading, setLoading] = useState(true);
     const {training} = useAppSelector(getText);
+    const isDark = useAppSelector(getIsDarkTheme);
 
     useEffect(() => {
         const loadPrograms = async () => {
@@ -45,6 +47,13 @@ const Programs = () => {
                                 <span>{p.title}</span>
                                 <p>{p.type} • {p.level} • {p.days_count} day{p.days_count > 1 ? 's' : ''}</p>
                             </li>
+                            <Image
+                                src={isDark ? '/icons/linkToWhite.svg' : '/icons/linkToDark.svg'}
+                                width={32}
+                                height={32}
+                                alt="to"
+                                unoptimized
+                            />
                         </Link>
                     ))}
                 </ul>

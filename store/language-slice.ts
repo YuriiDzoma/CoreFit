@@ -66,6 +66,10 @@ const initialState = {
             confirm: 'Confirm',
             createProgram: 'Create new program',
             myPrograms: 'My programs',
+            secondaryMuscles: 'Secondary muscles',
+            compound: 'Compound',
+            isolation: 'Isolation',
+            none: 'None',
         },
     }
 };

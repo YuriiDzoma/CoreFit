@@ -6,9 +6,13 @@ import {getLanguage} from "@/store/selectors";
 import {fetchExerciseById} from "@/lib/trainingData";
 import styles from './exerciseDetail.module.scss';
 import {useParams} from "next/navigation";
+import {getText} from "../../../../../store/selectors";
+import {ExerciseSkeleton} from "../../../../../ui/skeleton/skeleton";
+import Image from "next/image";
 
 const ExerciseDetail = () => {
     const {id} = useParams();
+    const { training } = useAppSelector(getText)
     const language = useAppSelector(getLanguage);
     const [data, setData] = useState<null | {
         name: string;
@@ -32,23 +36,24 @@ const ExerciseDetail = () => {
         load();
     }, [id, language]);
 
-    if (!data) return <p className={styles.loading}>Loading exercise...</p>;
+    if (!data) return <ExerciseSkeleton />;
 
     return (
         <div className={styles.exerciseDetail}>
             <h2 className={`${styles.title} title`}>{data.name}</h2>
             <div className={styles.exerciseDetail__info}>
-                <p><strong>Type:</strong> {data.type === 'compound' ? 'Compound' : 'Isolation'}</p>
-                {data.secondary && (
-                    <p><strong>Secondary muscles:</strong> {data.secondary}</p>
-                )}
+                <p><strong>{training.type}:</strong> {data.type === 'compound' ? training.compound : training.isolation}</p>
+                <p><strong>{training.secondaryMuscles}:</strong> {data.secondary ? data.secondary : training.none}</p>
             </div>
             <div className={styles.imgWrapper}>
-                <img
+                <Image
+                    className={styles.image}
                     src={data.image}
                     alt={data.name}
-                    className={styles.image}
+                    unoptimized
+                    fill
                 />
+
             </div>
             <p className={styles.description}>{data.description}</p>
             {data.video && (

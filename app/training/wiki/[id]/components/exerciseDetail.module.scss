@@ -16,23 +16,33 @@
 }
 
 .image {
-  margin: 0 auto;
-  width: auto;
-  max-height: 200px;
+  //margin: 0 auto;
+  //width: auto;
+  //max-height: 200px;
+  object-fit: cover
 }
 
 .description {
-  margin: 16px 0;
+  margin: 16px 0 24px;
 }
 
 .imgWrapper {
   display: flex;
   justify-content: center;
+  height: 200px;
+  position: relative;
+
+  @media only screen and (min-width: 500px) {
+    height: 300px;
+  }
 }
 
 .videoWrapper {
+  height: 300px;
+
   iframe {
     width: 100%;
+    height: 100%;
   }
   padding-bottom: 16px;
 }

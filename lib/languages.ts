@@ -25,6 +25,7 @@ export const getLanguages = async (value: string) => {
             allUsers: 'All users',
             edit: 'Edit',
             save: 'Save',
+            none: 'None',
         },
         settings: {
             language: 'Language',
@@ -65,6 +66,9 @@ export const getLanguages = async (value: string) => {
             confirm: 'Confirm',
             createProgram: 'Create new program',
             myPrograms: 'My programs',
+            secondaryMuscles: 'Secondary muscles',
+            compound: 'Compound',
+            none: 'None',
         },
     };
 
@@ -132,6 +136,10 @@ export const getLanguages = async (value: string) => {
             confirm: 'Подтвердить',
             createProgram: 'Создать новую программу',
             myPrograms: 'Мои программы',
+            secondaryMuscles: 'Вторичные мышцы',
+            compound: 'Многосуставное',
+            isolation: 'Изоляционное',
+            none: 'Нету',
         }
     };
 
@@ -199,6 +207,10 @@ export const getLanguages = async (value: string) => {
             confirm: 'Підтвердити',
             createProgram: 'Створити нову програму',
             myPrograms: 'Мої програми',
+            secondaryMuscles: 'Вторинні м\'язи',
+            compound: 'Багатосуставне',
+            isolation: 'Ізоляційне',
+            none: 'Немає',
         }
     };
 

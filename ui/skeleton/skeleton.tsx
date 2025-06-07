@@ -156,6 +156,19 @@ export function ExerciseListSkeleton() {
     )
 }
 
+export function ExerciseSkeleton() {
+    return (
+        <div className={styles.exercise}>
+            <span className={styles.title}/>
+            <span className={styles.exercise__row}/>
+            <span className={styles.exercise__row}/>
+            <span className={styles.exercise__image}/>
+            <span className={styles.exercise__text}/>
+            <span className={styles.exercise__video}/>
+        </div>
+    )
+}
+
 export function ProgramsList() {
     return (
         <div>
@@ -164,8 +177,9 @@ export function ProgramsList() {
             <ul className={styles.programList__list}>
                 <li  className={styles.programList__item}/>
                 <li  className={styles.programList__item}/>
-                <li  className={styles.programList__item}/>
             </ul>
         </div>
     )
 }
+
+

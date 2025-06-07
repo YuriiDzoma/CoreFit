@@ -11,14 +11,20 @@ import HeaderNavigation from './headerNavigation';
 
 import {useFriendRequestStore} from '@/store/useFriendRequestStore';
 import React, {useEffect} from 'react';
+import {useRouter} from "next/navigation";
 
 const Header = ({session}: { session: Session | null }) => {
     const userId = useAppSelector(getUserId);
     const {base} = useAppSelector(getText);
     const {width} = useWindowSize();
     const isDark = useAppSelector(getIsDarkTheme);
+    const router = useRouter();
 
     const {requests, subscribeToRealtime} = useFriendRequestStore();
+
+    const onBack = () => {
+        router.back()
+    }
 
     useEffect(() => {
         if (userId) {
@@ -28,7 +34,7 @@ const Header = ({session}: { session: Session | null }) => {
 
     return (
         <div className={styles.header}>
-            {userId && width < 1024 && <button className={styles.back}>
+            {userId && width < 1024 && <button onClick={() => onBack()} className={styles.back}>
                 <Image
                     src={isDark ? '/icons/backWhite.svg' : '/icons/backDark.svg'}
                     width={32}

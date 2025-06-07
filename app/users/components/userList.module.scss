@@ -47,3 +47,11 @@
     }
   }
 }
+
+@media only screen and (min-width: 768px) {
+  .users ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 16px 32px;
+  }
+}
