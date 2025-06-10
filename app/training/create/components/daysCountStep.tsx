@@ -28,17 +28,6 @@ export const DaysCountStep: React.FC<Props> = ({ value, onChange, onNext, onBack
     return (
         <div className={styles.days}>
             <h3 className={styles.create__title}>{training.changeDay}</h3>
-            {/*<Box sx={{ width: '100%', maxWidth: 400, margin: '20px auto' }}>*/}
-            {/*    <Slider*/}
-            {/*        aria-label="DaysCount"*/}
-            {/*        value={value}*/}
-            {/*        onChange={(e, val) => onChange(val as number)}*/}
-            {/*        step={1}*/}
-            {/*        min={1}*/}
-            {/*        max={7}*/}
-            {/*        marks*/}
-            {/*    />*/}
-            {/*</Box>*/}
             <div className={styles.difficulty__content}>
                 <Box
                     sx={{

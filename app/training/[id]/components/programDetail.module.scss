@@ -1,3 +1,130 @@
 .detail {
 
+  &__info {
+    margin: 16px 0;
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      font-weight: 600;
+    }
+  }
+}
+
+.programDays:has(span) {
+  max-width: 35%;
+}
+
+.programDays:has(img) {
+  max-width: 20%;
+}
+
+.programDays {
+  h3 {
+    margin-bottom: 8px;
+  }
+  h3::first-letter {
+    text-transform: uppercase;
+  }
+
+  ul {
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+  }
+
+  span, p {
+    font-size: 14px;
+    padding: 2px 0;
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  li {
+    font-size: 14px;
+    height: 20px;
+    position: relative;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+  }
+
+  li:has(span) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      overflow: unset;
+
+      span {
+        overflow: unset;
+        background-color: var(--button-bg);
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 2px 15px 2px 0;
+        border-radius: 2px;
+      }
+    }
+  }
+
+  li:has(img) {
+    height: auto;
+
+    div {
+      display: flex;
+      align-items: center;
+      column-gap: 4px;
+    }
+  }
+}
+
+.tabBox {
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.tab {
+  position: relative;
+  border: 1px solid var(--border-color);
+
+  p {
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 8px 0;
+    transition: all .2s;
+    width: 50px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+  }
+
+  input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+}
+
+.tab:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.tab:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.tab:has(input:checked) p {
+  background-color: var(--border-color);
+  color: #fff;
 }

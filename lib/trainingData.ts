@@ -125,6 +125,45 @@ export const fetchExerciseById = async (
     };
 };
 
+export const fetchExercisesByIds = async (
+    ids: string[],
+    lang: 'eng' | 'ukr' | 'rus'
+): Promise<Record<string, { name: string; image: string }>> => {
+    const supabase = createClient();
+
+    if (!ids.length) return {};
+
+    const fieldMap = {
+        eng: 'name_en',
+        ukr: 'name_uk',
+        rus: 'name_ru',
+    };
+
+    const nameField = fieldMap[lang];
+
+    const { data, error } = await supabase
+        .from('exercises')
+        .select(`id, ${nameField}, image_url`)
+        .in('id', ids);
+
+    if (error || !data) {
+        console.error('Error fetching exercises by IDs:', error?.message);
+        return {};
+    }
+
+    const map: Record<string, { name: string; image: string }> = {};
+
+    data.forEach((ex: Record<string, any>) => {
+        map[ex.id] = {
+            name: ex[nameField],
+            image: ex.image_url,
+        };
+    });
+
+
+    return map;
+};
+
 export const createTrainingProgram = async (
     userId: string,
     title: string,
@@ -134,7 +173,6 @@ export const createTrainingProgram = async (
 ): Promise<string | null> => {
     const supabase = createClient();
 
-    // Створення програми
     const { data: program, error: programError } = await supabase
         .from('programs')
         .insert([{ user_id: userId, title, type, level, days_count: days.length }])
@@ -146,7 +184,6 @@ export const createTrainingProgram = async (
         return null;
     }
 
-    // Створення днів
     const daysToInsert = days.map((d) => ({
         program_id: program.id,
         day_number: d.dayNumber,
@@ -163,10 +200,8 @@ export const createTrainingProgram = async (
         return null;
     }
 
-    // Карта day_number -> day_id
     const dayIdMap = new Map(insertedDays.map((d) => [d.day_number, d.id]));
 
-    // Створення вправ
     const exercisesToInsert = days.flatMap((day) =>
         day.exercises.map((exerciseId, index) => ({
             day_id: dayIdMap.get(day.dayNumber),

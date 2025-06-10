@@ -51,3 +51,4 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
         days: normalizedDays,
     };
 };
+
