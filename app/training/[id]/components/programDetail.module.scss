@@ -1,4 +1,12 @@
 .detail {
+  max-height: calc(100vh - 155px);
+  height: calc(100vh - 155px);
+  overflow-y: auto;
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+  }
 
   &__info {
     margin: 16px 0;
@@ -22,6 +30,7 @@
 .programDays {
   h3 {
     margin-bottom: 8px;
+    height: 20px;
   }
   h3::first-letter {
     text-transform: uppercase;
@@ -36,6 +45,8 @@
 
   span, p {
     font-size: 14px;
+    display: block;
+    height: 20px;
     padding: 2px 0;
     overflow: hidden;
     position: relative;

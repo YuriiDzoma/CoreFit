@@ -191,7 +191,7 @@ export const getLanguages = async (value: string) => {
             crossfitInfo: 'CrossFit - змішане тренування, аеробне + анаеробне',
             selectType: 'Виберіть тип програми',
             beginner: 'Початківець',
-            intermediate: 'Середній рівень',
+            intermediate: 'Середній',
             advanced: 'Просунутий',
             expert: 'Експерт',
             professional: 'Професійний',

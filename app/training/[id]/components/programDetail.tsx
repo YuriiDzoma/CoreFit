@@ -9,6 +9,8 @@ import ProgramDaysList from "./programDaysList";
 import {useAppSelector} from "../../../hooks/redux";
 import {getText} from "../../../../store/selectors";
 import ProgramTabs from "./programTabs";
+import TrainingHistory from "./trainingHistory/trainingHistory";
+import TrainingProcessing from "./trainingProcessing/trainingProcessing";
 
 const ProgramDetail = () => {
     const { training } = useAppSelector(getText);
@@ -16,6 +18,8 @@ const ProgramDetail = () => {
     const [program, setProgram] = useState<ProgramFull | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [activeTab, setActiveTab] = useState<number>(2);
+    const [results, setResults] = useState<Record<string, string>>({});
+
 
     useEffect(() => {
         const loadProgram = async () => {
@@ -58,8 +62,9 @@ const ProgramDetail = () => {
 
             <div className={styles.detail__content}>
                 <ProgramDaysList program={program} activeTab={activeTab} />
+                <TrainingHistory />
+                <TrainingProcessing program={program} results={results} setResults={setResults} />
             </div>
-
 
         </div>
     );
