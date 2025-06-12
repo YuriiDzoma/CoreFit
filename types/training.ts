@@ -20,6 +20,7 @@ export interface ProgramFull {
     type: string;
     level: string;
     days: {
+        id: string;
         day_number: number;
         exercises: string[];
     }[];

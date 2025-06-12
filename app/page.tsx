@@ -1,3 +1,8 @@
+import React from "react";
+import TrainingHistories from "./components/news/trainingHistories";
+
 export default function Home() {
-  return <p>upd 0.3.3</p>;
+  return <div>
+    <TrainingHistories />
+  </div>;
 }

@@ -1,0 +1,51 @@
+.process {
+  max-width: 90px;
+  min-width: 90px;
+  width: 90px;
+
+  input {
+    height: 20px;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    width: 100%;
+    color: var(--text-color);
+    padding-left: 4px;
+    font-size: 12px;
+  }
+
+  &__date {
+    margin-bottom: 8px;
+    height: 30px !important;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+    margin-bottom: 16px;
+  }
+}
+
+.bigField {
+  height: 51px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.error {
+  border: 1px solid #F17C7C;;
+}
+
+.processActions {
+  display: flex;
+
+  button {
+    width: 100%;
+    padding: 4px 8px;
+
+    span {
+      font-size: 14px;
+    }
+  }
+}

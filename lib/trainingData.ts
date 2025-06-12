@@ -159,8 +159,6 @@ export const fetchExercisesByIds = async (
             image: ex.image_url,
         };
     });
-
-
     return map;
 };
 
@@ -220,4 +218,79 @@ export const createTrainingProgram = async (
     }
 
     return program.id;
+};
+
+export const saveTrainingResult = async (
+    userId: string,
+    dayId: string,
+    date: string,
+    values: Record<string, string>
+): Promise<boolean> => {
+    const supabase = createClient();
+
+    const { error } = await supabase.from('training_history').insert([
+        {
+            user_id: userId,
+            day_id: dayId,
+            date,
+            values,
+        },
+    ]);
+
+    if (error) {
+        console.error('Error saving training result:', error.message);
+        return false;
+    }
+
+    return true;
+};
+
+export const fetchTrainingHistory = async (
+    dayId: string
+): Promise<{ date: string; values: Record<string, string> }[]> => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('training_history')
+        .select('date, values')
+        .eq('day_id', dayId)
+        .order('date', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching training history:', error.message);
+        return [];
+    }
+
+    return data as { date: string; values: Record<string, string> }[];
+};
+
+export const fetchAllTrainingHistories = async () => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('training_history')
+        .select(`
+            id,
+            date,
+            values,
+            created_at,
+            profiles (
+                username,
+                avatar_url
+            ),
+            program_days (
+                day_number,
+                programs (
+                    title
+                )
+            )
+        `)
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching training histories:', error.message);
+        return [];
+    }
+
+    return data;
 };

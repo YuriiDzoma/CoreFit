@@ -29,7 +29,7 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
 
     const { data, error } = await supabase
         .from('programs')
-        .select(`id, title, type, level, days:program_days(day_number, exercises:program_exercises(exercise_id))`)
+        .select(`id, title, type, level, days:program_days(id, day_number, exercises:program_exercises(exercise_id))`)
         .eq('id', id)
         .single();
 
@@ -39,6 +39,7 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
     }
 
     const normalizedDays = (data.days || []).map((day: any) => ({
+        id: day.id,
         day_number: day.day_number,
         exercises: (day.exercises || []).map((ex: any) => ex.exercise_id),
     }));
@@ -51,4 +52,5 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
         days: normalizedDays,
     };
 };
+
 

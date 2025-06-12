@@ -66,7 +66,6 @@ const ProgramDaysList = ({ program, activeTab }: ProgramDaysListTypes) => {
                             </li>
                         );
                     })}
-
                 </ul>
             ))}
         </div>

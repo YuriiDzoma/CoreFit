@@ -32,6 +32,9 @@ importers:
       '@types/react-redux':
         specifier: ^7.1.34
         version: 7.1.34
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       i:
         specifier: ^0.3.7
         version: 0.3.7
