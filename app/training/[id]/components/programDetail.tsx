@@ -11,6 +11,10 @@ import {getText} from "../../../../store/selectors";
 import ProgramTabs from "./programTabs";
 import TrainingHistory from "./trainingHistory/trainingHistory";
 import TrainingProcessing from "./trainingProcessing/trainingProcessing";
+import {fetchTrainingHistory} from "../../../../lib/trainingData";
+
+type HistoryMap = Record<string, { date: string; values: Record<string, string> }[]>;
+
 
 const ProgramDetail = () => {
     const { training } = useAppSelector(getText);
@@ -18,6 +22,23 @@ const ProgramDetail = () => {
     const [program, setProgram] = useState<ProgramFull | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [activeTab, setActiveTab] = useState<number>(2);
+
+    const [history, setHistory] = useState<HistoryMap>({});
+
+    const loadAllHistory = async () => {
+        if (!program?.days) return; // запобіжник
+        const map: HistoryMap = {};
+        for (const day of program.days) {
+            const data = await fetchTrainingHistory(day.id);
+            map[day.id] = data;
+        }
+        setHistory(map);
+    };
+
+
+    useEffect(() => {
+        loadAllHistory();
+    }, [program]);
 
 
     useEffect(() => {
@@ -61,8 +82,8 @@ const ProgramDetail = () => {
 
             <div className={styles.detail__content}>
                 <ProgramDaysList program={program} activeTab={activeTab} />
-                <TrainingHistory program={program} activeTab={activeTab} />
-                <TrainingProcessing program={program}  activeTab={activeTab} />
+                <TrainingHistory program={program} activeTab={activeTab} history={history} />
+                <TrainingProcessing program={program}  activeTab={activeTab} onComplete={loadAllHistory}/>
             </div>
 
         </div>

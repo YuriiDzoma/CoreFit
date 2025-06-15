@@ -1,9 +1,9 @@
-import { createClient } from '@/utils/supabase/client';
+import {createClient} from '@/utils/supabase/client';
 
 export const getMuscleGroupIdByName = async (group: string): Promise<string | null> => {
     const supabase = createClient();
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
         .from('muscle_groups')
         .select('id')
         .eq('name', group)
@@ -43,7 +43,7 @@ export const fetchExercisesByGroup = async (
         query = query.eq('muscle_group_id', groupId);
     }
 
-    const { data, error } = await query;
+    const {data, error} = await query;
 
     if (error || !data) {
         console.error('Error fetching exercises:', error?.message);
@@ -102,7 +102,7 @@ export const fetchExerciseById = async (
         'type',
     ].join(',');
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
         .from('exercises')
         .select(selectFields)
         .eq('id', id)
@@ -141,7 +141,7 @@ export const fetchExercisesByIds = async (
 
     const nameField = fieldMap[lang];
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
         .from('exercises')
         .select(`id, ${nameField}, image_url`)
         .in('id', ids);
@@ -171,9 +171,9 @@ export const createTrainingProgram = async (
 ): Promise<string | null> => {
     const supabase = createClient();
 
-    const { data: program, error: programError } = await supabase
+    const {data: program, error: programError} = await supabase
         .from('programs')
-        .insert([{ user_id: userId, title, type, level, days_count: days.length }])
+        .insert([{user_id: userId, title, type, level, days_count: days.length}])
         .select()
         .single();
 
@@ -188,7 +188,7 @@ export const createTrainingProgram = async (
         title: `Day ${d.dayNumber}`,
     }));
 
-    const { data: insertedDays, error: daysError } = await supabase
+    const {data: insertedDays, error: daysError} = await supabase
         .from('program_days')
         .insert(daysToInsert)
         .select();
@@ -208,7 +208,7 @@ export const createTrainingProgram = async (
         }))
     );
 
-    const { error: exercisesError } = await supabase
+    const {error: exercisesError} = await supabase
         .from('program_exercises')
         .insert(exercisesToInsert);
 
@@ -220,41 +220,17 @@ export const createTrainingProgram = async (
     return program.id;
 };
 
-export const saveTrainingResult = async (
-    userId: string,
-    dayId: string,
-    date: string,
-    values: Record<string, string>
-): Promise<boolean> => {
-    const supabase = createClient();
-
-    const { error } = await supabase.from('training_history').insert([
-        {
-            user_id: userId,
-            day_id: dayId,
-            date,
-            values,
-        },
-    ]);
-
-    if (error) {
-        console.error('Error saving training result:', error.message);
-        return false;
-    }
-
-    return true;
-};
 
 export const fetchTrainingHistory = async (
     dayId: string
 ): Promise<{ date: string; values: Record<string, string> }[]> => {
     const supabase = createClient();
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
         .from('training_history')
         .select('date, values')
         .eq('day_id', dayId)
-        .order('date', { ascending: false });
+        .order('date', {ascending: false});
 
     if (error) {
         console.error('Error fetching training history:', error.message);
@@ -267,7 +243,7 @@ export const fetchTrainingHistory = async (
 export const fetchAllTrainingHistories = async () => {
     const supabase = createClient();
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
         .from('training_history')
         .select(`
             id,
@@ -285,7 +261,7 @@ export const fetchAllTrainingHistories = async () => {
                 )
             )
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', {ascending: false});
 
     if (error) {
         console.error('Error fetching training histories:', error.message);
@@ -293,4 +269,140 @@ export const fetchAllTrainingHistories = async () => {
     }
 
     return data;
+};
+
+
+export const fetchDrafts = async (
+    userId: string,
+    programExerciseIds: string[]
+): Promise<Record<string, string>> => {
+    const supabase = createClient();
+
+    const {data, error} = await supabase
+        .from('exercise_drafts')
+        .select('program_exercise_id, value')
+        .eq('user_id', userId)
+        .in('program_exercise_id', programExerciseIds);
+
+    if (error) {
+        console.error('Error fetching drafts:', error.message);
+        return {};
+    }
+
+    const map: Record<string, string> = {};
+    data.forEach((draft) => {
+        map[draft.program_exercise_id] = draft.value;
+    });
+
+    return map;
+};
+
+export const saveDraft = async (
+    userId: string,
+    programExerciseId: string,
+    dayId: string,
+    value: string
+): Promise<boolean> => {
+    const supabase = createClient();
+
+    const { error } = await supabase
+        .from('exercise_drafts')
+        .upsert(
+            [
+                {
+                    user_id: userId,
+                    program_exercise_id: programExerciseId,
+                    day_id: dayId,
+                    value,
+                },
+            ],
+            {
+                onConflict: 'user_id,program_exercise_id',
+            }
+        );
+
+    if (error) {
+        console.error('Error saving draft:', error.message);
+        return false;
+    }
+
+    return true;
+};
+
+
+
+export const completeDay = async (
+    userId: string,
+    dayId: string,
+    date: string
+): Promise<boolean> => {
+    const supabase = createClient();
+
+    const {data: drafts, error: fetchError} = await supabase
+        .from('exercise_drafts')
+        .select('program_exercise_id, value')
+        .eq('user_id', userId)
+        .eq('day_id', dayId);
+
+    if (fetchError || !drafts) {
+        console.error('Error fetching drafts for completion:', fetchError?.message);
+        return false;
+    }
+
+    const valuesMap = Object.fromEntries(
+        drafts
+            .filter((d) => d.value?.trim())
+            .map((d) => [d.program_exercise_id, d.value])
+    );
+
+    // 1. insert into exercise_logs
+    const logs = Object.entries(valuesMap).map(([programExerciseId, value]) => ({
+        program_exercise_id: programExerciseId,
+        user_id: userId,
+        date,
+        weight: value,
+    }));
+
+    const {error: insertLogsError} = await supabase
+        .from('exercise_logs')
+        .insert(logs);
+
+    if (insertLogsError) {
+        console.error('Error inserting logs:', insertLogsError.message);
+        return false;
+    }
+
+    // 2. insert into training_history
+    const {error: insertHistoryError} = await supabase
+        .from('training_history')
+        .insert([
+            {
+                user_id: userId,
+                day_id: dayId,
+                date,
+                values: valuesMap,
+            },
+        ]);
+
+    if (insertHistoryError) {
+        console.error('Error inserting into training_history:', insertHistoryError.message);
+        return false;
+    }
+
+    // 3. delete from exercise_drafts
+    const idsToDelete = Object.keys(valuesMap);
+
+    const {error: deleteError} = await supabase
+        .from('exercise_drafts')
+        .delete()
+        .eq('user_id', userId)
+        .eq('day_id', dayId)
+        .in('program_exercise_id', idsToDelete);
+
+    if (deleteError) {
+        console.error('Error deleting drafts:', deleteError.message);
+        return false;
+    }
+
+    return true;
 };

@@ -34,7 +34,8 @@ const ProgramDaysList = ({ program, activeTab }: ProgramDaysListTypes) => {
 
     useEffect(() => {
         const load = async () => {
-            const ids = [...new Set(program.days.flatMap((d) => d.exercises))];
+            const ids = [...new Set(program.days.flatMap((d) => d.exercises.map(e => e.id)))];
+
             if (!language || !ids.length) return;
 
             const map = await fetchExercisesByIds(ids, language as 'eng' | 'ukr' | 'rus');
@@ -49,23 +50,23 @@ const ProgramDaysList = ({ program, activeTab }: ProgramDaysListTypes) => {
             {program.days.map((day) => (
                 <ul key={day.day_number}>
                     <h3>{training.day} {day.day_number}</h3>
-                    {day.exercises.map((exId, idx) => {
-                        const ex = exerciseMap[exId];
+                    {day.exercises.map((exercise, idx) => {
+                        const ex = exerciseMap[exercise.id];
                         return (
-                            <li className={`${handleView(activeTab)}`}  key={idx} title={ex?.name || exId}>
+                            <li key={exercise.programExerciseId} title={ex?.name || exercise.id} className={handleView(activeTab)}>
                                 {activeTab === 1 && (
-                                    <div>{idx + 1}. <img src={ex.image} alt={ex.name} width={50} height={50} /></div>
-
+                                    <div>{idx + 1}. <img src={ex?.image} alt={ex?.name} width={50} height={50} /></div>
                                 )}
                                 {activeTab === 2 && (
-                                    <span>{idx + 1}. {ex?.name || exId}</span>
+                                    <span>{idx + 1}. {ex?.name || exercise.id}</span>
                                 )}
                                 {activeTab === 3 && (
-                                    <p>{idx + 1}. {ex?.name || exId}</p>
+                                    <p>{idx + 1}. {ex?.name || exercise.id}</p>
                                 )}
                             </li>
                         );
                     })}
+
                 </ul>
             ))}
         </div>

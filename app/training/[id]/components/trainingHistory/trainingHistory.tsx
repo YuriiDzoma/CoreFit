@@ -1,32 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styles from './trainingHistory.module.scss';
 import {ProgramFull} from '@/types/training';
-import {fetchTrainingHistory} from '@/lib/trainingData';
 
 interface Props {
     program: ProgramFull;
     activeTab: number,
+    history: HistoryMap;
 }
 
 type HistoryMap = Record<string, { date: string; values: Record<string, string> }[]>;
 
-const TrainingHistory: React.FC<Props> = ({program, activeTab}) => {
-    const [history, setHistory] = useState<HistoryMap>({});
-
-    useEffect(() => {
-        const loadAll = async () => {
-            const map: HistoryMap = {};
-            for (const day of program.days) {
-                const data = await fetchTrainingHistory(day.id);
-                console.log(data)
-                map[day.id] = data;
-            }
-            setHistory(map);
-        };
-        loadAll();
-    }, [program]);
+const TrainingHistory: React.FC<Props> = ({program, activeTab, history}) => {
 
     return (
         <div className={styles.trainingHistory}>
@@ -52,26 +38,27 @@ const TrainingHistory: React.FC<Props> = ({program, activeTab}) => {
                                     )) : (<span className={styles.dateCell}/>)}
                             </div>
 
-                            {day.exercises.map((exId, exIdx) => (
+                            {day.exercises.map((exercise, exIdx) => (
                                 <li
-                                    key={exId}
-                                    className={activeTab === 1
-                                        ? `${styles.exerciseRow} ${styles.bigField}`
-                                        : styles.exerciseRow}
+                                    key={exercise.programExerciseId}
+                                    className={
+                                        activeTab === 1
+                                            ? `${styles.exerciseRow} ${styles.bigField}`
+                                            : styles.exerciseRow
+                                    }
                                 >
-
                                     {records.length > 0
                                         ? records.map((record, i) => (
                                             <p key={i} className={styles.valueCell}>
-                                                <span>{record.values[exId] || ''}</span>
+                                                <span>{record.values[exercise.programExerciseId] || ''}</span>
                                             </p>
                                         ))
                                         : (
-                                            <span className={styles.valueCell}/>
-                                        )
-                                    }
+                                            <span className={styles.valueCell} />
+                                        )}
                                 </li>
                             ))}
+
                         </ul>
                     </div>
                 );

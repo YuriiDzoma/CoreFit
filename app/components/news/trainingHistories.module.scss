@@ -1,0 +1,56 @@
+.histories {
+  //border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.historyCard {
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+
+  }
+}
+
+.datBox {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+  justify-content: center;
+}
+
+.date {
+  font-weight: 600;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  justify-content: center;
+
+  p {
+    font-size: 16px;
+  }
+}
+
+.exerciseList {
+  li {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+
+    span {
+      font-weight: 700;
+    }
+  }
+}

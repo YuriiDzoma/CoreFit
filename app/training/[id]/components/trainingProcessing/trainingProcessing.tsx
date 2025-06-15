@@ -1,48 +1,65 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './trainingProcessing.module.scss';
 import { ProgramFull } from '../../../../../types/training';
 import { useForm } from 'react-hook-form';
-import { saveTrainingResult } from '@/lib/trainingData';
 import {getUserId} from "../../../../../store/selectors";
 import {useAppSelector} from "../../../../hooks/redux";
+import {completeDay, fetchDrafts, saveDraft} from "../../../../../lib/trainingData";
+import Preloader from "../../../../../ui/preloader/Preloader";
 
 interface ProgramDaysListTypes {
     program: ProgramFull;
     activeTab: number;
+    onComplete: () => void;
 }
 
 type FormValues = {
     [exerciseId: string]: string;
 };
 
-const TrainingProcessing = ({ program, activeTab }: ProgramDaysListTypes) => {
+const TrainingProcessing = ({ program, activeTab, onComplete }: ProgramDaysListTypes) => {
+    const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const userId = useAppSelector(getUserId);
     const { register, handleSubmit, setValue, watch } = useForm<FormValues>();
     const [dates, setDates] = useState<Record<number, string>>({});
     const [submittedDays, setSubmittedDays] = useState<Record<number, boolean>>({});
 
-    const onSubmitDay = async (dayIndex: number, dayId: string, exerciseIds: string[]) => {
-        const formValues = watch();
-        const filtered: Record<string, string> = {};
 
-        exerciseIds.forEach((id) => {
-            if (formValues[id]?.trim()) {
-                filtered[id] = formValues[id];
+    useEffect(() => {
+        const loadDrafts = async () => {
+            if (!userId) return;
+
+            const allIds = program.days.flatMap(day => day.exercises.map(e => e.programExerciseId));
+            const drafts = await fetchDrafts(userId, allIds);
+
+            for (const [programExerciseId, value] of Object.entries(drafts)) {
+                setValue(programExerciseId, value);
             }
-        });
+        };
 
+        loadDrafts();
+    }, [userId, program, setValue]);
+
+
+    const onSubmitDay = async (dayIndex: number, dayId: string) => {
         const date = dates[dayIndex];
-        if (!userId || !date || Object.keys(filtered).length === 0) return;
-
-        const success = await saveTrainingResult(userId, dayId, date, filtered);
-
-
+        if (!userId || !date) return;
+        setIsPreloader(true);
+        const success = await completeDay(userId, dayId, date);
         if (success) {
             setSubmittedDays((prev) => ({ ...prev, [dayIndex]: true }));
+            program.days[dayIndex].exercises.forEach((exercise) => {
+                setValue(exercise.programExerciseId, '');
+            });
+            setDates((prev) => ({ ...prev, [dayIndex]: '' }));
+            onComplete();
+            setIsPreloader(false);
         }
+
     };
+
 
     return (
         <div className={styles.process}>
@@ -55,22 +72,27 @@ const TrainingProcessing = ({ program, activeTab }: ProgramDaysListTypes) => {
                         onChange={(e) => setDates((prev) => ({ ...prev, [index]: e.target.value }))}
                     />
 
-                    {day.exercises.map((exId, idx) => (
-                        <li key={exId} className={activeTab === 1 ? styles.bigField : ''}>
+                    {day.exercises.map((exercise, idx) => (
+                        <li key={exercise.programExerciseId} className={activeTab === 1 ? styles.bigField : ''}>
                             <input
                                 className={styles.input}
                                 style={activeTab === 1 ? { height: '30px' } : undefined}
                                 placeholder="XXX/YYxZ"
-                                {...register(exId)}
+                                {...register(exercise.programExerciseId)}
+                                onBlur={(e) => {
+                                    if (!userId) return;
+                                    saveDraft(userId, exercise.programExerciseId, day.id, e.target.value);
+                                }}
                             />
                         </li>
                     ))}
+
 
                     <div className={styles.processActions}>
                         <button
                             type="button"
                             className={'button'}
-                            onClick={() => onSubmitDay(index, day.id, day.exercises)}
+                            onClick={() => onSubmitDay(index, day.id)}
                             disabled={submittedDays[index]}
                         >
                             <span>Complete</span>
@@ -78,6 +100,7 @@ const TrainingProcessing = ({ program, activeTab }: ProgramDaysListTypes) => {
                     </div>
                 </ul>
             ))}
+            {isPreloader && <Preloader />}
         </div>
     );
 };

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import styles from './trainingHistories.module.scss';
 import { useAppSelector } from "../../hooks/redux";
-import { getLanguage } from "../../../store/selectors";
+import {getLanguage, getText} from "../../../store/selectors";
 import {
     fetchAllTrainingHistories,
     fetchExercisesByIds
@@ -13,6 +13,7 @@ const TrainingHistories = () => {
     const [histories, setHistories] = useState<any[]>([]);
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
     const language = useAppSelector(getLanguage);
+    const { training } = useAppSelector(getText)
 
     useEffect(() => {
         const load = async () => {
@@ -31,29 +32,36 @@ const TrainingHistories = () => {
         load();
     }, [language]);
 
+
     return (
         <div className={styles.histories}>
             {histories.map((entry) => (
                 <div key={entry.id} className={styles.historyCard}>
-                    <div className={styles.userInfo}>
-                        <img src={entry.profiles.avatar_url} alt="avatar" />
-                        <p>{entry.profiles.username}</p>
+                    <div className={styles.historyCard__header}>
+                        <div className={styles.userInfo}>
+                            <img src={entry.profiles.avatar_url} width='32px' height={'32px'} alt="avatar" />
+                            <p>{entry.profiles.username}</p>
+                        </div>
+
+                        <div className={styles.datBox}>
+                            <span>{training.finished}</span>
+                            <p className={styles.date}>
+                                {new Date(entry.date).toLocaleString('uk-UA', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: '2-digit',
+                                })}
+                            </p>
+                        </div>
                     </div>
 
-                    <p className={styles.date}>
-                        {new Date(entry.date).toLocaleString('uk-UA', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })}
-                    </p>
+
+
 
                     <ul className={styles.exerciseList}>
                         {Object.entries(entry.values as Record<string, string>).map(([exId, value]) => (
                             <li key={exId}>
-                                <strong>{exerciseMap[exId]?.name || exId}</strong>: {value}
+                                <p>{exerciseMap[exId]?.name || exId}:</p><span>{value}</span>
                             </li>
                         ))}
                     </ul>

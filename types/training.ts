@@ -22,6 +22,6 @@ export interface ProgramFull {
     days: {
         id: string;
         day_number: number;
-        exercises: string[];
+        exercises: { id: string; programExerciseId: string }[];
     }[];
 }

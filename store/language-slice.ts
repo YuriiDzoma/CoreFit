@@ -70,6 +70,7 @@ const initialState = {
             compound: 'Compound',
             isolation: 'Isolation',
             none: 'None',
+            finished: 'Finished training in -',
         },
     }
 };

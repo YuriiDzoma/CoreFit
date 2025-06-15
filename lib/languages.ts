@@ -69,6 +69,7 @@ export const getLanguages = async (value: string) => {
             secondaryMuscles: 'Secondary muscles',
             compound: 'Compound',
             none: 'None',
+            finished: 'Finished training in -',
         },
     };
 
@@ -140,6 +141,7 @@ export const getLanguages = async (value: string) => {
             compound: 'Многосуставное',
             isolation: 'Изоляционное',
             none: 'Нету',
+            finished: 'Закончил тренировку в -'
         }
     };
 
@@ -211,6 +213,7 @@ export const getLanguages = async (value: string) => {
             compound: 'Багатосуставне',
             isolation: 'Ізоляційне',
             none: 'Немає',
+            finished: 'Закінчив тренування в -'
         }
     };
 
