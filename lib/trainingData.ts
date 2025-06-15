@@ -406,3 +406,44 @@ export const completeDay = async (
 
     return true;
 };
+
+export const fetchProgramExerciseMap = async (
+    ids: string[]
+): Promise<Record<string, string>> => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('program_exercises')
+        .select('id, exercise_id')
+        .in('id', ids);
+
+    if (error || !data) {
+        console.error('Error fetching program_exercise map:', error.message);
+        return {};
+    }
+
+    const map: Record<string, string> = {};
+    data.forEach((row) => {
+        map[row.id] = row.exercise_id;
+    });
+
+    return map;
+};
+
+export const mapProgramExerciseToExerciseMeta = async (
+    programExerciseIds: string[],
+    lang: 'eng' | 'ukr' | 'rus'
+): Promise<Record<string, { name: string; image: string }>> => {
+    const programToExerciseMap = await fetchProgramExerciseMap(programExerciseIds);
+    const exerciseIds = Array.from(new Set(Object.values(programToExerciseMap)));
+    const exerciseMap = await fetchExercisesByIds(exerciseIds, lang);
+
+    const finalMap: Record<string, { name: string; image: string }> = {};
+    for (const [progId, exId] of Object.entries(programToExerciseMap)) {
+        if (exerciseMap[exId]) {
+            finalMap[progId] = exerciseMap[exId];
+        }
+    }
+
+    return finalMap;
+};

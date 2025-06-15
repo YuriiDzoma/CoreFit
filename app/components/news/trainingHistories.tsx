@@ -8,6 +8,7 @@ import {
     fetchAllTrainingHistories,
     fetchExercisesByIds
 } from "@/lib/trainingData";
+import {fetchProgramExerciseMap} from "../../../lib/trainingData";
 
 const TrainingHistories = () => {
     const [histories, setHistories] = useState<any[]>([]);
@@ -20,21 +21,33 @@ const TrainingHistories = () => {
             const results = await fetchAllTrainingHistories();
             setHistories(results);
 
-            const allIds = Array.from(
+            const programExIds = Array.from(
                 new Set(results.flatMap((entry) => Object.keys(entry.values)))
             );
 
+            const programToExerciseMap = await fetchProgramExerciseMap(programExIds);
+
+            const exerciseIds = Array.from(new Set(Object.values(programToExerciseMap)));
+
             const lang = language === 'ua' ? 'ukr' : language;
-            const map = await fetchExercisesByIds(allIds, lang as 'eng' | 'ukr' | 'rus');
-            setExerciseMap(map);
+            const map = await fetchExercisesByIds(exerciseIds, lang as 'eng' | 'ukr' | 'rus');
+
+            const finalMap: Record<string, { name: string; image: string }> = {};
+            for (const [progId, exId] of Object.entries(programToExerciseMap)) {
+                if (map[exId]) {
+                    finalMap[progId] = map[exId];
+                }
+            }
+            setExerciseMap(finalMap);
         };
 
         load();
     }, [language]);
 
 
+
     return (
-        <div className={styles.histories}>
+        <div className={`${styles.histories} container`}>
             {histories.map((entry) => (
                 <div key={entry.id} className={styles.historyCard}>
                     <div className={styles.historyCard__header}>
@@ -55,9 +68,6 @@ const TrainingHistories = () => {
                         </div>
                     </div>
 
-
-
-
                     <ul className={styles.exerciseList}>
                         {Object.entries(entry.values as Record<string, string>).map(([exId, value]) => (
                             <li key={exId}>
@@ -65,7 +75,6 @@ const TrainingHistories = () => {
                             </li>
                         ))}
                     </ul>
-
                 </div>
             ))}
         </div>

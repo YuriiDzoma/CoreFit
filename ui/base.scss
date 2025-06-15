@@ -227,3 +227,9 @@ body:has(.popup), body:has(.menuActive) {
   color: var(--title-color);
   margin-bottom: 16px;
 }
+
+.container {
+  max-height: calc(100vh - 124px);
+  height: calc(100vh - 124px);
+  overflow-y: auto;
+}
