@@ -447,3 +447,130 @@ export const mapProgramExerciseToExerciseMeta = async (
 
     return finalMap;
 };
+
+export const updateTrainingProgram = async (
+    programId: string,
+    title: string,
+    type: string,
+    level: string,
+    days: { dayNumber: number; exercises: string[] }[]
+): Promise<boolean> => {
+    const supabase = createClient();
+
+    const { error: programError } = await supabase
+        .from('programs')
+        .update({ title, type, level, days_count: days.length })
+        .eq('id', programId);
+
+    if (programError) {
+        console.error('Error updating program:', programError.message);
+        return false;
+    }
+
+    const { data: existingDays, error: fetchDaysError } = await supabase
+        .from('program_days')
+        .select('id, day_number')
+        .eq('program_id', programId);
+
+    if (fetchDaysError || !existingDays) {
+        console.error('Error fetching existing days:', fetchDaysError?.message);
+        return false;
+    }
+
+    const dayIdMap = new Map<number, string>();
+    for (const day of existingDays) {
+        dayIdMap.set(day.day_number, day.id);
+    }
+
+    const allProgramExerciseIds = days.flatMap((d) => d.exercises);
+    const exerciseIdMap = await fetchProgramExerciseMap(allProgramExerciseIds); // { programExId: exerciseId }
+
+    for (const day of days) {
+        const dayId = dayIdMap.get(day.dayNumber);
+        if (!dayId) continue;
+
+        const { data: existingExercises, error: exErr } = await supabase
+            .from('program_exercises')
+            .select('id, exercise_id')
+            .eq('day_id', dayId)
+            .order('order_index', { ascending: true });
+
+        if (exErr) {
+            console.error('Error fetching program_exercises:', exErr.message);
+            return false;
+        }
+
+        const existing = existingExercises ?? [];
+
+        const updates = [];
+        const inserts = [];
+
+        for (let i = 0; i < day.exercises.length; i++) {
+            const programExerciseId = day.exercises[i];
+            const exerciseId = exerciseIdMap[programExerciseId] ?? programExerciseId;
+
+            if (existing[i]) {
+                if (existing[i].exercise_id !== exerciseId) {
+                    updates.push({
+                        id: existing[i].id,
+                        exercise_id: exerciseId,
+                        order_index: i + 1,
+                    });
+                } else {
+                    updates.push({
+                        id: existing[i].id,
+                        order_index: i + 1,
+                    });
+                }
+            } else {
+                inserts.push({
+                    day_id: dayId,
+                    exercise_id: exerciseId,
+                    order_index: i + 1,
+                });
+            }
+        }
+
+        if (existing.length > day.exercises.length) {
+            const idsToDelete = existing
+                .slice(day.exercises.length)
+                .map((ex) => ex.id);
+
+            if (idsToDelete.length > 0) {
+                const { error: delErr } = await supabase
+                    .from('program_exercises')
+                    .delete()
+                    .in('id', idsToDelete);
+
+                if (delErr) {
+                    console.error('Error deleting extra program_exercises:', delErr.message);
+                    return false;
+                }
+            }
+        }
+
+        if (updates.length > 0) {
+            const { error: updErr } = await supabase
+                .from('program_exercises')
+                .upsert(updates, { onConflict: 'id' });
+
+            if (updErr) {
+                console.error('Error updating program_exercises:', updErr.message);
+                return false;
+            }
+        }
+
+        if (inserts.length > 0) {
+            const { error: insErr } = await supabase
+                .from('program_exercises')
+                .insert(inserts);
+
+            if (insErr) {
+                console.error('Error inserting new program_exercises:', insErr.message);
+                return false;
+            }
+        }
+    }
+
+    return true;
+};

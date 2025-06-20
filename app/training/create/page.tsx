@@ -1,6 +1,6 @@
 import React from "react";
-import CreateProgram from "./components/createProgram";
+import CreateEditProgram from "./components/CreateEditProgram";
 
 export default function Page() {
-    return <CreateProgram />;
+    return <CreateEditProgram />;
 }

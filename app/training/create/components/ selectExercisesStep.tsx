@@ -8,13 +8,12 @@ import ExercisesChooser from "./exercisesChooser";
 
 interface Props {
     days: { dayNumber: number; exercises: string[] }[];
-    onUpdateDay: (dayIndex: number, exercises: string[], map: Record<string, string>) => void;
+    onUpdateDay: (dayIndex: number, exercises: string[], map: Record<string, { name: string; image: string }>) => void;
     onBack: () => void;
     onNext: () => void;
-    exerciseMap: Record<string, string>;
+    exerciseMap: Record<string, { name: string; image: string }>;
     isValid: boolean;
 }
-
 
 const SelectExercisesStep: React.FC<Props> = ({
                                                   days,
@@ -27,7 +26,6 @@ const SelectExercisesStep: React.FC<Props> = ({
     const { training } = useAppSelector(getText);
     const [isShowPopup, setIsShowPopup] = useState<boolean>(false);
     const [currentDayIndex, setCurrentDayIndex] = useState<number | null>(null);
-
 
     return (
         <div className={styles.exercisesStep}>
@@ -44,7 +42,10 @@ const SelectExercisesStep: React.FC<Props> = ({
                             {hasExercises && (
                                 <ul className={styles.exerciseList}>
                                     {day.exercises.map((exId, indexEx) => (
-                                        <li key={exId}><span>{indexEx + 1}. </span>{exerciseMap[exId] || exId}</li>
+                                        <li key={exId} className={!exerciseMap[exId] ? styles.unknownExercise : ''}>
+                                            <span>{indexEx + 1}. </span>
+                                            {exerciseMap[exId]?.name || `Unknown (${exId})`}
+                                        </li>
                                     ))}
                                 </ul>
                             )}
@@ -69,14 +70,13 @@ const SelectExercisesStep: React.FC<Props> = ({
                 <button onClick={onNext} className={'submit'} disabled={!isValid}>
                     {training.create}
                 </button>
-
             </div>
 
             {isShowPopup && currentDayIndex !== null && (
                 <ExercisesChooser
                     setIsShowPopup={setIsShowPopup}
                     selectedDefault={days[currentDayIndex].exercises} // ⬅️ Передаємо існуючі вправи
-                    onSelect={(selected: string[], map: Record<string, string>) => {
+                    onSelect={(selected: string[], map: Record<string, { name: string; image: string }>) => {
                         onUpdateDay(currentDayIndex as number, selected, map);
                         setIsShowPopup(false);
                     }}

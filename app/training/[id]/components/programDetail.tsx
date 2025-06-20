@@ -12,6 +12,7 @@ import ProgramTabs from "./programTabs";
 import TrainingHistory from "./trainingHistory/trainingHistory";
 import TrainingProcessing from "./trainingProcessing/trainingProcessing";
 import {fetchTrainingHistory} from "../../../../lib/trainingData";
+import Link from "next/link";
 
 type HistoryMap = Record<string, { date: string; values: Record<string, string> }[]>;
 
@@ -73,6 +74,9 @@ const ProgramDetail = () => {
     return (
         <div className={styles.detail}>
             <h2 className={'title'}>{program.title}</h2>
+            <Link className={styles.edit} href={`/training/${program.id}/edit`}>
+                <span>Редагувати</span>
+            </Link>
             <div className={styles.detail__info}>
                 <p><span>{training.type}: </span>{program.type}</p>
                 <p><span>{training.difficulty}: </span>{handleLevel(program.level)}</p>

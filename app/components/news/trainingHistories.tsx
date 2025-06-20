@@ -19,6 +19,7 @@ const TrainingHistories = () => {
     useEffect(() => {
         const load = async () => {
             const results = await fetchAllTrainingHistories();
+            console.log(results)
             setHistories(results);
 
             const programExIds = Array.from(

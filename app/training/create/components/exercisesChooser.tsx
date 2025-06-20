@@ -12,7 +12,7 @@ import Preloader from "../../../../ui/preloader/Preloader";
 
 interface ExercisesChooserProps {
     setIsShowPopup: (value: boolean) => void;
-    onSelect: (selected: string[], map: Record<string, string>) => void;
+    onSelect: (selected: string[], map: Record<string, { name: string; image: string }>) => void;
     selectedDefault?: string[];
 }
 
@@ -31,7 +31,8 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({ setIsShowPopup, onS
     }, [selectedDefault]);
 
 
-    const [exerciseMap, setExerciseMap] = useState<Record<string, string>>({});
+    const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
+
 
     useEffect(() => {
         if (!language) return;
@@ -45,7 +46,11 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({ setIsShowPopup, onS
                 setExerciseMap((prevMap) => {
                     const updated = { ...prevMap };
                     data.forEach((ex) => {
-                        updated[ex.id] = ex.name;
+                        updated[ex.id] = {
+                            name: ex.name,
+                            image: ex.image,
+                        };
+
                     });
                     return updated;
                 });

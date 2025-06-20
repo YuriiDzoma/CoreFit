@@ -3,6 +3,7 @@
   height: calc(100vh - 155px);
   overflow-y: auto;
   padding-right: 8px;
+  position: relative;
 
   &__content {
     display: flex;
@@ -19,6 +20,12 @@
       font-weight: 600;
     }
   }
+}
+
+.edit {
+  position: absolute;
+  right: 16px;
+  top: 0;
 }
 
 .programDays:has(span) {
