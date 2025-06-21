@@ -61,7 +61,9 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
         if (initialProgram?.days) {
             return initialProgram.days.map((day) => ({
                 dayNumber: day.day_number,
-                exercises: day.exercises.map((ex) => ex.programExerciseId),
+                exercises: day.exercises.map((ex) => ex.id),
+
+
             }));
         }
 
@@ -71,36 +73,20 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
         }));
     });
 
+
+
     const [exerciseMap, setExerciseMap] = useState<
         Record<string, { name: string; image: string }>
         >({});
 
     const isValidProgram = programDays.every((day) => day.exercises.length > 0);
 
-    // Для редагування: отримуємо мапу назв з program_exercise.id
-    useEffect(() => {
-        const loadExerciseMap = async () => {
-            if (!initialProgram) return;
-
-            const programExerciseIds = initialProgram.days.flatMap((d) =>
-                d.exercises.map((ex) => ex.programExerciseId)
-            );
-
-            const lang = language === 'ua' ? 'ukr' : language;
-            const map = await mapProgramExerciseToExerciseMeta(programExerciseIds, lang as 'eng' | 'ukr' | 'rus');
-            setExerciseMap(map);
-        };
-
-        loadExerciseMap();
-    }, [initialProgram, language]);
 
     // Для створення: отримуємо мапу назв по exercise.id
     useEffect(() => {
-        const loadNewExerciseMap = async () => {
-            if (initialProgram) return;
-
+        const loadExerciseMap = async () => {
             const allIds = programDays.flatMap((d) => d.exercises);
-            const uniqueIds = Array.from(new Set(allIds));
+            const uniqueIds = Array.from(new Set(allIds)).filter((id) => !!id);
 
             if (uniqueIds.length === 0) return;
 
@@ -110,8 +96,10 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
             setExerciseMap((prev) => ({ ...prev, ...exerciseMapData }));
         };
 
-        loadNewExerciseMap();
-    }, [programDays, initialProgram, language]);
+        loadExerciseMap();
+    }, [JSON.stringify(programDays), language]); // ✅ стабільна перевірка змін
+
+
 
     const handleNext = () => setStep((prev) => prev + 1);
     const handleBack = () => setStep((prev) => prev - 1);
@@ -197,6 +185,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                     exerciseMap={exerciseMap}
                     onBack={handleBack}
                     onNext={handleSave}
+                    initialProgram={initialProgram}
                     isValid={isValidProgram}
                 />
             )}
