@@ -33,7 +33,6 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
     const [selected, setSelected] = useState<string[]>([]);
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
 
-    // 🔄 Завантажити дані для вибраних вправ при ініціалізації
     useEffect(() => {
         const shouldLoad = selectedDefault.length > 0 && selected.length === 0 && language;
 
@@ -49,7 +48,6 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
         }
     }, [selectedDefault.join(','), selected.length, language]);
 
-    // 📦 Завантажити список вправ по групі
     useEffect(() => {
         if (!language) return;
 
@@ -60,7 +58,6 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
             .then((data) => {
                 setExercises(data);
 
-                // 🔃 Доповнити карту вправ
                 setExerciseMap((prevMap) => {
                     const updated = { ...prevMap };
                     data.forEach((ex) => {
@@ -77,7 +74,6 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
             .finally(() => setIsPreloader(false));
     }, [activeTab, language]);
 
-    // ✅ Вибір вправи
     const toggleSelect = (id: string) => {
         setSelected((prev) =>
             prev.includes(id)
@@ -86,7 +82,6 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
         );
     };
 
-    // 🆔 Нумерація вправ
     const getExerciseIndex = (id: string): number => {
         const idx = selected.findIndex((item) => item === id);
         return idx >= 0 ? idx + 1 : 0;

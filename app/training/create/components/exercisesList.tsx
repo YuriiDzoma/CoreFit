@@ -11,14 +11,12 @@ interface ExercisesListTypes {
 }
 
 const ExercisesList = ({ getExerciseIndex, exercises, toggleSelect, selected }: ExercisesListTypes) => {
-    console.log(selected)
+
     return (
         <ul className={styles.exercisesList}>
             {exercises.map((exercise) => {
                 const isActive = selected.includes(exercise.id);
                 const index = isActive ? getExerciseIndex(exercise.id) : null;
-
-                console.log(isActive)
 
                 return (
                     <li

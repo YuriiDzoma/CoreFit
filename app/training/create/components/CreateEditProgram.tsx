@@ -16,7 +16,6 @@ import { ProgramFull } from '@/types/training';
 import {
     createTrainingProgram,
     updateTrainingProgram,
-    mapProgramExerciseToExerciseMeta,
     fetchExercisesByIds
 } from '@/lib/trainingData';
 
@@ -62,8 +61,6 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
             return initialProgram.days.map((day) => ({
                 dayNumber: day.day_number,
                 exercises: day.exercises.map((ex) => ex.id),
-
-
             }));
         }
 
@@ -73,8 +70,6 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
         }));
     });
 
-
-
     const [exerciseMap, setExerciseMap] = useState<
         Record<string, { name: string; image: string }>
         >({});
@@ -82,7 +77,6 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
     const isValidProgram = programDays.every((day) => day.exercises.length > 0);
 
 
-    // Для створення: отримуємо мапу назв по exercise.id
     useEffect(() => {
         const loadExerciseMap = async () => {
             const allIds = programDays.flatMap((d) => d.exercises);
@@ -117,6 +111,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
 
     const handleSave = async () => {
         if (!userId) return;
+
         setIsPreloader(true);
         const level = levelMap[difficulty - 1];
 
@@ -130,10 +125,13 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
             )
             : await createTrainingProgram(userId, programName, programType, level, programDays);
 
-        setIsPreloader(false);
-
-        if (success) router.push('/training');
-        else console.error('Failed to save program');
+        if (success) {
+            await new Promise((resolve) => setTimeout(resolve, 150));
+            router.push('/training');
+        } else {
+            console.error('Failed to save program');
+            setIsPreloader(false); // 🛑 лише у випадку помилки
+        }
     };
 
     return (
@@ -167,13 +165,17 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                     value={daysCount}
                     onChange={(val) => {
                         setDaysCount(val);
-                        setProgramDays(
-                            Array.from({ length: val }, (_, i) => ({
-                                dayNumber: i + 1,
-                                exercises: [],
-                            }))
-                        );
+                        setProgramDays((prev) => {
+                            const updated = Array.from({ length: val }, (_, i) => {
+                                const existing = prev.find((d) => d.dayNumber === i + 1);
+                                return existing
+                                    ? existing
+                                    : { dayNumber: i + 1, exercises: [] };
+                            });
+                            return updated;
+                        });
                     }}
+
                     onNext={handleNext}
                     onBack={handleBack}
                 />

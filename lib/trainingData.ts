@@ -457,6 +457,7 @@ export const updateTrainingProgram = async (
 ): Promise<boolean> => {
     const supabase = createClient();
 
+    // 1. Оновлюємо саму програму
     const { error: programError } = await supabase
         .from('programs')
         .update({ title, type, level, days_count: days.length })
@@ -467,6 +468,7 @@ export const updateTrainingProgram = async (
         return false;
     }
 
+    // 2. Отримуємо існуючі дні цієї програми
     const { data: existingDays, error: fetchDaysError } = await supabase
         .from('program_days')
         .select('id, day_number')
@@ -478,13 +480,41 @@ export const updateTrainingProgram = async (
     }
 
     const dayIdMap = new Map<number, string>();
+
+    // 3. Спочатку додаємо всі існуючі дні у мапу
     for (const day of existingDays) {
         dayIdMap.set(day.day_number, day.id);
     }
 
+    // 4. Додаємо відсутні дні
+    const missingDays = days.filter((d) => !dayIdMap.has(d.dayNumber));
+    if (missingDays.length > 0) {
+        const newDaysToInsert = missingDays.map((d) => ({
+            program_id: programId,
+            day_number: d.dayNumber,
+            title: `Day ${d.dayNumber}`,
+        }));
+
+        const { data: newInsertedDays, error: insertDaysErr } = await supabase
+            .from('program_days')
+            .insert(newDaysToInsert)
+            .select();
+
+        if (insertDaysErr || !newInsertedDays) {
+            console.error('Error inserting new days:', insertDaysErr?.message);
+            return false;
+        }
+
+        newInsertedDays.forEach((d) => {
+            dayIdMap.set(d.day_number, d.id);
+        });
+    }
+
+    // 5. Отримуємо всі programExerciseIds (можливо частина з них — це ID самих program_exercises)
     const allProgramExerciseIds = days.flatMap((d) => d.exercises);
     const exerciseIdMap = await fetchProgramExerciseMap(allProgramExerciseIds); // { programExId: exerciseId }
 
+    // 6. Для кожного дня оновлюємо або додаємо вправи
     for (const day of days) {
         const dayId = dayIdMap.get(day.dayNumber);
         if (!dayId) continue;
@@ -531,6 +561,7 @@ export const updateTrainingProgram = async (
             }
         }
 
+        // 7. Видаляємо зайві (застарілі) вправи
         if (existing.length > day.exercises.length) {
             const idsToDelete = existing
                 .slice(day.exercises.length)
@@ -549,6 +580,7 @@ export const updateTrainingProgram = async (
             }
         }
 
+        // 8. Оновлюємо порядок / ID
         if (updates.length > 0) {
             const { error: updErr } = await supabase
                 .from('program_exercises')
@@ -560,6 +592,7 @@ export const updateTrainingProgram = async (
             }
         }
 
+        // 9. Вставляємо нові
         if (inserts.length > 0) {
             const { error: insErr } = await supabase
                 .from('program_exercises')
