@@ -14,12 +14,13 @@ const TrainingHistories = () => {
     const [histories, setHistories] = useState<any[]>([]);
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
     const language = useAppSelector(getLanguage);
-    const { training } = useAppSelector(getText)
+    const { training } = useAppSelector(getText);
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
+        setIsLoading(true);
         const load = async () => {
             const results = await fetchAllTrainingHistories();
-            console.log(results)
             setHistories(results);
 
             const programExIds = Array.from(
@@ -39,12 +40,12 @@ const TrainingHistories = () => {
                     finalMap[progId] = map[exId];
                 }
             }
+            setIsLoading(false);
             setExerciseMap(finalMap);
         };
 
         load();
     }, [language]);
-
 
 
     return (
@@ -72,7 +73,10 @@ const TrainingHistories = () => {
                     <ul className={styles.exerciseList}>
                         {Object.entries(entry.values as Record<string, string>).map(([exId, value]) => (
                             <li key={exId}>
-                                <p>{exerciseMap[exId]?.name || exId}:</p><span>{value}</span>
+                                {isLoading
+                                    ? <span className={styles.exerciseLoad}/>
+                                    : <p>{exerciseMap[exId]?.name || exId}: <span className={styles.exerciseList__weight}>{value}</span></p>
+                                }
                             </li>
                         ))}
                     </ul>
