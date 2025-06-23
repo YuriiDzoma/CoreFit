@@ -2,15 +2,18 @@ import React from "react";
 import Link from "next/link";
 import styles from "./header.module.scss";
 import {usePathname} from "next/navigation";
+import {useAppSelector} from "../../hooks/redux";
+import {getText} from "../../../store/selectors";
 
 
 const HeaderNavigation = () => {
     const pathname = usePathname();
+    const { base } = useAppSelector(getText);
 
     const nav = [
         {title: 'Wiki', src: '/training/wiki'},
-        {title: 'Complexes', src: '/training/complexes'},
-        {title: 'Settings', src: '/settings'},
+        {title: base.complexes, src: '/training/complexes'},
+        {title: base.settings, src: '/settings'},
     ]
 
     return (

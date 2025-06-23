@@ -169,12 +169,14 @@ export function ExerciseSkeleton() {
     )
 }
 
-export function ProgramsList() {
+export function ProgramsListSkeleton() {
     return (
         <div>
             <span className={styles.title}/>
             <span className={styles.programList__create}/>
             <ul className={styles.programList__list}>
+                <li  className={styles.programList__item}/>
+                <li  className={styles.programList__item}/>
                 <li  className={styles.programList__item}/>
                 <li  className={styles.programList__item}/>
             </ul>

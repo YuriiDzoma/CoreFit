@@ -26,6 +26,11 @@ export const getLanguages = async (value: string) => {
             edit: 'Edit',
             save: 'Save',
             none: 'None',
+            cancelRequest: 'Cancel request',
+            removeFriend: 'Remove friend',
+            addFriends: 'Add to friends',
+            settings: 'Settings',
+            theme: 'Theme',
         },
         settings: {
             language: 'Language',
@@ -70,6 +75,14 @@ export const getLanguages = async (value: string) => {
             compound: 'Compound',
             none: 'None',
             finished: 'Finished training in -',
+            all: 'All',
+            chest: 'Chest',
+            backMus: 'Back',
+            biceps: 'Biceps',
+            triceps: 'Triceps',
+            shoulders: 'Shoulders',
+            legs: 'Legs',
+            abs: 'Abs',
         },
     };
 
@@ -97,6 +110,11 @@ export const getLanguages = async (value: string) => {
             allUsers: 'Все пользователи',
             edit: 'Редактировать',
             save: 'Сохранить',
+            cancelRequest: 'Отменить запрос',
+            removeFriend: 'Удалить друга',
+            addFriends: 'Добавить в друзья',
+            settings: 'Настройки',
+            theme: 'Тема',
         },
         settings: {
             language: 'Язык',
@@ -141,7 +159,15 @@ export const getLanguages = async (value: string) => {
             compound: 'Многосуставное',
             isolation: 'Изоляционное',
             none: 'Нету',
-            finished: 'Закончил тренировку в -'
+            finished: 'Закончил тренировку в -',
+            all: 'Все',
+            chest: 'Грудные',
+            backMus: 'Спина',
+            biceps: 'Бицепс',
+            triceps: 'Трицепс',
+            shoulders: 'Плечи',
+            legs: 'Ноги',
+            abs: 'Прес',
         }
     };
 
@@ -169,6 +195,11 @@ export const getLanguages = async (value: string) => {
             allUsers: 'Всі користувачі',
             edit: 'Редагувати',
             save: 'Зберегти',
+            cancelRequest: 'Скасувати запит',
+            removeFriend: 'Видалити друга',
+            addFriends: 'Додати до друзів',
+            settings: 'Налаштування',
+            theme: 'Тема',
         },
         settings: {
             language: 'Мова',
@@ -213,7 +244,15 @@ export const getLanguages = async (value: string) => {
             compound: 'Багатосуставне',
             isolation: 'Ізоляційне',
             none: 'Немає',
-            finished: 'Закінчив тренування в -'
+            finished: 'Закінчив тренування в -',
+            all: 'Все',
+            chest: 'Грудні',
+            backMus: 'Спина',
+            biceps: 'Біцепс',
+            triceps: 'Тріцепс',
+            shoulders: 'Плечі',
+            legs: 'Ноги',
+            abs: 'Прес',
         }
     };
 

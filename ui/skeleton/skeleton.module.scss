@@ -311,12 +311,22 @@
     height: 40px;
     display: block;
     margin: 16px 0;
+
+    @media only screen and (min-width: 768px) {
+      height: 60px;
+    }
   }
 
   &__list {
     display: flex;
     flex-direction: column;
     row-gap: 8px;
+
+    @media only screen and (min-width: 768px) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 16px 32px;
+    }
   }
 
   &__item {

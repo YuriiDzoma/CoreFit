@@ -38,7 +38,7 @@
   }
 
   &__show {
-    height: 88px;
+    height: 99px;
   }
 
   &__btn {
@@ -51,10 +51,10 @@
     border: 2px solid var(--border-color);
     min-width: 100px;
     border-radius: 4px;
-    padding: 12px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    row-gap: 16px;
+    row-gap: 20px;
     justify-content: flex-start;
     height: 100%;
 

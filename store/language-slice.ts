@@ -26,6 +26,11 @@ const initialState = {
             allUsers: 'All users',
             edit: 'Edit',
             save: 'Save',
+            cancelRequest: 'Cancel request',
+            removeFriend: 'Remove friend',
+            addFriends: 'Add to friends',
+            settings: 'Settings',
+            theme: 'Theme',
         },
         settings: {
             language: 'Language',
@@ -71,6 +76,14 @@ const initialState = {
             isolation: 'Isolation',
             none: 'None',
             finished: 'Finished training in -',
+            all: 'All',
+            chest: 'Chest',
+            backMus: 'Back',
+            biceps: 'Biceps',
+            triceps: 'Triceps',
+            shoulders: 'Shoulders',
+            legs: 'Legs',
+            abs: 'Abs',
         },
     }
 };

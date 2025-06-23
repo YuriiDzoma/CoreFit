@@ -46,7 +46,7 @@ export default function Wiki() {
 
     return (
         <div>
-            <h2 className={'pageTitle'}>Wiki Page</h2>
+            <h2 className={'pageTitle'}>Wiki</h2>
             <div className={styles.content}>
                 <ul className={styles.exercisesList}>
                     {exercises?.length && exercises.map((item, index) => (

@@ -2,6 +2,8 @@ import React from "react";
 import styles from './userList.module.scss';
 import Link from "next/link";
 import {ProfileType} from "../../../types/user";
+import {getText} from "../../../store/selectors";
+import {useAppSelector} from "../../hooks/redux";
 
 interface FullPicturesProps {
     user: ProfileType,
@@ -15,6 +17,7 @@ interface FullPicturesProps {
 
 
 const User = ({user, userId, pendingIds, friendIds, cancelFriend, addFriend, removeFriend}: FullPicturesProps) => {
+    const { base } = useAppSelector(getText);
     return (
         <li>
             <Link href={`/profile/${user.id}`} className={styles.userLink}>
@@ -29,14 +32,14 @@ const User = ({user, userId, pendingIds, friendIds, cancelFriend, addFriend, rem
                     className={`${styles.userLink__btn} button ${styles.pending}`}
                     onClick={() => cancelFriend(user.id)}
                 >
-                    <span>Cancel request</span>
+                    <span>{base.cancelRequest}</span>
                 </button>
             ) : friendIds.includes(user.id) ? (
                 <button
                     className={`${styles.userLink__btn} button ${styles.accepted}`}
                     onClick={() => removeFriend(user.id)}
                 >
-                    <span>Remove friend</span>
+                    <span>{base.removeFriend}</span>
                 </button>
             ) : (
                 <button
@@ -44,7 +47,7 @@ const User = ({user, userId, pendingIds, friendIds, cancelFriend, addFriend, rem
                     onClick={() => addFriend(user)}
                     disabled={pendingIds.includes(user.id)}
                 >
-                    <span>Add to friends</span>
+                    <span>{base.addFriends}</span>
                 </button>
             )}
         </li>

@@ -5,15 +5,14 @@ import Link from 'next/link';
 import {fetchUserPrograms} from "../../../../lib/programData";
 import {ProgramType} from "../../../../types/training";
 import {useAppSelector} from "../../../hooks/redux";
-import {getIsDarkTheme, getText} from "../../../../store/selectors";
-import {ProgramsList} from "../../../../ui/skeleton/skeleton";
-import Image from "next/image";
+import {getText} from "../../../../store/selectors";
+import {ProgramsListSkeleton} from "../../../../ui/skeleton/skeleton";
+import ProgramItem from "./ProgramItem";
 
 const Programs = () => {
     const [programs, setPrograms] = useState<ProgramType[]>([]);
     const [loading, setLoading] = useState(true);
     const {training} = useAppSelector(getText);
-    const isDark = useAppSelector(getIsDarkTheme);
 
     useEffect(() => {
         const loadPrograms = async () => {
@@ -25,7 +24,7 @@ const Programs = () => {
         loadPrograms();
     }, []);
 
-    if (loading) return <ProgramsList />;
+    if (loading) return <ProgramsListSkeleton />;
 
     return (
         <div className={styles.programs}>
@@ -41,20 +40,8 @@ const Programs = () => {
                 <p>No programs found</p>
             ) : (
                 <ul className={styles.programList}>
-                    {programs.map((p) => (
-                        <Link key={p.id} href={`/training/${p.id}`} className={styles.programItem}>
-                            <li>
-                                <span>{p.title}</span>
-                                <p>{p.type} • {p.level} • {p.days_count} day{p.days_count > 1 ? 's' : ''}</p>
-                            </li>
-                            <Image
-                                src={isDark ? '/icons/linkToWhite.svg' : '/icons/linkToDark.svg'}
-                                width={32}
-                                height={32}
-                                alt="to"
-                                unoptimized
-                            />
-                        </Link>
+                    {programs.map((program) => (
+                        <ProgramItem program={program} key={program.id} />
                     ))}
                 </ul>
             )}

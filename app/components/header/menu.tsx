@@ -2,7 +2,7 @@ import styles from "./header.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
-import {getIsDarkTheme, getUserId} from "../../../store/selectors";
+import {getIsDarkTheme, getText, getUserId} from "../../../store/selectors";
 import React, {useState} from "react";
 import {updateUserProfile} from "../../../lib/userData";
 import { setIsDarkTheme } from '@/store/account-slice';
@@ -13,6 +13,7 @@ const Menu = () => {
     const isDark = useAppSelector(getIsDarkTheme);
     const userId = useAppSelector(getUserId);
     const dispatch = useAppDispatch();
+    const { base } = useAppSelector(getText);
     const [isActive, setIsActive] = useState<boolean>(false);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
 
@@ -49,10 +50,10 @@ const Menu = () => {
             <div className={isActive ? styles.menu__show : styles.menu__hide}>
                 <div className={styles.menu__content}>
                     <Link href="/settings" onClick={() => setIsActive(false)}>
-                        <span>Settings</span>
+                        <span>{base.settings}</span>
                     </Link>
                     <button className={styles.menu__language} onClick={handleToggleTheme}>
-                        <span>Theme: </span>
+                        <span>{base.theme}: </span>
                         {isDark
                             ? <Image
                                 src="/icons/darkTheme.svg"
