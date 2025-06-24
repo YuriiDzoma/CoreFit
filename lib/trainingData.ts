@@ -28,9 +28,11 @@ export const fetchExercisesByGroup = async (
         eng: 'name_en',
         ukr: 'name_uk',
         rus: 'name_ru',
+        pl: 'name_en',
     };
+    const fallbackLang = 'eng';
+    const nameField = fieldMap[lang] ?? fieldMap[fallbackLang];
 
-    const nameField = fieldMap[lang];
 
     let query = supabase
         .from('exercises')
@@ -74,23 +76,28 @@ export const fetchExerciseById = async (
         eng: 'name_en',
         ukr: 'name_uk',
         rus: 'name_ru',
+        pl: 'name_en'
     };
 
     const descMap = {
         eng: 'description_en',
         ukr: 'description_uk',
         rus: 'description_ru',
+        pl: 'description_en'
     };
 
     const secondaryMap = {
         eng: 'secondary_en',
         ukr: 'secondary_uk',
         rus: 'secondary_ru',
+        pl: 'secondary_en'
     };
 
-    const nameField = fieldMap[lang];
-    const descField = descMap[lang];
-    const secondaryField = secondaryMap[lang];
+    const fallbackLang = 'eng';
+
+    const nameField = fieldMap[lang] ?? fieldMap[fallbackLang];
+    const descField = descMap[lang] ?? descMap[fallbackLang];
+    const secondaryField = secondaryMap[lang] ?? secondaryMap[fallbackLang];
 
     const selectFields = [
         'id',
@@ -137,9 +144,11 @@ export const fetchExercisesByIds = async (
         eng: 'name_en',
         ukr: 'name_uk',
         rus: 'name_ru',
+        pl: 'name_en',
     };
 
-    const nameField = fieldMap[lang];
+    const fallbackLang = 'eng';
+    const nameField = fieldMap[lang] ?? fieldMap[fallbackLang];
 
     const {data, error} = await supabase
         .from('exercises')

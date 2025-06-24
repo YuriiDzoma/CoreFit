@@ -31,6 +31,8 @@ const initialState = {
             addFriends: 'Add to friends',
             settings: 'Settings',
             theme: 'Theme',
+            seeAllFriends: 'See all friends',
+            friends: 'Friends',
         },
         settings: {
             language: 'Language',
@@ -38,6 +40,7 @@ const initialState = {
             english: "English",
             russian: "Russian",
             ukrainian: "Ukrainian",
+            poland: "Poland",
         },
         training: {
             programName: 'Name of program',
@@ -85,6 +88,9 @@ const initialState = {
             legs: 'Legs',
             abs: 'Abs',
             complete: 'Complete',
+            aerobic: 'Aerobic',
+            anaerobic: 'Anaerobic',
+            crossfit: 'Crossfit',
         },
     }
 };

@@ -31,6 +31,7 @@ export const LanguagesBox = () => {
         {value: 'eng', name: settings.english},
         {value: 'rus', name: settings.russian},
         {value: 'ukr', name: settings.ukrainian},
+        {value: 'pl', name: settings.poland},
     ]
 
     return (

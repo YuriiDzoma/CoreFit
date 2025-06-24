@@ -10,9 +10,11 @@ import { useAppSelector } from '@/app/hooks/redux';
 import Image from "next/image";
 import Link from "next/link";
 import {ProfileFriendsSkeleton} from "../../../ui/skeleton/skeleton";
+import {getText} from "../../../store/selectors";
 
 const Friends = () => {
     const userId = useAppSelector(getUserId);
+    const { base } = useAppSelector(getText);
     const [friends, setFriends] = useState<ProfileType[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -38,9 +40,9 @@ const Friends = () => {
         <div className={styles.friends}>
             {friends?.length > 0 && (
                 <div className={styles.friends__header}>
-                    <h2>Friends: <span>{friends.length}</span></h2>
+                    <h2>{base.friends}: <span>{friends.length}</span></h2>
                     <Link href={'/friends'}>
-                        <span>See all friends</span>
+                        <span>{base.seeAllFriends}</span>
                     </Link>
                 </div>
             )}

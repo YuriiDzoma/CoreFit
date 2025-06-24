@@ -31,6 +31,8 @@ export const getLanguages = async (value: string) => {
             addFriends: 'Add to friends',
             settings: 'Settings',
             theme: 'Theme',
+            seeAllFriends: 'See all friends',
+            friends: 'Friends',
         },
         settings: {
             language: 'Language',
@@ -38,6 +40,7 @@ export const getLanguages = async (value: string) => {
             english: "English",
             russian: "Russian",
             ukrainian: "Ukrainian",
+            poland: "Poland",
         },
         training: {
             programName: 'Name of program',
@@ -84,6 +87,9 @@ export const getLanguages = async (value: string) => {
             legs: 'Legs',
             abs: 'Abs',
             complete: 'Complete',
+            aerobic: 'Aerobic',
+            anaerobic: 'Anaerobic',
+            crossfit: 'Crossfit',
         },
     };
 
@@ -116,6 +122,8 @@ export const getLanguages = async (value: string) => {
             addFriends: 'Добавить в друзья',
             settings: 'Настройки',
             theme: 'Тема',
+            seeAllFriends: 'Посмотреть всех друзей',
+            friends: 'Друзья',
         },
         settings: {
             language: 'Язык',
@@ -123,6 +131,7 @@ export const getLanguages = async (value: string) => {
             english: "Английский",
             russian: "Руский",
             ukrainian: "Украинский",
+            poland: "Польский",
         },
         training: {
             programName: 'Название программы',
@@ -170,6 +179,9 @@ export const getLanguages = async (value: string) => {
             legs: 'Ноги',
             abs: 'Прес',
             complete: 'Завершить',
+            aerobic: 'Аэробная',
+            anaerobic: 'Анаэробная',
+            crossfit: 'Кроссфит',
         }
     };
 
@@ -202,6 +214,8 @@ export const getLanguages = async (value: string) => {
             addFriends: 'Додати до друзів',
             settings: 'Налаштування',
             theme: 'Тема',
+            seeAllFriends: 'Переглянути всіх друзів',
+            friends: 'Друзі',
         },
         settings: {
             language: 'Мова',
@@ -209,6 +223,7 @@ export const getLanguages = async (value: string) => {
             english: "Англійська",
             russian: "Російська",
             ukrainian: "Українська",
+            poland: "Польський",
         },
         training: {
             programName: 'Назва програми',
@@ -256,12 +271,110 @@ export const getLanguages = async (value: string) => {
             legs: 'Ноги',
             abs: 'Прес',
             complete: 'Завершити',
+            aerobic: 'Аеробна',
+            anaerobic: 'Анаеробна',
+            crossfit: 'Кроссфіт',
         }
     };
+
+    const pl = {
+        base: {
+            login: 'Zaloguj się',
+            signUp: 'Zarejestruj się',
+            profile: 'Profil',
+            training: 'Trening',
+            users: 'Użytkownicy',
+            complexes: 'Kompleksy',
+            Programs: 'Programy',
+            Wiki: 'Wiki',
+            authorization: 'Autoryzacja',
+            lblEmail: 'Twój e-mail',
+            lblPass: 'Twoje hasło',
+            lblName: 'Twoje imię',
+            lblLastName: 'Twoje nazwisko',
+            plHolName: 'Imię',
+            plHolLastName: 'Nazwisko',
+            plHolEmail: 'E-mail',
+            plHolPass: 'Hasło',
+            notHaveAcc: 'Jeśli nie masz konta',
+            haveAcc: 'Jeśli masz konto',
+            allUsers: 'Wszyscy użytkownicy',
+            edit: 'Edytuj',
+            save: 'Zapisz',
+            none: 'Brak',
+            cancelRequest: 'Anuluj prośbę',
+            removeFriend: 'Usuń znajomego',
+            addFriends: 'Dodaj do znajomych',
+            settings: 'Ustawienia',
+            theme: 'Motyw',
+            seeAllFriends: 'Zobacz wszystkich znajomych',
+            friends: 'Znajomi',
+        },
+        settings: {
+            language: 'Język',
+            profile: 'Profil',
+            english: 'Angielski',
+            russian: 'Rosyjski',
+            ukrainian: 'Ukraiński',
+            poland: "Polski",
+        },
+        training: {
+            programName: 'Nazwa programu',
+            plHolProgramName: 'Wprowadź nazwę programu',
+            errorName: 'Nazwa musi zawierać co najmniej 3 litery',
+            next: 'Dalej',
+            back: 'Wstecz',
+            name: 'Nazwa',
+            type: 'Typ',
+            difficulty: 'Poziom trudności',
+            days: 'Dni',
+            exercises: 'Ćwiczenia',
+            aerobicInfo: 'Aerobik - fitness, trening cardio',
+            anaerobicInfo: 'Anaerobowy - trening siłowy',
+            crossfitInfo: 'CrossFit - trening mieszany, aerobowy + anaerobowy',
+            selectType: 'Wybierz typ programu',
+            beginner: 'Początkujący',
+            intermediate: 'Średni',
+            advanced: 'Zaawansowany',
+            expert: 'Ekspert',
+            professional: 'Profesjonalista',
+            selectDifficulty: 'Wybierz poziom trudności',
+            day: 'dzień',
+            changeDay: 'Ile dni treningowych w tygodniu?',
+            generalTraining: 'ogólny trening dzienny',
+            splitTraining: 'trening dzielony dzienny',
+            create: 'Utwórz',
+            editExercises: 'Edytuj ćwiczenia',
+            addExercises: 'Dodaj ćwiczenia',
+            cancel: 'Anuluj',
+            confirm: 'Potwierdź',
+            createProgram: 'Utwórz nowy program',
+            myPrograms: 'Moje programy',
+            secondaryMuscles: 'Mięśnie pomocnicze',
+            compound: 'Złożone',
+            isolation: 'Izolowane',
+            none: 'Brak',
+            finished: 'Zakończono trening -',
+            all: 'Wszystko',
+            chest: 'Klatka piersiowa',
+            backMus: 'Plecy',
+            biceps: 'Biceps',
+            triceps: 'Triceps',
+            shoulders: 'Barki',
+            legs: 'Nogi',
+            abs: 'Brzuch',
+            complete: 'Zakończ',
+            aerobic: 'Aerobowy',
+            anaerobic: 'Anaerobowy',
+            crossfit: 'CrossFit',
+        },
+    };
+
 
     switch (value) {
         case 'eng' : return eng;
         case 'rus' : return rus;
         case 'ukr' : return ua;
+        case 'pl' : return pl;
     }
 }

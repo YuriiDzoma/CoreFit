@@ -22,3 +22,20 @@ export const useLevelText = () => {
         }
     };
 };
+
+export const useTypeText = () => {
+    const { training } = useAppSelector(getText);
+
+    return (type: string): string => {
+        switch (type) {
+            case 'aerobic':
+                return training.aerobic;
+            case 'anaerobic':
+                return training.anaerobic;
+            case 'crossfit':
+                return training.crossfit;
+            default:
+                return type;
+        }
+    };
+};

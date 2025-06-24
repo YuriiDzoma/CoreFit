@@ -11,7 +11,7 @@ import TrainingHistory from "./trainingHistory/trainingHistory";
 import TrainingProcessing from "./trainingProcessing/trainingProcessing";
 import {fetchTrainingHistory} from "../../../../lib/trainingData";
 import Link from "next/link";
-import {useLevelText} from "../../../hooks/useDifficulty";
+import {useLevelText, useTypeText} from "../../../hooks/useDifficulty";
 import {useAppSelector} from "../../../hooks/redux";
 import {getIsDarkTheme, getText} from "../../../../store/selectors";
 import Image from "next/image";
@@ -30,6 +30,7 @@ const ProgramDetail = () => {
     const [history, setHistory] = useState<HistoryMap>({});
 
     const getLevelText = useLevelText();
+    const getTypeText = useTypeText();
 
     const loadAllHistory = async () => {
         if (!program?.days) return; // запобіжник
@@ -73,7 +74,7 @@ const ProgramDetail = () => {
                 />
             </Link>
             <div className={styles.detail__info}>
-                <p><span>{training.type}: </span>{program.type}</p>
+                <p><span>{training.type}: </span>{getTypeText(program.type)}</p>
                 <p><span>{training.difficulty}: </span>{getLevelText(program.level)}</p>
             </div>
 
