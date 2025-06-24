@@ -252,7 +252,7 @@ export const fetchTrainingHistory = async (
 export const fetchAllTrainingHistories = async () => {
     const supabase = createClient();
 
-    const {data, error} = await supabase
+    const { data, error } = await supabase
         .from('training_history')
         .select(`
             id,
@@ -260,6 +260,7 @@ export const fetchAllTrainingHistories = async () => {
             values,
             created_at,
             profiles (
+                id,
                 username,
                 avatar_url
             ),
@@ -270,7 +271,7 @@ export const fetchAllTrainingHistories = async () => {
                 )
             )
         `)
-        .order('created_at', {ascending: false});
+        .order('created_at', { ascending: false });
 
     if (error) {
         console.error('Error fetching training histories:', error.message);
@@ -279,7 +280,6 @@ export const fetchAllTrainingHistories = async () => {
 
     return data;
 };
-
 
 export const fetchDrafts = async (
     userId: string,

@@ -48,7 +48,7 @@ const Friends = () => {
             )}
             <ul>
                 {friends.map(friend => (
-                    <li key={friend.id}>
+                    <Link href={`/profile/${friend.id}`} key={friend.id}>
                         <Image
                             src={friend.avatar_url}
                             width={64}
@@ -56,7 +56,7 @@ const Friends = () => {
                             alt={friend.username}
                         />
                         <span className={styles.friends__name}>{friend.username}</span>
-                    </li>
+                    </Link>
                 ))}
             </ul>
         </div>

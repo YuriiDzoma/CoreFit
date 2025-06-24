@@ -37,7 +37,7 @@ const Programs = () => {
             </div>
 
             {programs.length === 0 ? (
-                <p>No programs found</p>
+                <p>{training.notHavePrograms}</p>
             ) : (
                 <ul className={styles.programList}>
                     {programs.map((program) => (

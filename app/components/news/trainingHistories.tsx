@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import styles from './trainingHistories.module.scss';
-import { useAppSelector } from "../../hooks/redux";
+import {useAppSelector} from "../../hooks/redux";
 import {getLanguage, getText} from "../../../store/selectors";
 import {
     fetchAllTrainingHistories,
@@ -10,12 +10,13 @@ import {
 } from "@/lib/trainingData";
 import {fetchProgramExerciseMap} from "../../../lib/trainingData";
 import {NewsSkeleton} from "../../../ui/skeleton/skeleton";
+import Link from "next/link";
 
 const TrainingHistories = () => {
     const [histories, setHistories] = useState<any[]>([]);
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
     const language = useAppSelector(getLanguage);
-    const { training } = useAppSelector(getText);
+    const {training} = useAppSelector(getText);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isMap, setIsMap] = useState<boolean>(true);
 
@@ -23,6 +24,7 @@ const TrainingHistories = () => {
         setIsLoading(true);
         const load = async () => {
             const results = await fetchAllTrainingHistories();
+            console.log(results)
             setHistories(results);
 
             const programExIds = Array.from(
@@ -50,17 +52,17 @@ const TrainingHistories = () => {
         load();
     }, [language]);
 
-    if (isMap) return <NewsSkeleton />
+    if (isMap) return <NewsSkeleton/>
 
     return (
         <div className={`${styles.histories} container`}>
             {histories.map((entry) => (
                 <div key={entry.id} className={styles.historyCard}>
                     <div className={styles.historyCard__header}>
-                        <div className={styles.userInfo}>
-                            <img src={entry.profiles.avatar_url} width='32px' height={'32px'} alt="avatar" />
+                        <Link href={`/profile/${entry.profiles.id}`} className={styles.userInfo}>
+                            <img src={entry.profiles.avatar_url} width='32px' height={'32px'} alt="avatar"/>
                             <p>{entry.profiles.username}</p>
-                        </div>
+                        </Link>
 
                         <div className={styles.datBox}>
                             <span>{training.finished}</span>
@@ -79,7 +81,8 @@ const TrainingHistories = () => {
                             <li key={exId}>
                                 {isLoading
                                     ? <span className={styles.exerciseLoad}/>
-                                    : <p>{exerciseMap[exId]?.name || exId}: <span className={styles.exerciseList__weight}>{value}</span></p>
+                                    : <p>{exerciseMap[exId]?.name || exId}: <span
+                                        className={styles.exerciseList__weight}>{value}</span></p>
                                 }
                             </li>
                         ))}

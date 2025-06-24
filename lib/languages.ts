@@ -90,6 +90,7 @@ export const getLanguages = async (value: string) => {
             aerobic: 'Aerobic',
             anaerobic: 'Anaerobic',
             crossfit: 'Crossfit',
+            notHavePrograms: 'You don\'t have any programs yet',
         },
     };
 
@@ -182,6 +183,7 @@ export const getLanguages = async (value: string) => {
             aerobic: 'Аэробная',
             anaerobic: 'Анаэробная',
             crossfit: 'Кроссфит',
+            notHavePrograms: 'У вас пока нет ни одной программы',
         }
     };
 
@@ -274,6 +276,7 @@ export const getLanguages = async (value: string) => {
             aerobic: 'Аеробна',
             anaerobic: 'Анаеробна',
             crossfit: 'Кроссфіт',
+            notHavePrograms: 'У вас ще немає жодних програм',
         }
     };
 

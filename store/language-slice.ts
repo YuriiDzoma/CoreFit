@@ -91,6 +91,7 @@ const initialState = {
             aerobic: 'Aerobic',
             anaerobic: 'Anaerobic',
             crossfit: 'Crossfit',
+            notHavePrograms: 'You don\'t have any programs yet',
         },
     }
 };
