@@ -15,7 +15,7 @@ type HistoryMap = Record<string, { date: string; values: Record<string, string> 
 const TrainingHistory: React.FC<Props> = ({program, activeTab, history}) => {
 
     return (
-        <div className={styles.trainingHistory}>
+        <div className={styles.trainingHistory} style={activeTab === 1 ? {rowGap: '38px'} : undefined}>
             {program.days.map((day, idx) => {
                 const records = [...(history[day.id] || [])].sort(
                     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -25,7 +25,7 @@ const TrainingHistory: React.FC<Props> = ({program, activeTab, history}) => {
                 return (
                     <div key={day.id} className={styles.historyBlock}>
                         <ul className={styles.exerciseRows}>
-                            <div className={styles.dateRow}>
+                            <div className={styles.dateRow} style={activeTab === 1 ? {height: '32px'} : undefined}>
                                 {records.length > 0
                                     ? records.map((record, i) => (
                                         <span key={i} className={styles.dateCell}>

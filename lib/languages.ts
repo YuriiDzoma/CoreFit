@@ -83,6 +83,7 @@ export const getLanguages = async (value: string) => {
             shoulders: 'Shoulders',
             legs: 'Legs',
             abs: 'Abs',
+            complete: 'Complete',
         },
     };
 
@@ -168,6 +169,7 @@ export const getLanguages = async (value: string) => {
             shoulders: 'Плечи',
             legs: 'Ноги',
             abs: 'Прес',
+            complete: 'Завершить',
         }
     };
 
@@ -253,6 +255,7 @@ export const getLanguages = async (value: string) => {
             shoulders: 'Плечі',
             legs: 'Ноги',
             abs: 'Прес',
+            complete: 'Завершити',
         }
     };
 

@@ -184,4 +184,210 @@ export function ProgramsListSkeleton() {
     )
 }
 
+export function NewsSkeleton() {
+    return (
+        <div className={styles.news}>
+           <div className={styles.news__item}>
+               <p className={styles.news__header}>
+                   <span className={styles.news__avatar}/>
+                   <span className={styles.news__name}/>
+               </p>
+               <span className={styles.news__finished}/>
+               <ul className={styles.news__list}>
+                   <li className={styles.news__item}/>
+                   <li className={styles.news__item}/>
+                   <li className={styles.news__item}/>
+                   <li className={styles.news__item}/>
+                   <li className={styles.news__item}/>
+                   <li className={styles.news__item}/>
+               </ul>
+           </div>
+            <div className={styles.news__item}>
+                <p className={styles.news__header}>
+                    <span className={styles.news__avatar}/>
+                    <span className={styles.news__name}/>
+                </p>
+                <span className={styles.news__finished}/>
+                <ul className={styles.news__list}>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                </ul>
+            </div>
+            <div className={styles.news__item}>
+                <p className={styles.news__header}>
+                    <span className={styles.news__avatar}/>
+                    <span className={styles.news__name}/>
+                </p>
+                <span className={styles.news__finished}/>
+                <ul className={styles.news__list}>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                    <li className={styles.news__item}/>
+                </ul>
+            </div>
+        </div>
+    )
+}
 
+export function ProgramDetailSkeleton() {
+    return (
+        <div className={styles.program}>
+            <span className={styles.program__titleWrapper}>
+                <span className={styles.program__title}/>
+            </span>
+            <div className={styles.program__details}>
+                <span/>
+                <span/>
+            </div>
+            <span className={styles.program__changer}/>
+            <div className={styles.program__grid}>
+                <span className={styles.program__day}/>
+                <span className={styles.program__day}/>
+                <span className={styles.program__date}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+
+            <span className={styles.program__space} />
+
+            <div className={styles.program__grid}>
+                <span className={styles.program__day}/>
+                <span className={styles.program__day}/>
+                <span className={styles.program__date}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+            <div className={styles.program__grid}>
+                <span className={styles.program__exercise}/>
+                <span className={styles.program__weight}/>
+                <span className={styles.program__field}/>
+            </div>
+        </div>
+    )
+}
+
+export function ProgramDetailExercisesSkeleton() {
+    return (
+        <div className={styles.detailExercises}>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__day}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+
+            <span className={styles.program__space} />
+
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__day}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+            <div className={styles.detailExercises__grid}>
+                <span className={styles.program__exercise}/>
+            </div>
+        </div>
+    )
+}

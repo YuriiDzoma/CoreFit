@@ -166,6 +166,10 @@ body:has(.popup), body:has(.menuActive) {
   width: 100%;
 }
 
+.title {
+  font-size: 18px;
+}
+
 @media screen and (max-width: 768px) {
   h1, h2, h3, h4, h5, h6, p, span, li, button, label {
     font-size: 14px;
@@ -203,7 +207,7 @@ body:has(.popup), body:has(.menuActive) {
 
 .title {
   font-weight: 500;
-  font-size: 18px;
+  font-size: 20px;
   text-align: center;
   color: var(--title-color);
 }

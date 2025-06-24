@@ -9,13 +9,15 @@ import {
     fetchExercisesByIds
 } from "@/lib/trainingData";
 import {fetchProgramExerciseMap} from "../../../lib/trainingData";
+import {NewsSkeleton} from "../../../ui/skeleton/skeleton";
 
 const TrainingHistories = () => {
     const [histories, setHistories] = useState<any[]>([]);
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
     const language = useAppSelector(getLanguage);
     const { training } = useAppSelector(getText);
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isMap, setIsMap] = useState<boolean>(true);
 
     useEffect(() => {
         setIsLoading(true);
@@ -33,6 +35,7 @@ const TrainingHistories = () => {
 
             const lang = language === 'ua' ? 'ukr' : language;
             const map = await fetchExercisesByIds(exerciseIds, lang as 'eng' | 'ukr' | 'rus');
+            setIsMap(false);
 
             const finalMap: Record<string, { name: string; image: string }> = {};
             for (const [progId, exId] of Object.entries(programToExerciseMap)) {
@@ -47,6 +50,7 @@ const TrainingHistories = () => {
         load();
     }, [language]);
 
+    if (isMap) return <NewsSkeleton />
 
     return (
         <div className={`${styles.histories} container`}>

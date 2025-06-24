@@ -84,6 +84,7 @@ const initialState = {
             shoulders: 'Shoulders',
             legs: 'Legs',
             abs: 'Abs',
+            complete: 'Complete',
         },
     }
 };

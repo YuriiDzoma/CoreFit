@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import styles from './trainingProcessing.module.scss';
 import { ProgramFull } from '../../../../../types/training';
 import { useForm } from 'react-hook-form';
-import {getUserId} from "../../../../../store/selectors";
+import {getText, getUserId} from "../../../../../store/selectors";
 import {useAppSelector} from "../../../../hooks/redux";
 import {completeDay, fetchDrafts, saveDraft} from "../../../../../lib/trainingData";
 import Preloader from "../../../../../ui/preloader/Preloader";
@@ -20,6 +20,7 @@ type FormValues = {
 };
 
 const TrainingProcessing = ({ program, activeTab, onComplete }: ProgramDaysListTypes) => {
+    const { training } = useAppSelector(getText);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const userId = useAppSelector(getUserId);
     const { register, handleSubmit, setValue, watch } = useForm<FormValues>();
@@ -95,7 +96,7 @@ const TrainingProcessing = ({ program, activeTab, onComplete }: ProgramDaysListT
                             onClick={() => onSubmitDay(index, day.id)}
                             disabled={submittedDays[index]}
                         >
-                            <span>Complete</span>
+                            <span>{training.complete}</span>
                         </button>
                     </div>
                 </ul>

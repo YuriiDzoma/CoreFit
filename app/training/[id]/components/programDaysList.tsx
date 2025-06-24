@@ -6,6 +6,7 @@ import { ProgramFull } from '../../../../types/training';
 import {useAppSelector} from "../../../hooks/redux";
 import {getLanguage, getText} from "../../../../store/selectors";
 import {fetchExercisesByIds} from "../../../../lib/trainingData";
+import {ProgramDetailExercisesSkeleton, ProgramDetailSkeleton} from "../../../../ui/skeleton/skeleton";
 
 interface ProgramDaysListTypes {
     program: ProgramFull,
@@ -16,7 +17,7 @@ const ProgramDaysList = ({ program, activeTab }: ProgramDaysListTypes) => {
     const { training } = useAppSelector(getText);
     const language = useAppSelector(getLanguage);
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
-
+    const [loading, setLoading] = useState<boolean>(true);
 
     const handleView = (value: number) => {
         switch (value) {
@@ -31,7 +32,6 @@ const ProgramDaysList = ({ program, activeTab }: ProgramDaysListTypes) => {
         }
     };
 
-
     useEffect(() => {
         const load = async () => {
             const ids = [...new Set(program.days.flatMap((d) => d.exercises.map(e => e.id)))];
@@ -40,10 +40,13 @@ const ProgramDaysList = ({ program, activeTab }: ProgramDaysListTypes) => {
 
             const map = await fetchExercisesByIds(ids, language as 'eng' | 'ukr' | 'rus');
             setExerciseMap(map);
+            setLoading(false);
         };
 
         load();
     }, [program, language]);
+
+    if (loading) return <ProgramDetailExercisesSkeleton />;
 
     return (
         <div className={styles.programDays}>
@@ -66,7 +69,6 @@ const ProgramDaysList = ({ program, activeTab }: ProgramDaysListTypes) => {
                             </li>
                         );
                     })}
-
                 </ul>
             ))}
         </div>

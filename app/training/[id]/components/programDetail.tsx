@@ -13,7 +13,9 @@ import {fetchTrainingHistory} from "../../../../lib/trainingData";
 import Link from "next/link";
 import {useLevelText} from "../../../hooks/useDifficulty";
 import {useAppSelector} from "../../../hooks/redux";
-import {getText} from "../../../../store/selectors";
+import {getIsDarkTheme, getText} from "../../../../store/selectors";
+import Image from "next/image";
+import {ProgramDetailSkeleton} from "../../../../ui/skeleton/skeleton";
 
 type HistoryMap = Record<string, { date: string; values: Record<string, string> }[]>;
 
@@ -21,8 +23,9 @@ type HistoryMap = Record<string, { date: string; values: Record<string, string> 
 const ProgramDetail = () => {
     const { training } = useAppSelector(getText);
     const { id } = useParams<{ id: string }>();
+    const isDark = useAppSelector(getIsDarkTheme);
     const [program, setProgram] = useState<ProgramFull | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+
     const [activeTab, setActiveTab] = useState<number>(2);
     const [history, setHistory] = useState<HistoryMap>({});
 
@@ -49,20 +52,25 @@ const ProgramDetail = () => {
             if (!id) return;
             const result = await fetchProgramDetail(id);
             setProgram(result);
-            setLoading(false);
         };
 
         loadProgram();
     }, [id]);
 
-    if (loading) return <p>Loading...</p>;
-    if (!program) return <p>Program not found.</p>;
+
+    if (!program) return <ProgramDetailSkeleton />;
 
     return (
         <div className={styles.detail}>
             <h2 className={'title'}>{program.title}</h2>
             <Link className={styles.edit} href={`/training/${program.id}/edit`}>
-                <span>Редагувати</span>
+                <Image
+                    src={isDark ? '/icons/editMilk.svg' : '/icons/edit.svg'}
+                    width={28}
+                    height={28}
+                    alt="back"
+                    unoptimized
+                />
             </Link>
             <div className={styles.detail__info}>
                 <p><span>{training.type}: </span>{program.type}</p>
@@ -72,7 +80,7 @@ const ProgramDetail = () => {
             <ProgramTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
             <div className={styles.detail__content}>
-                <ProgramDaysList program={program} activeTab={activeTab} />
+                <ProgramDaysList program={program} activeTab={activeTab}/>
                 <TrainingHistory program={program} activeTab={activeTab} history={history} />
                 <TrainingProcessing program={program}  activeTab={activeTab} onComplete={loadAllHistory}/>
             </div>
