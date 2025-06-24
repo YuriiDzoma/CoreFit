@@ -16,6 +16,10 @@ import {useAppSelector} from "../../../hooks/redux";
 import {getIsDarkTheme, getText} from "../../../../store/selectors";
 import Image from "next/image";
 import {ProgramDetailSkeleton} from "../../../../ui/skeleton/skeleton";
+import { useRouter } from 'next/navigation';
+import { deleteProgramWithRelations } from '@/lib/programData';
+import Preloader from "../../../../ui/preloader/Preloader";
+import GlobalPopup from "../../../components/globalPopup/globalPopup";
 
 type HistoryMap = Record<string, { date: string; values: Record<string, string> }[]>;
 
@@ -23,11 +27,13 @@ type HistoryMap = Record<string, { date: string; values: Record<string, string> 
 const ProgramDetail = () => {
     const { training } = useAppSelector(getText);
     const { id } = useParams<{ id: string }>();
+    const router = useRouter();
     const isDark = useAppSelector(getIsDarkTheme);
     const [program, setProgram] = useState<ProgramFull | null>(null);
-
+    const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<number>(2);
     const [history, setHistory] = useState<HistoryMap>({});
+    const [isShowRemove, setIsShowRemove] = useState<boolean>(false)
 
     const getLevelText = useLevelText();
     const getTypeText = useTypeText();
@@ -58,6 +64,24 @@ const ProgramDetail = () => {
         loadProgram();
     }, [id]);
 
+    const onRemove = async () => {
+        if (!program) return;
+        setIsPreloader(true);
+
+        const success = await deleteProgramWithRelations(program.id);
+
+        if (success) {
+            router.push('/training/');
+            setIsPreloader(false);
+        } else {
+            alert('Error deleting program. Please try again.');
+            setIsPreloader(false);
+        }
+    };
+
+    const closePopup = () => {
+        setIsShowRemove(false);
+    }
 
     if (!program) return <ProgramDetailSkeleton />;
 
@@ -79,7 +103,7 @@ const ProgramDetail = () => {
                 <p><span>{training.difficulty}: </span>{getLevelText(program.level)}</p>
             </div>
 
-            <button className={styles.detail__removeProgram}>
+            <button className={styles.detail__removeProgram} onClick={() => setIsShowRemove(true)}>
                 <Image
                     src={'/icons/remove.svg'}
                     width={28}
@@ -97,6 +121,9 @@ const ProgramDetail = () => {
                 <TrainingProcessing program={program}  activeTab={activeTab} onComplete={loadAllHistory}/>
             </div>
 
+            {isPreloader && <Preloader />}
+            {isShowRemove && <GlobalPopup title={training.removeProgramTitle} message={training.removeProgramText} onConfirm={onRemove} onCancel={closePopup} />}
+            {isShowRemove && <button className={styles.closer} onClick={() => closePopup()}/>}
         </div>
     );
 };

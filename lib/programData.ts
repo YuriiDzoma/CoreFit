@@ -74,3 +74,60 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
 };
 
 
+export const deleteProgramWithRelations = async (programId: string): Promise<boolean> => {
+    const supabase = createClient();
+
+    const { data: days, error: daysError } = await supabase
+        .from('program_days')
+        .select('id')
+        .eq('program_id', programId);
+
+    if (daysError || !days) {
+        console.error('Error fetching program days:', daysError?.message);
+        return false;
+    }
+
+    const dayIds = days.map(d => d.id);
+
+    const { error: historyError } = await supabase
+        .from('training_history')
+        .delete()
+        .in('day_id', dayIds);
+
+    if (historyError) {
+        console.error('Error deleting training_history:', historyError.message);
+        return false;
+    }
+
+    const { error: exercisesError } = await supabase
+        .from('program_exercises')
+        .delete()
+        .in('day_id', dayIds);
+
+    if (exercisesError) {
+        console.error('Error deleting program_exercises:', exercisesError.message);
+        return false;
+    }
+
+    const { error: daysDelError } = await supabase
+        .from('program_days')
+        .delete()
+        .in('id', dayIds);
+
+    if (daysDelError) {
+        console.error('Error deleting program_days:', daysDelError.message);
+        return false;
+    }
+
+    const { error: programError } = await supabase
+        .from('programs')
+        .delete()
+        .eq('id', programId);
+
+    if (programError) {
+        console.error('Error deleting program:', programError.message);
+        return false;
+    }
+
+    return true;
+};

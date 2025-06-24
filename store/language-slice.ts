@@ -92,6 +92,8 @@ const initialState = {
             anaerobic: 'Anaerobic',
             crossfit: 'Crossfit',
             notHavePrograms: 'You don\'t have any programs yet',
+            removeProgramTitle: 'Uninstalling the program',
+            removeProgramText: 'Are you sure you want to delete the program? All its settings and training history will also be deleted along with the program',
         },
     }
 };
