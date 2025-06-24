@@ -20,6 +20,12 @@
       font-weight: 600;
     }
   }
+
+  &__removeProgram {
+    position: absolute;
+    left: 8px;
+    top: 0;
+  }
 }
 
 .edit {

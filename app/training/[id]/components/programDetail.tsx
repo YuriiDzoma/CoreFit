@@ -64,6 +64,7 @@ const ProgramDetail = () => {
     return (
         <div className={styles.detail}>
             <h2 className={'title'}>{program.title}</h2>
+
             <Link className={styles.edit} href={`/training/${program.id}/edit`}>
                 <Image
                     src={isDark ? '/icons/editMilk.svg' : '/icons/edit.svg'}
@@ -77,6 +78,16 @@ const ProgramDetail = () => {
                 <p><span>{training.type}: </span>{getTypeText(program.type)}</p>
                 <p><span>{training.difficulty}: </span>{getLevelText(program.level)}</p>
             </div>
+
+            <button className={styles.detail__removeProgram}>
+                <Image
+                    src={'/icons/remove.svg'}
+                    width={28}
+                    height={28}
+                    alt="remove"
+                    unoptimized
+                />
+            </button>
 
             <ProgramTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
