@@ -13,13 +13,14 @@ interface ProgramDaysListTypes {
     program: ProgramFull;
     activeTab: number;
     onComplete: () => void;
+    isMyProgram: boolean,
 }
 
 type FormValues = {
     [exerciseId: string]: string;
 };
 
-const TrainingProcessing = ({ program, activeTab, onComplete }: ProgramDaysListTypes) => {
+const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: ProgramDaysListTypes) => {
     const { training } = useAppSelector(getText);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const userId = useAppSelector(getUserId);
@@ -58,7 +59,6 @@ const TrainingProcessing = ({ program, activeTab, onComplete }: ProgramDaysListT
             onComplete();
             setIsPreloader(false);
         }
-
     };
 
 
@@ -88,19 +88,21 @@ const TrainingProcessing = ({ program, activeTab, onComplete }: ProgramDaysListT
                         </li>
                     ))}
 
-
                     <div className={styles.processActions}>
-                        <button
-                            type="button"
-                            className={'button'}
-                            onClick={() => onSubmitDay(index, day.id)}
-                            disabled={submittedDays[index]}
-                        >
-                            <span>{training.complete}</span>
-                        </button>
+                        {isMyProgram && (
+                            <button
+                                type="button"
+                                className={'button'}
+                                onClick={() => onSubmitDay(index, day.id)}
+                                disabled={submittedDays[index]}
+                            >
+                                <span>{training.complete}</span>
+                            </button>
+                        )}
                     </div>
                 </ul>
             ))}
+
             {isPreloader && <Preloader />}
         </div>
     );

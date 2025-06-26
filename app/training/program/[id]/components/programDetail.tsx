@@ -1,10 +1,10 @@
 'use client';
 
 import styles from './programDetail.module.scss'
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { fetchProgramDetail } from '@/lib/programData';
-import { ProgramFull } from '@/types/training';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'next/navigation';
+import {fetchProgramDetail} from '@/lib/programData';
+import {ProgramFull} from '@/types/training';
 import ProgramDaysList from "./programDaysList";
 import ProgramTabs from "./programTabs";
 import TrainingHistory from "./trainingHistory/trainingHistory";
@@ -13,11 +13,11 @@ import {fetchTrainingHistory} from "../../../../../lib/trainingData";
 import Link from "next/link";
 import {useLevelText, useTypeText} from "../../../../hooks/useDifficulty";
 import {useAppSelector} from "../../../../hooks/redux";
-import {getIsDarkTheme, getText} from "../../../../../store/selectors";
+import {getIsDarkTheme, getText, getUserId} from "../../../../../store/selectors";
 import Image from "next/image";
 import {ProgramDetailSkeleton} from "../../../../../ui/skeleton/skeleton";
-import { useRouter } from 'next/navigation';
-import { deleteProgramWithRelations } from '@/lib/programData';
+import {useRouter} from 'next/navigation';
+import {deleteProgramWithRelations} from '@/lib/programData';
 import Preloader from "../../../../../ui/preloader/Preloader";
 import GlobalPopup from "../../../../components/globalPopup/globalPopup";
 
@@ -25,8 +25,9 @@ type HistoryMap = Record<string, { date: string; values: Record<string, string> 
 
 
 const ProgramDetail = () => {
-    const { training } = useAppSelector(getText);
-    const { id } = useParams<{ id: string }>();
+    const currentUserId = useAppSelector(getUserId);
+    const {training} = useAppSelector(getText);
+    const {id} = useParams<{ id: string }>();
     const router = useRouter();
     const isDark = useAppSelector(getIsDarkTheme);
     const [program, setProgram] = useState<ProgramFull | null>(null);
@@ -34,6 +35,8 @@ const ProgramDetail = () => {
     const [activeTab, setActiveTab] = useState<number>(2);
     const [history, setHistory] = useState<HistoryMap>({});
     const [isShowRemove, setIsShowRemove] = useState<boolean>(false)
+
+    const isMyProgram = program?.user_id === currentUserId;
 
     const getLevelText = useLevelText();
     const getTypeText = useTypeText();
@@ -83,46 +86,53 @@ const ProgramDetail = () => {
         setIsShowRemove(false);
     }
 
-    if (!program) return <ProgramDetailSkeleton />;
+    if (!program) return <ProgramDetailSkeleton/>;
 
     return (
         <div className={styles.detail}>
             <h2 className={'title'}>{program.title}</h2>
 
-            <Link className={styles.edit} href={`/training/${program.id}/edit`}>
-                <Image
-                    src={isDark ? '/icons/editMilk.svg' : '/icons/edit.svg'}
-                    width={28}
-                    height={28}
-                    alt="back"
-                    unoptimized
-                />
-            </Link>
+            {isMyProgram && (
+                <button className={styles.detail__removeProgram} onClick={() => setIsShowRemove(true)}>
+                    <Image
+                        src={'/icons/remove.svg'}
+                        width={28}
+                        height={28}
+                        alt="remove"
+                        unoptimized
+                    />
+                </button>
+            )}
+
             <div className={styles.detail__info}>
                 <p><span>{training.type}: </span>{getTypeText(program.type)}</p>
                 <p><span>{training.difficulty}: </span>{getLevelText(program.level)}</p>
             </div>
 
-            <button className={styles.detail__removeProgram} onClick={() => setIsShowRemove(true)}>
-                <Image
-                    src={'/icons/remove.svg'}
-                    width={28}
-                    height={28}
-                    alt="remove"
-                    unoptimized
-                />
-            </button>
+            {isMyProgram && (
+                <Link className={styles.edit} href={`/training/${program.id}/edit`}>
+                    <Image
+                        src={isDark ? '/icons/editMilk.svg' : '/icons/edit.svg'}
+                        width={28}
+                        height={28}
+                        alt="back"
+                        unoptimized
+                    />
+                </Link>
+            )}
 
-            <ProgramTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+            <ProgramTabs activeTab={activeTab} setActiveTab={setActiveTab}/>
 
             <div className={styles.detail__content}>
                 <ProgramDaysList program={program} activeTab={activeTab}/>
-                <TrainingHistory program={program} activeTab={activeTab} history={history} />
-                <TrainingProcessing program={program}  activeTab={activeTab} onComplete={loadAllHistory}/>
+                <TrainingHistory program={program} activeTab={activeTab} history={history}/>
+                <TrainingProcessing program={program} activeTab={activeTab} isMyProgram={isMyProgram} onComplete={loadAllHistory}/>
             </div>
 
-            {isPreloader && <Preloader />}
-            {isShowRemove && <GlobalPopup title={training.removeProgramTitle} message={training.removeProgramText} onConfirm={onRemove} onCancel={closePopup} />}
+            {isPreloader && <Preloader/>}
+            {isShowRemove &&
+            <GlobalPopup title={training.removeProgramTitle} message={training.removeProgramText} onConfirm={onRemove}
+                         onCancel={closePopup}/>}
             {isShowRemove && <button className={styles.closer} onClick={() => closePopup()}/>}
         </div>
     );
