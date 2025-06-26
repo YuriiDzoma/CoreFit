@@ -89,3 +89,16 @@
     color: var(--title-color);
   }
 }
+
+.programsLink {
+  display: block;
+  margin-top: 8px;
+
+  span {
+    font-size: 16px;
+    opacity: 1;
+    font-weight: 600;
+    letter-spacing: 1.1;
+    text-decoration: underline;
+  }
+}

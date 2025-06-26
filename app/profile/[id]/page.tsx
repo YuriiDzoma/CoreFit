@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { fetchUserProfileById } from '@/lib/userData';
 import {ProfileType} from "../../../types/user";
 import Profile from "../components/profile";
+import {ProfileSkeleton} from "../../../ui/skeleton/skeleton";
 
 export default function OtherUserProfilePage() {
     const { id } = useParams<{ id: string }>();
@@ -16,7 +17,7 @@ export default function OtherUserProfilePage() {
         }
     }, [id]);
 
-    if (!profile) return <p>Loading or not found...</p>;
+    if (!profile) return <ProfileSkeleton />;
 
     return (
         <div>

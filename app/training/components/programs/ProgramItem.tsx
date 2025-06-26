@@ -11,7 +11,7 @@ const ProgramItem = ({program}: { program: ProgramType }) => {
     const isDark = useAppSelector(getIsDarkTheme);
 
     return (
-        <Link href={`/training/${program.id}`} className={styles.programItem}>
+        <Link href={`/training/program/${program.id}`} className={styles.programItem}>
             <li>
                 <span>{program.title}</span>
                 <p>{program.type} • {program.level} • {program.days_count} day{program.days_count > 1 ? 's' : ''}</p>

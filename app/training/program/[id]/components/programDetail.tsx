@@ -9,17 +9,17 @@ import ProgramDaysList from "./programDaysList";
 import ProgramTabs from "./programTabs";
 import TrainingHistory from "./trainingHistory/trainingHistory";
 import TrainingProcessing from "./trainingProcessing/trainingProcessing";
-import {fetchTrainingHistory} from "../../../../lib/trainingData";
+import {fetchTrainingHistory} from "../../../../../lib/trainingData";
 import Link from "next/link";
-import {useLevelText, useTypeText} from "../../../hooks/useDifficulty";
-import {useAppSelector} from "../../../hooks/redux";
-import {getIsDarkTheme, getText} from "../../../../store/selectors";
+import {useLevelText, useTypeText} from "../../../../hooks/useDifficulty";
+import {useAppSelector} from "../../../../hooks/redux";
+import {getIsDarkTheme, getText} from "../../../../../store/selectors";
 import Image from "next/image";
-import {ProgramDetailSkeleton} from "../../../../ui/skeleton/skeleton";
+import {ProgramDetailSkeleton} from "../../../../../ui/skeleton/skeleton";
 import { useRouter } from 'next/navigation';
 import { deleteProgramWithRelations } from '@/lib/programData';
-import Preloader from "../../../../ui/preloader/Preloader";
-import GlobalPopup from "../../../components/globalPopup/globalPopup";
+import Preloader from "../../../../../ui/preloader/Preloader";
+import GlobalPopup from "../../../../components/globalPopup/globalPopup";
 
 type HistoryMap = Record<string, { date: string; values: Record<string, string> }[]>;
 

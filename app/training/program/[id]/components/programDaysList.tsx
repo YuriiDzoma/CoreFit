@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from './programDetail.module.scss';
-import { ProgramFull } from '../../../../types/training';
-import {useAppSelector} from "../../../hooks/redux";
-import {getLanguage, getText} from "../../../../store/selectors";
-import {fetchExercisesByIds} from "../../../../lib/trainingData";
-import {ProgramDetailExercisesSkeleton, ProgramDetailSkeleton} from "../../../../ui/skeleton/skeleton";
+import { ProgramFull } from '../../../../../types/training';
+import {useAppSelector} from "../../../../hooks/redux";
+import {getLanguage, getText} from "../../../../../store/selectors";
+import {fetchExercisesByIds} from "../../../../../lib/trainingData";
+import {ProgramDetailExercisesSkeleton, ProgramDetailSkeleton} from "../../../../../ui/skeleton/skeleton";
 
 interface ProgramDaysListTypes {
     program: ProgramFull,

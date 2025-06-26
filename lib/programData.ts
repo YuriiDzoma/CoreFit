@@ -1,20 +1,14 @@
 import {createClient} from '@/utils/supabase/client';
 import {ProgramFull, ProgramType} from "../types/training";
 
-export const fetchUserPrograms = async (): Promise<ProgramType[]> => {
+export const fetchUserPrograms = async (userId: string): Promise<ProgramType[]> => {
     const supabase = createClient();
 
-    const {
-        data: {user},
-    } = await supabase.auth.getUser();
-
-    if (!user) return [];
-
-    const {data, error} = await supabase
+    const { data, error } = await supabase
         .from('programs')
         .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', {ascending: false});
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
 
     if (error) {
         console.error('Error fetching user programs:', error.message);
@@ -23,6 +17,7 @@ export const fetchUserPrograms = async (): Promise<ProgramType[]> => {
 
     return data as ProgramType[];
 };
+
 
 export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null> => {
     const supabase = createClient();

@@ -2,14 +2,14 @@ import React from "react";
 import styles from './profiles.module.scss'
 import Image from "next/image";
 import useWindowSize from "../../hooks/useWindowSize";
-import {getIsDarkTheme, getUserId} from "../../../store/selectors";
+import {getIsDarkTheme, getText, getUserId} from "../../../store/selectors";
 import {useAppSelector} from "../../hooks/redux";
 import {ProfileType} from "../../../types/user";
 import Link from "next/link";
-import Friends from "./Friends";
 
 const Profile = ({profile}: {profile: ProfileType}) => {
     const { width } = useWindowSize();
+    const { base } = useAppSelector(getText);
     const currentId = useAppSelector(getUserId);
     const isDark = useAppSelector(getIsDarkTheme);
 
@@ -26,7 +26,11 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                 <div>
                     <p>{profile.username}</p>
                     <span>{new Date(profile.created_at).toLocaleString()}</span>
+                    <Link className={styles.programsLink} href={`/training/${profile.id}`}>
+                        <span>{base.programs}</span>
+                    </Link>
                 </div>
+
                 {currentId === profile.id && (
                     <Link className={styles.settings} href="/settings" >
                         <Image

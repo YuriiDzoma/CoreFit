@@ -2,12 +2,12 @@
 
 import React, {useEffect, useState} from 'react';
 import styles from './trainingProcessing.module.scss';
-import { ProgramFull } from '../../../../../types/training';
+import { ProgramFull } from '../../../../../../types/training';
 import { useForm } from 'react-hook-form';
-import {getText, getUserId} from "../../../../../store/selectors";
-import {useAppSelector} from "../../../../hooks/redux";
-import {completeDay, fetchDrafts, saveDraft} from "../../../../../lib/trainingData";
-import Preloader from "../../../../../ui/preloader/Preloader";
+import {getText, getUserId} from "../../../../../../store/selectors";
+import {useAppSelector} from "../../../../../hooks/redux";
+import {completeDay, fetchDrafts, saveDraft} from "../../../../../../lib/trainingData";
+import Preloader from "../../../../../../ui/preloader/Preloader";
 
 interface ProgramDaysListTypes {
     program: ProgramFull;
