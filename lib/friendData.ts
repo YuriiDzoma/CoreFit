@@ -107,6 +107,7 @@ export const fetchIncomingFriendRequests = async (userId: string): Promise<Frien
 };
 
 export const getAllFriendsOfUser = async (userId: string): Promise<FriendRecord[]> => {
+    console.log(userId)
     const supabase = createClient();
     const { data, error } = await supabase
         .from('friends')

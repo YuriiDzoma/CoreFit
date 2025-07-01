@@ -12,19 +12,18 @@ import Link from "next/link";
 import {ProfileFriendsSkeleton} from "../../../ui/skeleton/skeleton";
 import {getText} from "../../../store/selectors";
 
-const Friends = () => {
-    const userId = useAppSelector(getUserId);
+const Friends = ({id}):{id: string} => {
     const { base } = useAppSelector(getText);
     const [friends, setFriends] = useState<ProfileType[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!userId) return;
+            if (!id) return;
 
-            const friendLinks = await getAllFriendsOfUser(userId);
+            const friendLinks = await getAllFriendsOfUser(id);
             const friendIds = friendLinks.map(r =>
-                r.user_id === userId ? r.friend_id : r.user_id
+                r.user_id === id ? r.friend_id : r.user_id
             );
 
             const limitedFriends = await fetchLimitedFriendProfiles(friendIds, 12);
@@ -32,7 +31,7 @@ const Friends = () => {
             setLoading(false);
         };
         fetchData();
-    }, [userId]);
+    }, [id]);
 
     if (loading) return <ProfileFriendsSkeleton />;
 

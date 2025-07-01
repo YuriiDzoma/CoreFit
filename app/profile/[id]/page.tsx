@@ -6,6 +6,7 @@ import { fetchUserProfileById } from '@/lib/userData';
 import {ProfileType} from "../../../types/user";
 import Profile from "../components/profile";
 import {ProfileSkeleton} from "../../../ui/skeleton/skeleton";
+import Friends from "../components/Friends";
 
 export default function OtherUserProfilePage() {
     const { id } = useParams<{ id: string }>();
@@ -22,7 +23,9 @@ export default function OtherUserProfilePage() {
     return (
         <div>
             {profile && <Profile profile={profile}/>}
-
+            {id && (
+                <Friends id={id} />
+            )}
         </div>
     );
 }
