@@ -19,6 +19,7 @@ export interface ProgramFull {
     title: string;
     type: string;
     level: string;
+    user_id: string;
     days: {
         id: string;
         day_number: number;

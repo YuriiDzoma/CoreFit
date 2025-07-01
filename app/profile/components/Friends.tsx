@@ -5,14 +5,17 @@ import { getAllFriendsOfUser } from '@/lib/friendData';
 import { fetchLimitedFriendProfiles } from '@/lib/userData';
 import { ProfileType } from '@/types/user';
 import styles from './profiles.module.scss';
-import { getUserId } from '@/store/selectors';
 import { useAppSelector } from '@/app/hooks/redux';
 import Image from "next/image";
 import Link from "next/link";
 import {ProfileFriendsSkeleton} from "../../../ui/skeleton/skeleton";
 import {getText} from "../../../store/selectors";
 
-const Friends = ({id}):{id: string} => {
+type FriendsProps = {
+    id: string;
+};
+
+const Friends: React.FC<FriendsProps> = ({id}) => {
     const { base } = useAppSelector(getText);
     const [friends, setFriends] = useState<ProfileType[]>([]);
     const [loading, setLoading] = useState(true);
