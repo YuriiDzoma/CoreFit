@@ -1,0 +1,25 @@
+.allFriends {
+
+}
+
+.friendList {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+
+  &__link {
+    display: flex;
+    column-gap: 16px;
+
+    img {
+      height: 80px;
+      max-height: 80px;
+      width: 80px;
+      max-width: 80px;
+    }
+  }
+
+  &__name {
+    font-size: 18px;
+  }
+}

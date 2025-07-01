@@ -43,7 +43,7 @@ const Friends: React.FC<FriendsProps> = ({id}) => {
             {friends?.length > 0 && (
                 <div className={styles.friends__header}>
                     <h2>{base.friends}: <span>{friends.length}</span></h2>
-                    <Link href={'/friends'}>
+                    <Link href={`/friends/${id}`}>
                         <span>{base.seeAllFriends}</span>
                     </Link>
                 </div>
@@ -51,12 +51,7 @@ const Friends: React.FC<FriendsProps> = ({id}) => {
             <ul>
                 {friends.map(friend => (
                     <Link href={`/profile/${friend.id}`} key={friend.id} className={styles.friends__link}>
-                        <Image
-                            src={friend.avatar_url}
-                            width={64}
-                            height={64}
-                            alt={friend.username}
-                        />
+                        <img src={friend.avatar_url} alt={friend.username}/>
                         <span className={styles.friends__name}>{friend.username}</span>
                     </Link>
                 ))}

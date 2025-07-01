@@ -45,6 +45,13 @@
     display: flex;
     flex-direction: column;
     row-gap: 8px;
+
+    img {
+      max-width: 64px;
+      width: 64px;
+      height: 64px;
+      max-height: 64px;
+    }
   }
 
   &__header {
