@@ -11,7 +11,8 @@ const TrainingMenu = () => {
     if (width >= 768) return null;
 
     const getLinkClass = (path: string) =>
-        `${styles.link} button ${pathname === path ? styles.active : ''}`;
+        `${styles.link} button ${pathname.startsWith(path) ? styles.active : ''}`;
+
 
     return (
         <div className={styles.trainingMenu}>
