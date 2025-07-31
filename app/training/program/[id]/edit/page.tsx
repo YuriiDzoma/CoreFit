@@ -11,6 +11,9 @@ export default function EditProgramPage() {
     const params = useParams();
     const id = params?.id as string;
 
+    console.log(id)
+    console.log(params)
+
     const [program, setProgram] = useState<ProgramFull | null>(null);
     const [loading, setLoading] = useState(true);
 

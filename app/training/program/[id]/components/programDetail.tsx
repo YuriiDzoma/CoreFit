@@ -61,7 +61,6 @@ const ProgramDetail = () => {
         const loadProgram = async () => {
             if (!id) return;
             const result = await fetchProgramDetail(id);
-            console.log(result)
             setProgram(result);
         };
 
@@ -119,7 +118,7 @@ const ProgramDetail = () => {
             </div>
 
             {isMyProgram && (
-                <Link className={styles.edit} href={`/training/${program.id}/edit`}>
+                <Link className={styles.edit} href={`/training/program/${program.id}/edit`}>
                     <Image
                         src={isDark ? '/icons/editMilk.svg' : '/icons/edit.svg'}
                         width={28}

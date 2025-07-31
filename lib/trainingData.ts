@@ -182,7 +182,14 @@ export const createTrainingProgram = async (
 
     const {data: program, error: programError} = await supabase
         .from('programs')
-        .insert([{user_id: userId, title, type, level, days_count: days.length}])
+        .insert([{
+            user_id: userId,
+            author_id: userId, // ✅ додаємо автора
+            title,
+            type,
+            level,
+            days_count: days.length
+        }])
         .select()
         .single();
 
@@ -466,10 +473,28 @@ export const updateTrainingProgram = async (
 ): Promise<boolean> => {
     const supabase = createClient();
 
-    // 1. Оновлюємо саму програму
+    // 1. Отримуємо існуючу програму, щоб зберегти автора
+    const { data: existingProgram, error: fetchProgramError } = await supabase
+        .from('programs')
+        .select('author_id')
+        .eq('id', programId)
+        .single();
+
+    if (fetchProgramError || !existingProgram) {
+        console.error('Error fetching existing program:', fetchProgramError?.message);
+        return false;
+    }
+
+    // 2. Оновлюємо саму програму, зберігаючи автора
     const { error: programError } = await supabase
         .from('programs')
-        .update({ title, type, level, days_count: days.length })
+        .update({
+            title,
+            type,
+            level,
+            days_count: days.length,
+            author_id: existingProgram.author_id, // ✅ зберігаємо автора
+        })
         .eq('id', programId);
 
     if (programError) {
@@ -477,7 +502,7 @@ export const updateTrainingProgram = async (
         return false;
     }
 
-    // 2. Отримуємо існуючі дні цієї програми
+    // 3. Отримуємо існуючі дні програми
     const { data: existingDays, error: fetchDaysError } = await supabase
         .from('program_days')
         .select('id, day_number')
@@ -489,8 +514,6 @@ export const updateTrainingProgram = async (
     }
 
     const dayIdMap = new Map<number, string>();
-
-    // 3. Спочатку додаємо всі існуючі дні у мапу
     for (const day of existingDays) {
         dayIdMap.set(day.day_number, day.id);
     }
@@ -519,11 +542,11 @@ export const updateTrainingProgram = async (
         });
     }
 
-    // 5. Отримуємо всі programExerciseIds (можливо частина з них — це ID самих program_exercises)
+    // 5. Мапимо programExerciseIds -> exerciseIds
     const allProgramExerciseIds = days.flatMap((d) => d.exercises);
-    const exerciseIdMap = await fetchProgramExerciseMap(allProgramExerciseIds); // { programExId: exerciseId }
+    const exerciseIdMap = await fetchProgramExerciseMap(allProgramExerciseIds);
 
-    // 6. Для кожного дня оновлюємо або додаємо вправи
+    // 6. Оновлюємо вправи для кожного дня
     for (const day of days) {
         const dayId = dayIdMap.get(day.dayNumber);
         if (!dayId) continue;
@@ -540,7 +563,6 @@ export const updateTrainingProgram = async (
         }
 
         const existing = existingExercises ?? [];
-
         const updates = [];
         const inserts = [];
 
@@ -570,12 +592,9 @@ export const updateTrainingProgram = async (
             }
         }
 
-        // 7. Видаляємо зайві (застарілі) вправи
+        // 7. Видаляємо зайві вправи
         if (existing.length > day.exercises.length) {
-            const idsToDelete = existing
-                .slice(day.exercises.length)
-                .map((ex) => ex.id);
-
+            const idsToDelete = existing.slice(day.exercises.length).map((ex) => ex.id);
             if (idsToDelete.length > 0) {
                 const { error: delErr } = await supabase
                     .from('program_exercises')
@@ -589,7 +608,7 @@ export const updateTrainingProgram = async (
             }
         }
 
-        // 8. Оновлюємо порядок / ID
+        // 8. Оновлюємо наявні вправи
         if (updates.length > 0) {
             const { error: updErr } = await supabase
                 .from('program_exercises')
@@ -601,7 +620,7 @@ export const updateTrainingProgram = async (
             }
         }
 
-        // 9. Вставляємо нові
+        // 9. Додаємо нові вправи
         if (inserts.length > 0) {
             const { error: insErr } = await supabase
                 .from('program_exercises')
@@ -616,3 +635,4 @@ export const updateTrainingProgram = async (
 
     return true;
 };
+

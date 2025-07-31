@@ -8,7 +8,7 @@ const Navigation = () => {
     const pathname = usePathname();
     const { width } = useWindowSize();
 
-    const isActive = (route: string) => (pathname.startsWith(`${route}/`) && width < 768) || pathname === route;
+    const isActive = (route: string) => pathname.startsWith(`${route}/`) || pathname === route;
 
     return (
         <div className={styles.navigation}>
