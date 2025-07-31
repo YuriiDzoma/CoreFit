@@ -16,6 +16,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
     return (
         <div className={styles.profile}>
             <div className={styles.profile__header}>
+
                 <Image
                     src={profile.avatar_url}
                     width={width < 768 ? 96 : 150}
@@ -23,6 +24,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                     alt="avatar"
                     unoptimized
                 />
+
                 <div>
                     <p>{profile.username}</p>
                     <span>{new Date(profile.created_at).toLocaleString()}</span>
@@ -42,8 +44,8 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                         />
                     </Link>
                 )}
-            </div>
 
+            </div>
         </div>
     )
 }

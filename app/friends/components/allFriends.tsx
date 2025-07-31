@@ -35,7 +35,6 @@ const AllFriends = () => {
 
     if (loading) return <p>Loading...</p>;
 
-
     return (
         <div className={styles.allFriends}>
             <h2 className={'pageTitle'}>{base.friends}</h2>

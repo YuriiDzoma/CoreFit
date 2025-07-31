@@ -1,13 +1,13 @@
 'use client';
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import styles from './settings.module.scss';
-import {useAppSelector} from "../../hooks/redux";
-import {getText} from "../../../store/selectors";
-import {useForm} from "react-hook-form";
-import {firstNameOptions, lastNameOptions} from "../../../lib/validations";
+import { useAppSelector } from "../../hooks/redux";
+import { getText } from "../../../store/selectors";
+import { useForm } from "react-hook-form";
+import { firstNameOptions, lastNameOptions } from "../../../lib/validations";
 import InputBox from "../../components/inputBox/inputBox";
-import {fetchOwnProfile, updateUserProfile} from "../../../lib/userData";
-import {ProfileSettingsSkeleton} from "../../../ui/skeleton/skeleton";
+import { fetchOwnProfile, updateUserProfile } from "../../../lib/userData";
+import { ProfileSettingsSkeleton } from "../../../ui/skeleton/skeleton";
 import Preloader from "../../../ui/preloader/Preloader";
 
 type profileSettingsForm = {
@@ -18,19 +18,21 @@ type profileSettingsForm = {
 const ProfileSettings = () => {
     const { settings, base } = useAppSelector(getText);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<profileSettingsForm>();
-
+    const { register, handleSubmit, formState: { errors }, reset, watch } = useForm<profileSettingsForm>();
     const [loading, setLoading] = useState(true);
+
+    const [initialValues, setInitialValues] = useState<profileSettingsForm>({ firstName: '', lastName: '' });
+
+    const watchedFirstName = watch("firstName");
+    const watchedLastName = watch("lastName");
 
     useEffect(() => {
         const loadProfile = async () => {
             const profile = await fetchOwnProfile();
             if (profile) {
                 const [firstName, lastName] = profile.username?.split(' ') ?? ['', ''];
-                reset({
-                    firstName,
-                    lastName,
-                });
+                setInitialValues({ firstName, lastName }); // зберігаємо початкові значення
+                reset({ firstName, lastName });
             }
             setLoading(false);
         };
@@ -43,14 +45,16 @@ const ProfileSettings = () => {
         if (!profile) return;
 
         const fullName = `${data.firstName} ${data.lastName}`.trim();
-
-        await updateUserProfile(profile.id, {
-            username: fullName,
-        });
+        await updateUserProfile(profile.id, { username: fullName });
+        setInitialValues(data); // після збереження оновлюємо initialValues
         setIsPreloader(false);
     };
 
     if (loading) return <ProfileSettingsSkeleton />;
+
+    const isUnchanged =
+        watchedFirstName.trim() === initialValues.firstName.trim() &&
+        watchedLastName.trim() === initialValues.lastName.trim();
 
     return (
         <div className={styles.profile}>
@@ -70,7 +74,7 @@ const ProfileSettings = () => {
                     label={base.lblLastName}
                     options={register("lastName", lastNameOptions)}
                 />
-                <button className={`submit`} type="submit">
+                <button className={`submit`} type="submit" disabled={isUnchanged}>
                     {base.save}
                 </button>
             </form>
