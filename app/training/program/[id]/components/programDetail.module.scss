@@ -12,9 +12,11 @@
   }
 
   &__info {
-    margin: 16px 0;
+    margin: 24px 0;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    row-gap: 8px;
+    align-items: flex-end;
 
     span {
       font-weight: 600;

@@ -30,6 +30,7 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
                 type,
                 level,
                 user_id,
+                author:author_id (id, username, avatar_url),
                 days:program_days(
                     id,
                     day_number,
@@ -66,6 +67,7 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
         type: data.type,
         level: data.level,
         user_id: data.user_id,
+        author: data.author,
         days: normalizedDays,
     };
 };

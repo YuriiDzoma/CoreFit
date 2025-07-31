@@ -418,8 +418,10 @@
 
   &__details {
     display: flex;
-    justify-content: space-between;
-    margin: 16px 0;
+    align-items: flex-end;
+    flex-direction: column;
+    row-gap: 8px;
+    margin: 24px 0;
 
     span {
       width: 160px;

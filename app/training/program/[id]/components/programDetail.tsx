@@ -61,6 +61,7 @@ const ProgramDetail = () => {
         const loadProgram = async () => {
             if (!id) return;
             const result = await fetchProgramDetail(id);
+            console.log(result)
             setProgram(result);
         };
 
@@ -77,7 +78,7 @@ const ProgramDetail = () => {
             router.push('/training/');
             setIsPreloader(false);
         } else {
-            alert('Error deleting program. Please try again.');
+            console.log('Error deleting program. Please try again.');
             setIsPreloader(false);
         }
     };
@@ -107,6 +108,14 @@ const ProgramDetail = () => {
             <div className={styles.detail__info}>
                 <p><span>{training.type}: </span>{getTypeText(program.type)}</p>
                 <p><span>{training.difficulty}: </span>{getLevelText(program.level)}</p>
+                {program.author && (
+                    <p>
+                        <span>{training.author}: </span>
+                        <Link href={`/profile/${program.author.id}`} className={styles.detail__authorLink}>
+                            {program.author.username}
+                        </Link>
+                    </p>
+                )}
             </div>
 
             {isMyProgram && (

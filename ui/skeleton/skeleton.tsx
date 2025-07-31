@@ -246,6 +246,7 @@ export function ProgramDetailSkeleton() {
             <div className={styles.program__details}>
                 <span/>
                 <span/>
+                <span/>
             </div>
             <span className={styles.program__changer}/>
             <div className={styles.program__grid}>

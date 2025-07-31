@@ -94,6 +94,7 @@ export const getLanguages = async (value: string) => {
             notHaveProgramsUser: 'The user has no programs',
             removeProgramTitle: 'Uninstalling the program',
             removeProgramText: 'Are you sure you want to delete the program? All its settings and training history will also be deleted along with the program',
+            author: 'Author',
         },
     };
 
@@ -190,6 +191,7 @@ export const getLanguages = async (value: string) => {
             notHaveProgramsUser: 'У пользователя нет программ',
             removeProgramTitle: 'Удаление программы',
             removeProgramText: 'Вы уверены, что хотите удалить программу? Всея ее упражнения и история тренировок также будут удалены вместе с программой',
+            author: 'Автор',
         }
     };
 
@@ -286,6 +288,7 @@ export const getLanguages = async (value: string) => {
             notHaveProgramsUser: 'У користувача немає програм',
             removeProgramTitle: 'Видалення програми',
             removeProgramText: 'Ви впевнені, що хочете видалити програму? Усі її вправи та історія тренувань також будуть видалені разом із програмою',
+            author: 'Автор',
         }
     };
 
@@ -383,6 +386,7 @@ export const getLanguages = async (value: string) => {
             notHaveProgramsUser: 'Użytkownik nie ma żadnych programów',
             removeProgramTitle: 'Odinstalowywanie programu',
             removeProgramText: 'Czy na pewno chcesz usunąć aplikację? Wszystkie jej ćwiczenia i historia treningów zostaną również usunięte wraz z aplikacją',
+            author: 'Autor',
         },
     };
 

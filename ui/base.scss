@@ -64,7 +64,7 @@ img {
   vertical-align: top;
 }
 
-h1, h2, h3, h4, h5, h6, p, span, li, button, label {
+h1, h2, h3, h4, h5, h6, p, span, li, button, label, a {
   font-weight: 400;
   color: var(--text-color);
   font-size: 16px;
@@ -171,7 +171,7 @@ body:has(.popup), body:has(.menuActive) {
 }
 
 @media screen and (max-width: 768px) {
-  h1, h2, h3, h4, h5, h6, p, span, li, button, label {
+  h1, h2, h3, h4, h5, h6, p, span, li, button, label, a {
     font-size: 14px;
   }
 
