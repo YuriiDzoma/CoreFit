@@ -10,20 +10,19 @@ const TrainingMenu = () => {
 
     if (width >= 768) return null;
 
-    const getLinkClass = (path: string) => {
+    const getLinkClass = (path: string, options?: { includeSubpaths?: boolean }) => {
+        const { includeSubpaths = false } = options || {};
         let isActive = false;
 
-        if (path === '/training') {
-            isActive =
-                pathname.startsWith('/training') &&
-                !pathname.startsWith('/training/wiki') &&
-                !pathname.startsWith('/training/complexes');
+        if (includeSubpaths) {
+            isActive = pathname === path || pathname.startsWith(`${path}/`);
         } else {
-            isActive = pathname.startsWith(path);
+            isActive = pathname === path;
         }
 
         return `${styles.link} button ${isActive ? styles.active : ''}`;
     };
+
 
     return (
         <div className={styles.trainingMenu}>

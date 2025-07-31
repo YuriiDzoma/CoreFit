@@ -18,29 +18,32 @@ export const fetchUserPrograms = async (userId: string): Promise<ProgramType[]> 
     return data as ProgramType[];
 };
 
-
 export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null> => {
     const supabase = createClient();
 
-    const {data, error} = await supabase
+    const { data, error } = await supabase
         .from('programs')
         .select(`
+            id,
+            title,
+            type,
+            level,
+            user_id,
+            author_id (
                 id,
-                title,
-                type,
-                level,
-                user_id,
-                author:author_id (id, username, avatar_url),
-                days:program_days(
-                    id,
-                    day_number,
-                    exercises:program_exercises(
+                username,
+                avatar_url
+            ),
+            program_days (
+                id,
+                day_number,
+                program_exercises (
                     id,
                     exercise_id,
                     order_index
-                    )
                 )
-                `)
+            )
+        `)
         .eq('id', id)
         .single();
 
@@ -49,10 +52,10 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
         return null;
     }
 
-    const normalizedDays = (data.days || []).map((day: any) => ({
+    const normalizedDays = (data.program_days || []).map((day: any) => ({
         id: day.id,
         day_number: day.day_number,
-        exercises: (day.exercises || [])
+        exercises: (day.program_exercises || [])
             .sort((a: any, b: any) => a.order_index - b.order_index)
             .map((ex: any) => ({
                 id: ex.exercise_id,
@@ -60,14 +63,13 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
             })),
     }));
 
-
     return {
         id: data.id,
         title: data.title,
         type: data.type,
         level: data.level,
         user_id: data.user_id,
-        author: data.author,
+        author: Array.isArray(data.author_id) ? data.author_id[0] : data.author_id || undefined,
         days: normalizedDays,
     };
 };

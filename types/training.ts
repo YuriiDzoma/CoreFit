@@ -25,4 +25,11 @@ export interface ProgramFull {
         day_number: number;
         exercises: { id: string; programExerciseId: string }[];
     }[];
+    author?: {
+        id: string;
+        username: string;
+        avatar_url?: string;
+    };
 }
+
+
