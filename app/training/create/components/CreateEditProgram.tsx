@@ -9,7 +9,7 @@ import Stepper from './stepper';
 import { DaysCountStep } from './daysCountStep';
 import SelectExercisesStep from './ selectExercisesStep';
 import Preloader from '../../../../ui/preloader/Preloader';
-import { useRouter } from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import { useAppSelector } from '@/app/hooks/redux';
 import { getUserId, getLanguage } from '@/store/selectors';
 import { ProgramFull } from '@/types/training';
@@ -18,6 +18,7 @@ import {
     updateTrainingProgram,
     fetchExercisesByIds
 } from '@/lib/trainingData';
+import {createGlobalProgram} from "../../../../lib/complexesData";
 
 type EditableProgramDay = {
     dayNumber: number;
@@ -32,6 +33,9 @@ const allowedTypes = ['aerobic', 'anaerobic', 'crossfit'] as const;
 type AllowedType = (typeof allowedTypes)[number];
 
 const CreateEditProgram = ({ initialProgram }: Props) => {
+    const searchParams = useSearchParams();
+    const isGlobal = searchParams.get("global") === "1";
+
     const userId = useAppSelector(getUserId);
     const language = useAppSelector(getLanguage);
     const router = useRouter();
@@ -41,7 +45,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
     const levelMap = ['beginner', 'intermediate', 'advanced', 'expert', 'professional'];
     const isEdit = Boolean(initialProgram);
 
-    const [programName, setProgramName] = useState(initialProgram?.title || '');
+    const [programName, setProgramName] = useState<string>(initialProgram?.title || '');
 
     const initialType: AllowedType | '' =
         initialProgram && allowedTypes.includes(initialProgram.type as AllowedType)
@@ -93,8 +97,6 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
         loadExerciseMap();
     }, [JSON.stringify(programDays), language]); // ✅ стабільна перевірка змін
 
-
-
     const handleNext = () => setStep((prev) => prev + 1);
     const handleBack = () => setStep((prev) => prev - 1);
 
@@ -115,24 +117,37 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
         setIsPreloader(true);
         const level = levelMap[difficulty - 1];
 
-        const success = isEdit && initialProgram
-            ? await updateTrainingProgram(
-                initialProgram.id,
+        let success: string | boolean | null;
+
+        if (isGlobal) {
+            // ✅ створення глобальної програми
+            success = await createGlobalProgram(
+                programName,
+                programType,
+                level,
+                programDays,
+            );
+        } else {
+            // ✅ створення особистої програми
+            success = await createTrainingProgram(
+                userId!,
                 programName,
                 programType,
                 level,
                 programDays
-            )
-            : await createTrainingProgram(userId, programName, programType, level, programDays);
+            );
+        }
 
         if (success) {
             await new Promise((resolve) => setTimeout(resolve, 150));
-            router.push('/training');
+            router.push(isGlobal ? '/training/complexes' : '/training');
         } else {
             console.error('Failed to save program');
-            setIsPreloader(false); // 🛑 лише у випадку помилки
+            setIsPreloader(false);
         }
+
     };
+
 
     return (
         <div className={styles.wrapper}>

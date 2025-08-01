@@ -1,3 +1,6 @@
+import Complexes from "./components/complexes";
+import React from "react";
+
 export default function Page() {
-    return <p>Complexes Page</p>;
+    return <Complexes />;
 }

@@ -1,10 +1,5 @@
 import { createClient } from '@/utils/supabase/client';
-import {ProfileType, User} from "../types/user";
-
-type UserSettings = {
-    dark: boolean;
-    language: string;
-};
+import {ProfileType, User, UserSettings} from "../types/user";
 
 export const fetchUsers = async (): Promise<ProfileType[]> => {
     const supabase = createClient();
@@ -55,7 +50,7 @@ export const fetchUserSettings = async (userId: string): Promise<UserSettings> =
 
     const { data, error } = await supabase
         .from('profiles')
-        .select('dark, language')
+        .select('dark, language, is_trainer')
         .eq('id', userId)
         .single();
 
@@ -64,14 +59,17 @@ export const fetchUserSettings = async (userId: string): Promise<UserSettings> =
         return {
             dark: true,
             language: 'english',
+            is_trainer: false, // ✅ дефолт
         };
     }
 
     return {
         dark: data.dark ?? true,
         language: data.language ?? 'english',
+        is_trainer: data.is_trainer ?? false, // ✅ беремо з профілю
     };
 };
+
 
 export const updateUserProfile = async (
     userId: string,

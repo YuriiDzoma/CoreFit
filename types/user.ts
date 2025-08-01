@@ -6,6 +6,7 @@ export type User = {
     email: string;
     language: string;
     dark: boolean;
+    is_trainer: boolean;
 };
 
 export type ProfileType = {
@@ -13,4 +14,10 @@ export type ProfileType = {
     username: string;
     avatar_url: string;
     created_at: string;
+};
+
+export type UserSettings = {
+    dark: boolean;
+    language: string;
+    is_trainer?: boolean;
 };

@@ -32,4 +32,40 @@ export interface ProgramFull {
     };
 }
 
+export interface ExerciseDetails {
+    id: string;
+    image_url: string;
+    name_en: string;
+    name_uk: string;
+    name_ru: string;
+}
+
+export interface GlobalExercise {
+    id: string;
+    exercise_id: string;
+    details: ExerciseDetails | null;
+}
+
+export interface GlobalDay {
+    id: string;
+    program_id: string;
+    day_number: number;
+    exercises: GlobalExercise[];
+}
+
+export interface GlobalProgram {
+    id: string;
+    title: string;
+    type: string;
+    level: string;
+    days_count: number;
+    created_at: string;
+    days: GlobalDay[];
+}
+
+export type EditableProgramDay = {
+    dayNumber: number;
+    exercises: string[];
+};
+
 

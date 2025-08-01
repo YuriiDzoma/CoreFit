@@ -1,0 +1,33 @@
+.createLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.programList {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+.programCard {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.dayBlock {
+  margin-top: 16px;
+}
+
+.exerciseItem {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+}
