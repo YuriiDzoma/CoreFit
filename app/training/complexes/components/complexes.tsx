@@ -34,7 +34,6 @@ const Complexes = () => {
         const loadPrograms = async () => {
             setLoading(true);
             const result = await fetchGlobalProgramsWithDetails();
-            console.log(result)
             setPrograms(result);
             setLoading(false);
         };

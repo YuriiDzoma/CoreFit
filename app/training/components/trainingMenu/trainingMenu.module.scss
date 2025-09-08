@@ -39,7 +39,7 @@
       position: absolute;
       content: '';
       display: block;
-      height: 50%;
+      height: calc(50% + 1px);
       width: 0;
       left: 50%;
       transform: translateX(-50%);
