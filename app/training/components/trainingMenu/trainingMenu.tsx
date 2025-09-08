@@ -10,10 +10,12 @@ const TrainingMenu = () => {
 
     if (width >= 768) return null;
 
-    const getLinkClass = (path: string) => {
+    const getLinkClass = (path: string, options?: { includeSubpaths?: boolean }) => {
         let isActive = false;
 
-        if (path === '/training') {
+        if (options?.includeSubpaths) {
+            isActive = pathname.startsWith(path);
+        } else if (path === '/training') {
             isActive =
                 pathname.startsWith('/training') &&
                 !pathname.startsWith('/training/wiki') &&
@@ -24,6 +26,7 @@ const TrainingMenu = () => {
 
         return `${styles.link} button ${isActive ? styles.active : ''}`;
     };
+
 
 
     return (
