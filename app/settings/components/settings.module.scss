@@ -29,7 +29,7 @@
     justify-content: flex-start;
     row-gap: 16px;
     max-width: 800px;
-    width: 800px;
+    width: 100%;
     margin: 0 auto;
   }
 
@@ -76,6 +76,6 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: var(--bg-color);
+    background-color: var(--border-color);
   }
 }
