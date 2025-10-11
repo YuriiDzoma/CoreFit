@@ -1,10 +1,11 @@
-import React from "react";
-import styles from './profiles.module.scss'
+'use client';
+
+import styles from './profiles.module.scss';
 import Image from "next/image";
 import useWindowSize from "../../hooks/useWindowSize";
-import {getIsDarkTheme, getText, getUserId} from "../../../store/selectors";
+import {getIsDarkTheme, getText, getUserId} from "@/store/selectors";
 import {useAppSelector} from "../../hooks/redux";
-import {ProfileType} from "../../../types/user";
+import {ProfileType} from "@/types/user";
 import Link from "next/link";
 
 const Profile = ({profile}: {profile: ProfileType}) => {

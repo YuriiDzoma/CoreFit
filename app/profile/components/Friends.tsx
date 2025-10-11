@@ -1,63 +1,50 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { getAllFriendsOfUser } from '@/lib/friendData';
-import { fetchLimitedFriendProfiles } from '@/lib/userData';
-import { ProfileType } from '@/types/user';
+import Link from 'next/link';
+import Image from 'next/image';
 import styles from './profiles.module.scss';
 import { useAppSelector } from '@/app/hooks/redux';
-import Image from "next/image";
-import Link from "next/link";
-import {ProfileFriendsSkeleton} from "../../../ui/skeleton/skeleton";
-import {getText} from "../../../store/selectors";
+import { getText } from '@/store/selectors';
+import type { ProfileType } from '@/types/user';
 
 type FriendsProps = {
     id: string;
+    initial: ProfileType[];
 };
 
-const Friends: React.FC<FriendsProps> = ({id}) => {
+export default function Friends({ id, initial }: FriendsProps) {
     const { base } = useAppSelector(getText);
-    const [friends, setFriends] = useState<ProfileType[]>([]);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!id) return;
-
-            const friendLinks = await getAllFriendsOfUser(id);
-            const friendIds = friendLinks.map(r =>
-                r.user_id === id ? r.friend_id : r.user_id
-            );
-
-            const limitedFriends = await fetchLimitedFriendProfiles(friendIds, 12);
-            setFriends(limitedFriends);
-            setLoading(false);
-        };
-        fetchData();
-    }, [id]);
-
-    if (loading) return <ProfileFriendsSkeleton />;
+    if (!initial || initial.length === 0) {
+        return null;
+    }
 
     return (
         <div className={styles.friends}>
-            {friends?.length > 0 && (
-                <div className={styles.friends__header}>
-                    <h2>{base.friends}: <span>{friends.length}</span></h2>
-                    <Link href={`/friends/${id}`}>
-                        <span>{base.seeAllFriends}</span>
-                    </Link>
-                </div>
-            )}
+            <div className={styles.friends__header}>
+                <h2>
+                    {base.friends}: <span>{initial.length}</span>
+                </h2>
+                <Link href={`/friends/${id}`}>
+                    <span>{base.seeAllFriends}</span>
+                </Link>
+            </div>
+
             <ul>
-                {friends.map(friend => (
-                    <Link href={`/profile/${friend.id}`} key={friend.id} className={styles.friends__link}>
-                        <img src={friend.avatar_url} alt={friend.username}/>
-                        <span className={styles.friends__name}>{friend.username}</span>
-                    </Link>
+                {initial.map((friend) => (
+                    <li key={friend.id}>
+                        <Link href={`/profile/${friend.id}`} className={styles.friends__link}>
+                            <Image
+                                src={friend.avatar_url || '/avatar-placeholder.png'}
+                                alt={friend.username || 'user'}
+                                width={40}
+                                height={40}
+                            />
+                            <span className={styles.friends__name}>{friend.username}</span>
+                        </Link>
+                    </li>
                 ))}
             </ul>
         </div>
     );
-};
-
-export default Friends;
+}

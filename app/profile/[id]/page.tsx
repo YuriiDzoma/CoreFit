@@ -1,31 +1,26 @@
-'use client';
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import styles from "../components/profiles.module.scss";
+import ProfileClient from "../components/Profile.client";
+import FriendsServer from "../components/Friends.server";
+import { getProfileById } from "@/lib/data/user";
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { fetchUserProfileById } from '@/lib/userData';
-import {ProfileType} from "../../../types/user";
-import Profile from "../components/profile";
-import {ProfileSkeleton} from "../../../ui/skeleton/skeleton";
-import Friends from "../components/Friends";
+export const dynamic = "force-dynamic";
 
-export default function OtherUserProfilePage() {
-    const { id } = useParams<{ id: string }>();
-    const [profile, setProfile] = useState<ProfileType | null>(null);
+type PageProps = { params: Promise<{ id: string }> };
 
-    useEffect(() => {
-        if (id) {
-            fetchUserProfileById(id).then(setProfile);
-        }
-    }, [id]);
+export default async function OtherProfile({ params }: PageProps) {
+    const { id } = await params;
+    const profile = await getProfileById(id);
 
-    if (!profile) return <ProfileSkeleton />;
+    if (!profile) notFound();
 
     return (
-        <div>
-            {profile && <Profile profile={profile}/>}
-            {id && (
-                <Friends id={id} />
-            )}
+        <div className={styles.container}>
+            <ProfileClient profile={profile} />
+            <Suspense fallback={null}>
+                <FriendsServer id={profile.id} />
+            </Suspense>
         </div>
     );
 }
