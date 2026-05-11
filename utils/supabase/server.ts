@@ -1,28 +1,29 @@
-'use server';
+import 'server-only';
+import { cookies } from 'next/headers';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
-import { cookies as getCookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
-import type { CookieOptions } from '@supabase/ssr';
-import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
+export async function createServerSupabase() {
+    const url  = process.env.SUPABASE_URL  ?? process.env.NEXT_PUBLIC_SUPABASE_URL  ?? '';
+    const anon = process.env.SUPABASE_ANON_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
+    if (!url || !anon) throw new Error('Missing SUPABASE_URL/ANON_KEY');
 
-export const createClient = () => {
-    const cookieStore = getCookies() as unknown as ReadonlyRequestCookies;
+    const store = await cookies();
 
-    return createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                get(name: string) {
-                    return cookieStore.get(name)?.value;
-                },
-                set(name: string, value: string, options?: CookieOptions) {
-                    cookieStore.set({ name, value, ...options });
-                },
-                remove(name: string, options?: CookieOptions) {
-                    cookieStore.delete({ name, ...options });
-                },
+    const set = (name: string, value: string, options?: CookieOptions) => {
+        store.set({ name, value, ...(options ?? {}) } as any);
+    };
+
+    const remove = (name: string, options?: CookieOptions) => {
+        store.delete({ name, ...(options ?? {}) } as any);
+    };
+
+    return createServerClient(url, anon, {
+        cookies: {
+            get(name: string) {
+                return store.get(name)?.value;
             },
-        }
-    );
-};
+            set,
+            remove,
+        },
+    });
+}

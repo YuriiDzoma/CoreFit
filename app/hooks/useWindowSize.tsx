@@ -13,7 +13,6 @@ const useWindowSize = (): WindowSize => {
     });
 
     useEffect(() => {
-        // SSR-safe
         if (typeof window === 'undefined') return;
 
         const handleResize = () => {
@@ -23,7 +22,7 @@ const useWindowSize = (): WindowSize => {
             });
         };
 
-        handleResize(); // Ініціалізація
+        handleResize();
 
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
