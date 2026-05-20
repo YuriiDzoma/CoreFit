@@ -3,12 +3,16 @@ import React, { useEffect, useState } from "react";
 import { fetchUserSettings } from "../../../../lib/userData";
 import { useAppSelector } from "../../../hooks/redux";
 import {getUserId, getLanguage, getIsDarkTheme} from "../../../../store/selectors";
-import { fetchGlobalProgramsWithDetails } from "../../../../lib/complexesData";
+import {
+    addGlobalProgramToUser,
+    fetchGlobalProgramsWithDetails,
+    fetchUserGlobalProgramMap,
+    removeGlobalProgramFromUser
+} from "../../../../lib/complexesData";
 import styles from "./complexes.module.scss";
 import Link from "next/link";
 import { GlobalDay, GlobalExercise, GlobalProgram } from "../../../../types/training";
 
-// ✅ MUI Accordion
 import {
     Accordion,
     AccordionSummary,
@@ -25,20 +29,31 @@ const Complexes = () => {
     const [isTrainer, setIsTrainer] = useState(false);
     const [programs, setPrograms] = useState<GlobalProgram[]>([]);
     const [loading, setLoading] = useState(true);
+    const [userGlobalProgramMap, setUserGlobalProgramMap] = useState<Record<string, string>>({});
+    const [actionLoadingProgramId, setActionLoadingProgramId] = useState<string | null>(null);
 
     useEffect(() => {
-        if (userId) {
-            fetchUserSettings(userId).then((settings) => setIsTrainer(settings.is_trainer ?? false));
-        }
-
-        const loadPrograms = async () => {
+        const loadData = async () => {
             setLoading(true);
+
+            if (userId) {
+                const settings = await fetchUserSettings(userId);
+                setIsTrainer(settings.is_trainer ?? false);
+
+                const addedProgramsMap = await fetchUserGlobalProgramMap(userId);
+                setUserGlobalProgramMap(addedProgramsMap);
+            } else {
+                setIsTrainer(false);
+                setUserGlobalProgramMap({});
+            }
+
             const result = await fetchGlobalProgramsWithDetails();
             setPrograms(result);
+
             setLoading(false);
         };
 
-        loadPrograms();
+        loadData();
     }, [userId]);
 
     const getExerciseName = (exercise: any) => {
@@ -47,6 +62,40 @@ const Complexes = () => {
             case "rus": return exercise?.details?.name_ru || exercise?.details?.name_en;
             default: return exercise?.details?.name_en;
         }
+    };
+
+    const handleToggleProgram = async (programId: string) => {
+        if (!userId) {
+            alert("Please login first");
+            return;
+        }
+
+        setActionLoadingProgramId(programId);
+
+        const isAdded = Boolean(userGlobalProgramMap[programId]);
+
+        if (isAdded) {
+            const success = await removeGlobalProgramFromUser(programId, userId);
+
+            if (success) {
+                setUserGlobalProgramMap((prev) => {
+                    const next = { ...prev };
+                    delete next[programId];
+                    return next;
+                });
+            }
+        } else {
+            const copiedProgramId = await addGlobalProgramToUser(programId, userId);
+
+            if (copiedProgramId) {
+                setUserGlobalProgramMap((prev) => ({
+                    ...prev,
+                    [programId]: copiedProgramId,
+                }));
+            }
+        }
+
+        setActionLoadingProgramId(null);
     };
 
     return (
@@ -75,12 +124,18 @@ const Complexes = () => {
                                    sx={{
                                        backgroundColor: "transparent",
                                        color: isDark ? "#fff" : "#19355A",
-                                       border: "1px solid #204879", // тонка рамка
+                                       border: "1px solid #204879",
                                        borderRadius: "8px",
-                                       marginBottom: "10px",
                                        boxShadow: "none",
-                                       margin: '0',
-                                       "&:before": { display: "none" }, // прибираємо лінію перед акордеоном
+                                       margin: "0 0 10px 0 !important",
+
+                                       "&.Mui-expanded": {
+                                           margin: "0 0 10px 0 !important",
+                                       },
+
+                                       "&:before": {
+                                           display: "none",
+                                       },
                                    }}>
                             <AccordionSummary
                                 expandIcon={
@@ -89,8 +144,17 @@ const Complexes = () => {
                                 sx={{
                                     minHeight: "40px !important",
                                     padding: "0",
+
+                                    "&.Mui-expanded": {
+                                        minHeight: "40px !important",
+                                    },
+
                                     "& .MuiAccordionSummary-content": {
-                                        margin: 0,
+                                        margin: "0 !important",
+                                    },
+
+                                    "& .MuiAccordionSummary-content.Mui-expanded": {
+                                        margin: "0 !important",
                                     },
                                 }}
                                 className={styles.programCard__header}
@@ -105,7 +169,12 @@ const Complexes = () => {
                                     </Typography>
                                 </div>
                             </AccordionSummary>
-                            <AccordionDetails className={styles.programCard__content}>
+                            <AccordionDetails
+                                className={styles.programCard__content}
+                                sx={{
+                                    padding: "0 !important",
+                                }}
+                            >
                                 {program.days.map((day: GlobalDay) => (
                                     <div key={day.id} className={styles.dayBlock}>
                                         <Typography variant="subtitle1">
@@ -126,6 +195,23 @@ const Complexes = () => {
                                         </ul>
                                     </div>
                                 ))}
+
+                                <div className={styles.programActions}>
+                                    <button
+                                        type="button"
+                                        className={`${styles.programActionButton} ${
+                                            userGlobalProgramMap[program.id] ? styles.programActionButtonRemove : ""
+                                        }`}
+                                        disabled={actionLoadingProgramId === program.id}
+                                        onClick={() => handleToggleProgram(program.id)}
+                                    >
+                                        {actionLoadingProgramId === program.id
+                                            ? "Loading..."
+                                            : userGlobalProgramMap[program.id]
+                                                ? "Remove from my programs"
+                                                : "Add to my programs"}
+                                    </button>
+                                </div>
                             </AccordionDetails>
                         </Accordion>
                     ))}
