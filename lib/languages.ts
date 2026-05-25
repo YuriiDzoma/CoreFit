@@ -1,6 +1,6 @@
-import React from "react";
+import {AppLanguage} from './defaultLanguage';
 
-export const getLanguages = async (value: string) => {
+export const getLanguages = (value: AppLanguage | string = 'eng') => {
     const eng = {
         base: {
             login: 'Login',
@@ -9,7 +9,7 @@ export const getLanguages = async (value: string) => {
             training: 'Training',
             users: 'Users',
             complexes: 'Complexes',
-            Programs: 'Programs',
+            programs: 'Programs',
             Wiki: 'Wiki',
             authorization: 'Authorization',
             lblEmail: 'Your E-mail',
@@ -37,10 +37,10 @@ export const getLanguages = async (value: string) => {
         settings: {
             language: 'Language',
             profile: 'Profile',
-            english: "English",
-            russian: "Russian",
-            ukrainian: "Ukrainian",
-            poland: "Poland",
+            english: 'English',
+            russian: 'Russian',
+            ukrainian: 'Ukrainian',
+            poland: 'Poland',
         },
         training: {
             programName: 'Name of program',
@@ -106,7 +106,7 @@ export const getLanguages = async (value: string) => {
             training: 'Тренировка',
             users: 'Пользователи',
             complexes: 'Комлпексы',
-            Programs: 'Програмы',
+            programs: 'Програмы',
             Wiki: 'Wiki',
             authorization: 'Авторизация',
             lblEmail: 'Ваш E-mail',
@@ -133,10 +133,10 @@ export const getLanguages = async (value: string) => {
         settings: {
             language: 'Язык',
             profile: 'Профиль',
-            english: "Английский",
-            russian: "Руский",
-            ukrainian: "Украинский",
-            poland: "Польский",
+            english: 'Английский',
+            russian: 'Руский',
+            ukrainian: 'Украинский',
+            poland: 'Польский',
         },
         training: {
             programName: 'Название программы',
@@ -192,7 +192,7 @@ export const getLanguages = async (value: string) => {
             removeProgramTitle: 'Удаление программы',
             removeProgramText: 'Вы уверены, что хотите удалить программу? Всея ее упражнения и история тренировок также будут удалены вместе с программой',
             author: 'Автор',
-        }
+        },
     };
 
     const ua = {
@@ -230,10 +230,10 @@ export const getLanguages = async (value: string) => {
         settings: {
             language: 'Мова',
             profile: 'Профіль',
-            english: "Англійська",
-            russian: "Російська",
-            ukrainian: "Українська",
-            poland: "Польський",
+            english: 'Англійська',
+            russian: 'Російська',
+            ukrainian: 'Українська',
+            poland: 'Польський',
         },
         training: {
             programName: 'Назва програми',
@@ -289,7 +289,7 @@ export const getLanguages = async (value: string) => {
             removeProgramTitle: 'Видалення програми',
             removeProgramText: 'Ви впевнені, що хочете видалити програму? Усі її вправи та історія тренувань також будуть видалені разом із програмою',
             author: 'Автор',
-        }
+        },
     };
 
     const pl = {
@@ -300,7 +300,7 @@ export const getLanguages = async (value: string) => {
             training: 'Trening',
             users: 'Użytkownicy',
             complexes: 'Kompleksy',
-            Programs: 'Programy',
+            programs: 'Programy',
             Wiki: 'Wiki',
             authorization: 'Autoryzacja',
             lblEmail: 'Twój e-mail',
@@ -331,7 +331,7 @@ export const getLanguages = async (value: string) => {
             english: 'Angielski',
             russian: 'Rosyjski',
             ukrainian: 'Ukraiński',
-            poland: "Polski",
+            poland: 'Polski',
         },
         training: {
             programName: 'Nazwa programu',
@@ -390,11 +390,16 @@ export const getLanguages = async (value: string) => {
         },
     };
 
-
     switch (value) {
-        case 'eng' : return eng;
-        case 'rus' : return rus;
-        case 'ukr' : return ua;
-        case 'pl' : return pl;
+        case 'eng':
+            return eng;
+        case 'rus':
+            return rus;
+        case 'ukr':
+            return ua;
+        case 'pl':
+            return pl;
+        default:
+            return eng;
     }
-}
+};
