@@ -24,10 +24,12 @@ const TrainingHistories = () => {
         setIsLoading(true);
         const load = async () => {
             const results = await fetchAllTrainingHistories();
-            setHistories(results);
+            const sortedResults = sortTrainingHistories(results);
+
+            setHistories(sortedResults);
 
             const programExIds = Array.from(
-                new Set(results.flatMap((entry) => Object.keys(entry.values)))
+                new Set(sortedResults.flatMap((entry) => Object.keys(entry.values)))
             );
 
             const programToExerciseMap = await fetchProgramExerciseMap(programExIds);
@@ -50,6 +52,22 @@ const TrainingHistories = () => {
 
         load();
     }, [language]);
+
+    const sortTrainingHistories = (items: any[]) => {
+        return [...items].sort((a, b) => {
+            const dateDiff =
+                new Date(b.date).getTime() - new Date(a.date).getTime();
+
+            if (dateDiff !== 0) {
+                return dateDiff;
+            }
+
+            return (
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            );
+        });
+    };
 
     if (isMap) return <NewsSkeleton/>
 

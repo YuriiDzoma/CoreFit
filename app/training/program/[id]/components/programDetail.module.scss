@@ -37,7 +37,7 @@
 }
 
 .programDays:has(span) {
-  max-width: 30%;
+  max-width: 38%;
 }
 
 .programDays:has(img) {
@@ -171,4 +171,13 @@
   height: 100vh;
   background-color: #0000004d;
   transition: all .15s;
+}
+
+@media only screen and (min-width: 768px) {
+  .detail__info {
+    flex-direction: row;
+    column-gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+  }
 }

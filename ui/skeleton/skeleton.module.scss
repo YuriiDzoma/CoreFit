@@ -442,7 +442,7 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: 30% 1fr 1fr;
+    grid-template-columns: 38% 1fr 1fr;
     grid-gap: 8px;
     margin-bottom: 8px;
 
@@ -500,8 +500,8 @@
 .detailExercises {
   display: flex;
   flex-direction: column;
-  min-width: 30%;
-  max-width: 30%;
+  min-width: 38%;
+  max-width: 38%;
 
   &__grid {
     display: grid;
