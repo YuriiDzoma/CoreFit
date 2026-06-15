@@ -113,7 +113,7 @@ const Complexes = () => {
             {loading ? (
                 <div style={{ textAlign: "center", marginTop: "20px" }}>
                     <CircularProgress />
-                    <p>Loading programs...</p>
+                    <p>Loading programs... preloader!</p>
                 </div>
             ) : programs.length === 0 ? (
                 <p>No global programs found.</p>
