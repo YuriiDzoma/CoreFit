@@ -63,16 +63,19 @@ const Header = ({session}: { session: Session | null }) => {
 
             {session && (
                 <div className={styles.header__rightSection}>
-                    {requests.length > 0 && (
-                        <Link href="/requests" className={styles.add}>
-                            <Image
-                                src={isDark ? '/icons/addFriend.svg' : '/icons/addFriendDark.svg'}
-                                width={24}
-                                height={24}
-                                alt="requests"
-                            />
-                        </Link>
-                    )}
+                    <Link href="/requests" className={styles.add}>
+                        <Image
+                            src={isDark ? '/icons/addFriend.svg' : '/icons/addFriendDark.svg'}
+                            width={24}
+                            height={24}
+                            alt="requests"
+                        />
+                        {requests.length > 0 && (
+                            <span className={styles.addBadge}>
+                                {requests.length > 99 ? '99+' : requests.length}
+                            </span>
+                        )}
+                    </Link>
                     {width < 768 ? <Menu/> : <HeaderNavigation/>}
                 </div>
             )}
