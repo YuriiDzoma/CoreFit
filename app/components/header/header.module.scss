@@ -33,7 +33,11 @@
     right: -2px;
     top: 100%;
     background-color: var(--bg-color);
-    z-index: 3;
+    // Above the floating Header/Navigation/TrainingSubNav bars (all
+    // `z-index: 20`) and their own shared `.shadow` backdrop below (`25`)
+    // — otherwise this dropdown itself could render underneath the
+    // floating chrome instead of over it.
+    z-index: 26;
     border-radius: 4px;
   }
 
@@ -43,7 +47,7 @@
 
   &__btn {
     position: relative;
-    z-index: 3;
+    z-index: 26;
   }
 
   &__content, &__contentHide {
@@ -76,7 +80,13 @@
 
 .shadow, .shadowActive {
   position: fixed;
-  z-index: 2;
+  // Above the floating Header/Navigation/TrainingSubNav bars (all
+  // `z-index: 20`) — otherwise opening the Settings dropdown dims the
+  // regular page content but leaves the floating chrome undimmed, making
+  // whichever nav item already happened to be active suddenly stand out
+  // against the newly-darkened page behind it (not a state change, just
+  // newly-visible contrast — but reads as one).
+  z-index: 25;
   left: 0;
   top: 0;
   width: 100vw;
@@ -140,7 +150,15 @@
     top: calc(12px + env(safe-area-inset-top));
     left: 8px;
     right: 8px;
-    z-index: 20;
+    // No `z-index` here on purpose — `position: fixed` already paints
+    // above normal-flow page content without one, and explicitly setting
+    // one would create a stacking context that traps every descendant
+    // (the Settings dropdown's `.shadow` backdrop included) below any
+    // *sibling* with an equal-or-higher z-index later in the DOM —
+    // Navigation and TrainingMenu's own floating bars, both `z-index: 20`
+    // — regardless of how high a z-index that descendant is given.
+    // `.shadow`'s own `z-index: 25` only actually outranks them once
+    // `.header` stops boxing it into a separate context of its own.
     margin-bottom: 0;
     height: 56px;
     padding: 0 16px;

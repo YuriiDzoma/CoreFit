@@ -1,71 +1,90 @@
-.trainingMenu {
+// Floating glass pill bar — the Web Mobile (<768px) equivalent of the
+// mobile app's `TrainingSubNav` (`components/training-sub-nav.tsx`).
+// Stacked directly above the main floating `Navigation` bar (56px tall,
+// sitting at `bottom: calc(12px + env(safe-area-inset-bottom))` —
+// `navigation.module.scss`), with a tightened 8px gap between them so the
+// two read as one connected floating-chrome stack rather than two
+// independent bars, matching the mobile app's own `NAV_GAP`.
+.floatingWrap {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: calc(76px + env(safe-area-inset-bottom));
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+}
+
+.floatingBar {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  z-index: 3;
-  border: 2px solid var(--bg-color);
-  background-color: var(--bg-color);
+  width: 100%;
+  max-width: 420px;
+  height: 48px;
+  border-radius: 20px;
+  // Same soft hairline highlight as Header/Navigation's own glass edge —
+  // see `navigation.module.scss`'s `.floatingBar` for why (not
+  // `--border-color`, and deliberately no background-fill token
+  // alongside it).
+  border: 1px solid var(--glass-border);
+  // No manual `-webkit-backdrop-filter` here — Turbopack's CSS transform
+  // silently drops the unprefixed `backdrop-filter` declaration entirely
+  // when a hand-written `-webkit-backdrop-filter` sits next to it in the
+  // same rule (see `header.module.scss`'s identical comment for the full
+  // story). Letting the build tool prefix on its own avoids the bug.
+  backdrop-filter: blur(32px) saturate(180%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
 
-  &:after {
-    display: block;
-    content: '';
-    width: 100%;
-    border-bottom: 2px solid var(--border-color);
-    border-left: 2px solid var(--border-color);
-    border-right: 2px solid var(--border-color);
-    height: calc(50% + 1px);
-    transform: translateY(-50%);
-    position: absolute;
-    left: 0;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
-  }
-
-  .link, .active {
-    min-width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 30px;
-    position: relative;
-    z-index: 5;
-
-    span {
-      font-size: 18px;
-    }
-
-    span:after {
-      transition: all .2s;
-      position: absolute;
-      content: '';
-      display: block;
-      height: calc(50% + 1px);
-      width: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 2px solid transparent;
-      border-top: 3px solid transparent;
-      border-right: 2px solid transparent;
-      top: -3px;
-      background-color: transparent;
-    }
-
-    &:hover {
-      background-color: var(--bg-color)
-    }
-  }
-
-  .active span:after {
-    border-left: 4px solid var(--bg-color);
-    border-top: 4px solid var(--bg-color);
-    border-right: 6px solid var(--bg-color);
-    width: calc(100% + 6px);
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .floatingBar {
+    background-color: var(--bg-color);
   }
 }
 
-@media only screen and (max-width: 460px) {
-  .trainingMenu .link {
-    min-width: 100px;
-    padding: 4px 12px;
-  }
+.floatingItem {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floatingPill,
+.floatingPillActive {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  border-radius: 16px;
+  border: 2px solid var(--border-color);
+  background-color: var(--button-hover);
+  transition: opacity 0.2s ease;
+}
+
+.floatingPill {
+  opacity: 0;
+}
+
+.floatingPillActive {
+  opacity: 1;
+}
+
+.label,
+.labelActive {
+  position: relative;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--title-color);
+  transition: color 0.2s ease;
+}
+
+.labelActive {
+  color: var(--text-color);
 }

@@ -15,9 +15,21 @@
   overflow: auto;
 }
 
-// Was `position: fixed; bottom: 12px` — TrainingMenu now renders in normal
-// flow, directly below the Header, instead of pinned to the viewport
-// bottom.
+// `TrainingMenu` (`trainingMenu.module.scss`'s `.floatingWrap`) is
+// `position: fixed` again at this width — a floating glass pill bar
+// stacked above the main Navigation bar, not in-flow chrome — so this
+// wrapper can no longer reserve space for it and `.content` needs its own
+// bottom clearance instead, the same "clearance goes on whichever element
+// is actually scrolling" rule already applied to `app.module.scss`'s own
+// `.content` for the main Navigation bar. `136px` = the sub-nav's own
+// `bottom` offset (76px) + its height (48px) + a little breathing room
+// (12px), mirroring the mobile app's `getFloatingSubNavClearance()`.
+@media only screen and (max-width: 768px) {
+  .content {
+    padding-bottom: calc(136px + env(safe-area-inset-bottom));
+  }
+}
+
 .menu {
   flex-shrink: 0;
   margin-bottom: 8px;

@@ -4,40 +4,51 @@ import styles from "./trainingMenu.module.scss";
 import { usePathname } from "next/navigation";
 import useWindowSize from "../../../hooks/useWindowSize";
 
+const ITEMS = [
+    {
+        label: 'Complexes',
+        href: '/training/complexes',
+        isActive: (pathname: string) => pathname.startsWith('/training/complexes'),
+    },
+    {
+        label: 'Programs',
+        href: '/training',
+        isActive: (pathname: string) =>
+            pathname.startsWith('/training') &&
+            !pathname.startsWith('/training/wiki') &&
+            !pathname.startsWith('/training/complexes'),
+    },
+    {
+        label: 'Wiki',
+        href: '/training/wiki',
+        isActive: (pathname: string) => pathname.startsWith('/training/wiki'),
+    },
+];
+
+// Floating glass pill bar, matching the mobile app's own `TrainingSubNav`
+// -- see that component's comment for why this is a deliberate floating
+// bar rather than in-flow chrome now that Header/Navigation are both
+// floating too.
 const TrainingMenu = () => {
     const { width } = useWindowSize();
     const pathname = usePathname();
 
     if (width >= 768) return null;
 
-    const getLinkClass = (path: string) => {
-        let isActive = false;
-
-        if (path === '/training') {
-            isActive =
-                pathname.startsWith('/training') &&
-                !pathname.startsWith('/training/wiki') &&
-                !pathname.startsWith('/training/complexes');
-        } else {
-            isActive = pathname.startsWith(path);
-        }
-
-        return `${styles.link} button ${isActive ? styles.active : ''}`;
-    };
-
     return (
-        <div className={styles.trainingMenu}>
-            <Link href="/training/complexes" className={getLinkClass('/training/complexes')}>
-                <span>Complexes</span>
-            </Link>
+        <div className={styles.floatingWrap}>
+            <div className={styles.floatingBar}>
+                {ITEMS.map((item) => {
+                    const active = item.isActive(pathname);
 
-            <Link href="/training" className={getLinkClass('/training')}>
-                <span>Programs</span>
-            </Link>
-
-            <Link href="/training/wiki" className={getLinkClass('/training/wiki')}>
-                <span>Wiki</span>
-            </Link>
+                    return (
+                        <Link key={item.label} href={item.href} className={styles.floatingItem}>
+                            <span className={active ? styles.floatingPillActive : styles.floatingPill} />
+                            <span className={active ? styles.labelActive : styles.label}>{item.label}</span>
+                        </Link>
+                    );
+                })}
+            </div>
         </div>
     );
 };
