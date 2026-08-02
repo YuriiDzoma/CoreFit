@@ -5,6 +5,9 @@ const initialState = {
     isAuth: false,
     dark: true,
     language: 'eng',
+    // Program Detail's I/II/III view-density tab, synced via
+    // `profiles.program_view_density` — `2` until the user picks one.
+    programViewDensity: 2,
 };
 
 export const accountSlice = createSlice({
@@ -20,8 +23,11 @@ export const accountSlice = createSlice({
         setLanguage: (state, {payload}) => {
             state.language = payload;
         },
+        setProgramViewDensity: (state, {payload}) => {
+            state.programViewDensity = payload;
+        },
     },
 });
 
-export const { setIsDarkTheme, setLanguage, setCurrentUserId } = accountSlice.actions;
+export const { setIsDarkTheme, setLanguage, setCurrentUserId, setProgramViewDensity } = accountSlice.actions;
 export default accountSlice.reducer;

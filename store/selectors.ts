@@ -5,6 +5,7 @@ export const getIsAuth = (state: RootState) => state.account.isAuth;
 export const getLanguage = (state: RootState) => state.account.language;
 export const getIsDarkTheme = (state: RootState) => state.account.dark;
 export const getUserId = (state: RootState) => state.account.currentId;
+export const getProgramViewDensity = (state: RootState) => state.account.programViewDensity;
 
 
 export const getText = (state: RootState) => state.language.text;

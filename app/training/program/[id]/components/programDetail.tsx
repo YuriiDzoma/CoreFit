@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import {fetchProgramDetail, deleteProgramWithRelations} from '@/lib/programData';
+import {updateUserProfile} from '@/lib/userData';
 import {ProgramFull} from '@/types/training';
 
 import ProgramDaysList from './programDaysList';
@@ -16,8 +17,9 @@ import TrainingProcessing from './trainingProcessing/trainingProcessing';
 
 import {fetchTrainingHistory} from '../../../../../lib/trainingData';
 import {useLevelText, useTypeText} from '../../../../hooks/useDifficulty';
-import {useAppSelector} from '../../../../hooks/redux';
-import {getIsDarkTheme, getText, getUserId} from '../../../../../store/selectors';
+import {useAppDispatch, useAppSelector} from '../../../../hooks/redux';
+import {getIsDarkTheme, getProgramViewDensity, getText, getUserId} from '../../../../../store/selectors';
+import {setProgramViewDensity} from '@/store/account-slice';
 
 import Preloader from '../../../../../ui/preloader/Preloader';
 import GlobalPopup from '../../../../components/globalPopup/globalPopup';
@@ -66,6 +68,8 @@ const ProgramDetail = () => {
     const currentUserId = useAppSelector(getUserId);
     const {training} = useAppSelector(getText);
     const isDark = useAppSelector(getIsDarkTheme);
+    const activeTab = useAppSelector(getProgramViewDensity);
+    const dispatch = useAppDispatch();
 
     const {id} = useParams<{ id: string }>();
     const router = useRouter();
@@ -74,8 +78,20 @@ const ProgramDetail = () => {
     const [history, setHistory] = useState<HistoryMap>({});
 
     const [isPreloader, setIsPreloader] = useState<boolean>(true);
-    const [activeTab, setActiveTab] = useState<number>(2);
     const [isShowRemove, setIsShowRemove] = useState<boolean>(false);
+
+    // Instant-apply, matching the theme toggle's own pattern (`menu.tsx`'s
+    // `handleToggleTheme`): no separate Save step, optimistic — the tab
+    // switches immediately via Redux, and a failed write just means it
+    // won't survive a reload rather than blocking the UI.
+    const setActiveTab = (value: number) => {
+        if (value === activeTab) return;
+        dispatch(setProgramViewDensity(value));
+        if (!currentUserId) return;
+        updateUserProfile(currentUserId, {program_view_density: value}).catch((error) => {
+            console.log('Error saving view density:', error);
+        });
+    };
 
     const isMyProgram = program?.user_id === currentUserId;
 

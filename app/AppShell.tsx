@@ -11,7 +11,7 @@ import PwaInstallPrompt from './components/PwaInstallPrompt/pwaInstallPrompt';
 
 import {useAppDispatch} from './hooks/redux';
 import {setText} from '@/store/language-slice';
-import {setCurrentUserId, setIsDarkTheme, setLanguage} from '@/store/account-slice';
+import {setCurrentUserId, setIsDarkTheme, setLanguage, setProgramViewDensity} from '@/store/account-slice';
 
 import {getLanguages} from '../lib/languages';
 import {useSupabaseSession} from '@/lib/authClient';
@@ -50,6 +50,12 @@ const AppShell = ({children}: { children: React.ReactNode }) => {
 
             let lang: AppLanguage = storedLanguage || defaultLanguage;
             let isDarkTheme = true;
+            // `2` until the user picks a density at least once — always
+            // dispatched below (never conditionally skipped) for the same
+            // reason `isDarkTheme` always is: switching to a different user
+            // on the same device must overwrite whatever the previous
+            // user's density was, not leave it stale in the store.
+            let viewDensity = 2;
 
             try {
                 if (session?.user?.id) {
@@ -65,6 +71,7 @@ const AppShell = ({children}: { children: React.ReactNode }) => {
                     }
 
                     isDarkTheme = Boolean(settings?.dark);
+                    viewDensity = settings?.program_view_density ?? 2;
                 }
 
                 const theme = isDarkTheme ? 'dark' : 'light';
@@ -74,6 +81,7 @@ const AppShell = ({children}: { children: React.ReactNode }) => {
                 dispatch(setIsDarkTheme(isDarkTheme));
                 dispatch(setLanguage(lang));
                 dispatch(setText(getLanguages(lang)));
+                dispatch(setProgramViewDensity(viewDensity));
             } catch (error) {
                 console.log('Error initializing app:', error);
 
@@ -82,6 +90,7 @@ const AppShell = ({children}: { children: React.ReactNode }) => {
                 dispatch(setIsDarkTheme(true));
                 dispatch(setLanguage(lang));
                 dispatch(setText(getLanguages(lang)));
+                dispatch(setProgramViewDensity(2));
             } finally {
                 timer = setTimeout(() => {
                     if (isMounted) {
