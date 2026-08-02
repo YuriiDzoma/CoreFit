@@ -17,6 +17,12 @@
 
   --submit-bg: #203045;
   --submit-hover: #102a4b;
+
+  // Floating Header/Navigation glass edge — a light hairline highlight, not
+  // `--border-color`'s saturated navy, which read as a hard outline.
+  // Deliberately no background-fill token alongside it: blur alone
+  // separates the surface from content behind it, not a color overlay.
+  --glass-border: rgba(255, 255, 255, 0.15);
 }
 
 [data-theme='light'] {
@@ -36,4 +42,8 @@
 
   --submit-bg: #fff;
   --submit-hover: #fff;
+
+  // See dark theme above — light needs a soft dark hairline instead of a
+  // light one.
+  --glass-border: rgba(0, 0, 0, 0.08);
 }

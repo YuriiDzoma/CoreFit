@@ -10,7 +10,7 @@
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border: 2px solid var(--border-color);
-    transition: all .2s;
+    transition: all 0.2s;
     min-width: 110px;
     display: flex;
     align-content: center;
@@ -21,13 +21,13 @@
       letter-spacing: 1px;
       position: relative;
       color: var(--title-color);
-      transition: all .2s;
+      transition: all 0.2s;
       font-size: 18px;
 
       &:after {
-        transition: all .2s;
+        transition: all 0.2s;
         position: absolute;
-        content: '';
+        content: "";
         display: block;
         height: 2px;
         width: 0;
@@ -82,4 +82,160 @@
       background-color: var(--button-hover);
     }
   }
+}
+
+// Instagram/Threads-style floating glass bar — Web Mobile (<768px) only.
+// `--bg-color` doubles as the frosted tint over `backdrop-filter`, same
+// role React Native's `theme.workspace` overlay plays in
+// `components/navigation.tsx` there.
+.floatingWrap {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+}
+
+.floatingBar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 420px;
+  height: 56px;
+  border-radius: 28px;
+  // A soft hairline highlight (`--glass-border`), not `--border-color`'s
+  // saturated navy — that read as a hard, deliberate outline rather than
+  // just defining the glass's edge.
+  border: 1px solid var(--glass-border);
+  // Deliberately no background-color here — blur alone is what separates
+  // this surface from content behind it, not a color overlay. `saturate`
+  // is the other half of the native-iOS-glass look: it's what stops the
+  // blur from reading as flat frosted plastic.
+  // No manual `-webkit-backdrop-filter` alongside this — Turbopack's own
+  // CSS transform (lightningcss) silently drops the *unprefixed*
+  // `backdrop-filter` declaration entirely when a hand-written
+  // `-webkit-backdrop-filter` sits next to it in the same rule (confirmed
+  // live: computed style read `backdrop-filter: none` with both present,
+  // `blur(32px) saturate(1.8)` with only this one). Letting the build tool
+  // autoprefix on its own, same as every other property in this file,
+  // avoids the bug rather than working around it.
+  backdrop-filter: blur(32px) saturate(180%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+// Only when `backdrop-filter` isn't supported at all (no blur possible):
+// a plain solid fill is the sole fallback, so the bar stays visible/usable
+// rather than fully invisible. Not part of the glass tint decision above.
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .floatingBar {
+    background-color: var(--bg-color);
+  }
+}
+
+.floatingItem {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floatingPill,
+.floatingPillActive {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: var(--button-hover);
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.floatingPill {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.floatingPillActive {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.icon {
+  position: relative;
+  color: var(--title-color);
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.iconActive {
+  position: relative;
+  color: var(--text-color);
+  transform: scale(1.08);
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.badgeAnchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background-color: #e5484d;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+
+.avatarRing,
+.avatarRingActive {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition:
+    border-color 0.2s ease,
+    border-width 0.2s ease;
+}
+
+// A fully transparent inactive ring left the avatar looking visually
+// lighter than every other (outlined) nav icon — same fix as the icon
+// color pass above: a thin, always-present outline at the same weight
+// other icons already read at, not a separate "no border" treatment.
+.avatarRing {
+  border: 1px solid var(--title-color);
+}
+
+.avatarRingActive {
+  border: 2px solid var(--text-color);
+}
+
+.avatarImg {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
 }

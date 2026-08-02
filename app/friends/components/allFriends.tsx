@@ -2,20 +2,25 @@
 import React, {useEffect, useState} from "react";
 import {useAppSelector} from "../../hooks/redux";
 import { useParams } from "next/navigation";
-import {getText} from "../../../store/selectors";
+import {getText, getUserId} from "../../../store/selectors";
 import Link from "next/link";
 import Image from "next/image";
 import styles from '../components/allFriends.module.scss'
 import {ProfileType} from "../../../types/user";
 import {fetchLimitedFriendProfiles} from "../../../lib/userData";
 import {getAllFriendsOfUser} from "../../../lib/friendData";
+import {useFriendRequestStore} from "@/store/useFriendRequestStore";
 
 
 const AllFriends = () => {
     const {base} = useAppSelector(getText);
+    const currentUserId = useAppSelector(getUserId);
     const { id } = useParams();
     const [friends, setFriends] = useState<ProfileType[]>([]);
     const [loading, setLoading] = useState(true);
+    const { requests } = useFriendRequestStore();
+
+    const isOwnProfile = !!currentUserId && currentUserId === id;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,6 +43,18 @@ const AllFriends = () => {
     return (
         <div className={styles.allFriends}>
             <h2 className={'pageTitle'}>{base.friends}</h2>
+
+            {/* Requests has no nav entry point of its own now that the
+                primary bar's Friends badge is a count only (not a link) —
+                this is the one path back to it, shown only on your own
+                Friends page and only when there's something to act on. */}
+            {isOwnProfile && requests.length > 0 && (
+                <Link href="/requests" className={styles.requestsBanner}>
+                    <span>Friend Requests ({requests.length > 99 ? '99+' : requests.length})</span>
+                    <span>›</span>
+                </Link>
+            )}
+
             <ul className={styles.friendList}>
                 {friends.map(friend => (
                     <Link

@@ -22,27 +22,6 @@
   }
 }
 
-.add {
-  position: relative;
-  display: inline-flex;
-}
-
-.addBadge {
-  position: absolute;
-  top: -6px;
-  right: -8px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  border-radius: 8px;
-  background-color: #e5484d;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 16px;
-  text-align: center;
-}
-
 .menu {
   position: relative;
 
@@ -150,12 +129,40 @@
   }
 }
 
+// Floating glass bar — Web Mobile (<768px) only, matching
+// `navigation.module.scss`'s `.floatingBar` recipe exactly (same 12px
+// margin/80px-clearance convention `app.module.scss` sizes its content
+// padding from) so both bars read as one consistent floating-chrome
+// system. Desktop's `.header` above is untouched.
 @media only screen and (max-width: 768px) {
   .header {
-    margin-bottom: 16px;
+    position: fixed;
+    top: calc(12px + env(safe-area-inset-top));
+    left: 8px;
+    right: 8px;
+    z-index: 20;
+    margin-bottom: 0;
+    height: 56px;
+    padding: 0 16px;
+    border-radius: 24px;
+    // Same soft hairline border, no background fill, and blur balance as
+    // `.floatingBar` — see that rule's comment for why. No manual
+    // `-webkit-backdrop-filter` here either — see `.floatingBar`'s own
+    // comment on the Turbopack bug that caused.
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(32px) saturate(180%);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   }
 
   .logo p {
     font-size: 20px;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  @media only screen and (max-width: 768px) {
+    .header {
+      background-color: var(--bg-color);
+    }
   }
 }

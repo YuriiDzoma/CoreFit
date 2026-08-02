@@ -1,18 +1,24 @@
+// `max-height: calc(100vh - Npx)` assumed Header still consumed flow
+// height above this wrapper — now stale, since `.content` (app.module.scss)
+// no longer height-constrains via a viewport calc at all, it pads instead.
+// `.training` just fills whatever height that padding-box leaves.
 .training {
   display: flex;
   flex-direction: column;
   height: 100%;
-  max-height: calc(100vh - 150px);
   overflow: hidden;
 }
 
 .content {
-
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
+// Was `position: fixed; bottom: 12px` — TrainingMenu now renders in normal
+// flow, directly below the Header, instead of pinned to the viewport
+// bottom.
 .menu {
-  position: fixed;
-  bottom: 12px;
-  width: calc(100% - 16px);
-  left: 8px;
+  flex-shrink: 0;
+  margin-bottom: 8px;
 }

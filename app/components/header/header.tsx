@@ -20,7 +20,11 @@ const Header = ({session}: { session: Session | null }) => {
     const isDark = useAppSelector(getIsDarkTheme);
     const router = useRouter();
 
-    const {requests, subscribeToRealtime} = useFriendRequestStore();
+    // Requests' own icon/badge moved to the Friends nav item — this
+    // subscription stays here regardless, since it's the store's one
+    // realtime source; `useFriendRequestStore`'s `requests` state is now
+    // read from `Navigation`/`FloatingNavigation` instead of here.
+    const {subscribeToRealtime} = useFriendRequestStore();
 
     const onBack = () => {
         router.back()
@@ -63,19 +67,6 @@ const Header = ({session}: { session: Session | null }) => {
 
             {session && (
                 <div className={styles.header__rightSection}>
-                    <Link href="/requests" className={styles.add}>
-                        <Image
-                            src={isDark ? '/icons/addFriend.svg' : '/icons/addFriendDark.svg'}
-                            width={24}
-                            height={24}
-                            alt="requests"
-                        />
-                        {requests.length > 0 && (
-                            <span className={styles.addBadge}>
-                                {requests.length > 99 ? '99+' : requests.length}
-                            </span>
-                        )}
-                    </Link>
                     {width < 768 ? <Menu/> : <HeaderNavigation/>}
                 </div>
             )}
