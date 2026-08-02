@@ -229,3 +229,24 @@ body:has(.popup), body:has(.menuActive) {
   height: calc(100vh - 124px);
   overflow-y: auto;
 }
+
+// Web Mobile (<768px): Header/Navigation are `position: fixed` floating
+// glass bars now (see `app.module.scss`'s own `.content` override), not
+// docked in-flow chrome — the `124px` this class subtracts is stale, a
+// leftover from when Header occupied real flow height above it. Left
+// as-is, this class's own `height`/`overflow-y` created a second,
+// independent scroll frame nested inside `.content`'s already-scrolling
+// one, capped to the wrong height and starting below `.content`'s
+// clearance padding — so its content could never actually reach up
+// behind the floating Header the way `.content`'s own scroll can.
+// Neutralized here so `.content` is the only scroll container at this
+// width, exactly the same "clearance goes on whichever element is
+// actually scrolling, never a competing ancestor/nested frame" fix
+// already applied on the mobile app for the identical bug shape.
+@media only screen and (max-width: 768px) {
+  .container {
+    max-height: none;
+    height: auto;
+    overflow-y: visible;
+  }
+}
