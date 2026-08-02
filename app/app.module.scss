@@ -33,5 +33,12 @@
     min-height: 100vh;
     max-height: 100vh;
     overflow: auto;
+    // Desktop's boxed-panel look (border + rounded corners + the
+    // border-compensating negative margin above) doesn't fit the
+    // edge-to-edge floating-glass mobile chrome — the mobile app has no
+    // such border around its scrolling content either.
+    border: none;
+    border-radius: 0;
+    margin-top: 0;
   }
 }
