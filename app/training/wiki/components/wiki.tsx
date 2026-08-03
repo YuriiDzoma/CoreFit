@@ -57,7 +57,7 @@ export default function Wiki() {
 
     return (
         <div>
-            <h2 className={'pageTitle'}>Wiki</h2>
+            <h2 className={`pageTitle ${styles.title}`}>Wiki</h2>
 
             <div className={styles.searchRow}>
                 <input

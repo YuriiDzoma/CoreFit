@@ -5,17 +5,26 @@
   justify-content: space-between;
 }
 
-// Matches `InputBox`'s own bordered-not-filled input language
-// (`components/inputBox/inputBox.module.scss`) rather than inventing a
-// second convention -- 1px border in `--border-color`, 4px radius,
-// transparent fill.
+// The global `.pageTitle` class (`ui/base.scss`, shared by every screen's
+// heading) inherits `font-weight: 400` from base.scss's own heading
+// reset -- the mobile app's title here is medium (500, `ThemedText`'s
+// own default weight, not overridden by its `pageTitle` style). Scoped to
+// this one screen rather than changing the shared global class, which
+// every other screen's heading also uses.
+.title {
+  font-weight: 500;
+}
+
+// Matches the mobile app's own `ExerciseSearchBar` exactly (2px border,
+// 8px radius) rather than `InputBox`'s thinner 1px/4px convention -- this
+// is a direct visual port of that component, not a new web-native field.
 .searchRow {
   display: flex;
   align-items: center;
   column-gap: 8px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 0 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0 16px;
   margin-bottom: 16px;
 }
 
@@ -177,6 +186,12 @@
     max-width: 100%;
     width: 100%;
     flex-direction: row;
+    // The base rule's `row-gap: 16px` (above) only spaces items in a
+    // *column* direction -- it does nothing once this is a row, so tabs
+    // rendered edge-to-edge with no gap at all until this was added.
+    // 16px matches the mobile app's own `MuscleGroupFilter` (`Spacing.
+    // three`) exactly.
+    column-gap: 16px;
     height: auto;
     overflow-x: auto;
     overflow-y: hidden;
