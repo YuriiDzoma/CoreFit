@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './wiki.module.scss'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import WikiNav from "./wikiNav";
 import {useAppSelector} from "../../../hooks/redux";
 import {getLanguage} from "../../../../store/selectors";
@@ -18,6 +18,11 @@ export default function Wiki() {
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<string>('All')
     const [exercises, setExercises] = useState<exerciseTypes[]>([]);
+    // Client-side, on top of whatever the current muscle-group tab already
+    // fetched -- matches the mobile app's own `useExerciseBrowser` (muscle
+    // group is a server-side re-fetch per tab, search filters the already-
+    // loaded result), not a second server round-trip.
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
 
     const fetchExercises = (value: string) => {
@@ -42,16 +47,44 @@ export default function Wiki() {
         fetchExercises(value);
     }
 
+    const filteredExercises = useMemo(() => {
+        const trimmedQuery = searchQuery.trim().toLowerCase();
+        if (!trimmedQuery) return exercises;
+        return exercises.filter((item) => item.name.toLowerCase().includes(trimmedQuery));
+    }, [exercises, searchQuery]);
+
     if (!exercises.length) return <ExerciseListSkeleton />
 
     return (
         <div>
             <h2 className={'pageTitle'}>Wiki</h2>
+
+            <div className={styles.searchRow}>
+                <input
+                    className={styles.searchInput}
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Search exercises"
+                    type="search"
+                />
+                {searchQuery.length > 0 && (
+                    <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
+                        ✕
+                    </button>
+                )}
+            </div>
+
             <div className={styles.content}>
                 <ul className={styles.exercisesList}>
-                    {exercises?.length && exercises.map((item, index) => (
-                        <Exercise key={index} item={item} />
-                    ))}
+                    {filteredExercises.length === 0 ? (
+                        <li className={styles.emptyState}>
+                            No exercises match &quot;{searchQuery.trim()}&quot;.
+                        </li>
+                    ) : (
+                        filteredExercises.map((item, index) => (
+                            <Exercise key={index} item={item} />
+                        ))
+                    )}
                 </ul>
                 <WikiNav activeTab={activeTab} handleChangeTab={handleChangeTab} />
             </div>

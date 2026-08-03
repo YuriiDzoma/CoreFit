@@ -30,8 +30,17 @@
     padding: 8px;
     padding-top: calc(80px + env(safe-area-inset-top));
     padding-bottom: calc(80px + env(safe-area-inset-bottom));
-    min-height: 100vh;
-    max-height: 100vh;
+    // `height: 100vh`, not `min-height` + `max-height` pinned to the same
+    // value -- they constrain this element's own box identically, but
+    // Chrome doesn't treat a min/max-pinned height as *definite* for
+    // resolving a descendant's own `height: 100%` the way a literal
+    // `height` is, once there's an `overflow: auto` + flex chain between
+    // them (confirmed live: Training's `.training` — `height: 100%`,
+    // `training.module.scss` — resolved to the height of its own
+    // (very tall, meant to scroll) content instead of this element's
+    // actual 749px box, only fixed by switching this to a literal
+    // `height`).
+    height: 100vh;
     overflow: auto;
     // Desktop's boxed-panel look (border + rounded corners + the
     // border-compensating negative margin above) doesn't fit the

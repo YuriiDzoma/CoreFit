@@ -5,6 +5,55 @@
   justify-content: space-between;
 }
 
+// Matches `InputBox`'s own bordered-not-filled input language
+// (`components/inputBox/inputBox.module.scss`) rather than inventing a
+// second convention -- 1px border in `--border-color`, 4px radius,
+// transparent fill.
+.searchRow {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0 12px;
+  margin-bottom: 16px;
+}
+
+.searchInput {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  height: 40px;
+  font-size: 16px;
+  color: var(--text-color);
+
+  &::placeholder {
+    color: var(--title-color);
+  }
+
+  // Safari/Chrome's default `type="search"` chrome (the native round
+  // cancel/clear glyph) doesn't match this app's own bordered-input
+  // language -- `.searchClear` below is the one clear affordance.
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.searchClear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--title-color);
+}
+
+.emptyState {
+  color: var(--title-color);
+  font-size: 14px;
+}
+
 .nav, .navCreate {
   max-width: 78px;
   width: 100%;
@@ -104,5 +153,49 @@
     height: 90px;
     min-height: 90px;
     row-gap: 12px;
+  }
+}
+
+// Web Mobile only -- matches the mobile app's own `WikiScreen`: the
+// muscle-group rail moves above the list as a horizontally-scrolling row
+// (`MuscleGroupFilter`, not a vertical sidebar) rather than beside it.
+// `max-width: 767px` (not `768px`, matching `min-width: 768px` above) so
+// the two breakpoints don't both apply at the exact same pixel.
+@media screen and (max-width: 767px) {
+  .content {
+    // `column-reverse`, not `column` -- `WikiNav` renders *after* the
+    // exercise list in JSX (unchanged from the side-by-side desktop
+    // layout, where DOM order doesn't affect a row's visual order), so a
+    // plain `column` direction would put it visually last (bottom), not
+    // first (top). Desktop's own `.content` above already reverses for
+    // exactly this reason.
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .nav {
+    max-width: 100%;
+    width: 100%;
+    flex-direction: row;
+    height: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-right: 0;
+    padding-bottom: 8px;
+  }
+
+  // Was its own independently-scrolling box (`height: calc(100vh - 190px);
+  // overflow-y: auto`), a leftover from before Header/Navigation/
+  // TrainingMenu became floating chrome -- exactly the "nested scroll
+  // frame trapped below a stale height calc, can never reach content
+  // behind the floating chrome" bug already found and fixed for Home's
+  // `.container` (`ui/base.scss`) and Training's own `.content`
+  // (`training.module.scss`). `training.module.scss`'s `.content` is
+  // already the correct, single scroll container for this whole route
+  // group; this list just needs to flow inside it instead of competing
+  // with its own scroll.
+  .exercisesList {
+    height: auto;
+    overflow-y: visible;
   }
 }
