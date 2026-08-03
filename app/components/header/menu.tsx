@@ -4,7 +4,9 @@ import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {getIsDarkTheme, getText, getUserId} from "../../../store/selectors";
 import React, {useState} from "react";
+import {useRouter} from "next/navigation";
 import {updateUserProfile} from "../../../lib/userData";
+import {signOut} from "@/lib/authClient";
 import { setIsDarkTheme } from '@/store/account-slice';
 import Preloader from "../../../ui/preloader/Preloader";
 
@@ -14,6 +16,7 @@ const Menu = () => {
     const userId = useAppSelector(getUserId);
     const dispatch = useAppDispatch();
     const { base } = useAppSelector(getText);
+    const router = useRouter();
     const [isActive, setIsActive] = useState<boolean>(false);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
 
@@ -27,6 +30,12 @@ const Menu = () => {
         dispatch(setIsDarkTheme(updatedTheme?.dark));
         document.documentElement.setAttribute('data-theme', themeString);
         setIsPreloader(false);
+    };
+
+    const handleSignOut = async () => {
+        setIsActive(false);
+        await signOut();
+        router.push('/');
     };
 
     return (
@@ -66,6 +75,9 @@ const Menu = () => {
                                 height={24}
                                 alt="settings"
                             />}
+                    </button>
+                    <button className={styles.menu__signOut} onClick={handleSignOut}>
+                        <span>Sign out</span>
                     </button>
                 </div>
             </div>

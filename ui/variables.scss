@@ -23,6 +23,11 @@
   // Deliberately no background-fill token alongside it: blur alone
   // separates the surface from content behind it, not a color overlay.
   --glass-border: rgba(255, 255, 255, 0.15);
+
+  // Matches the mobile app's own `theme.danger` (`constants/theme.ts`)
+  // exactly — the same value in both light and dark there too, not a
+  // per-theme color.
+  --danger: #e5484d;
 }
 
 [data-theme='light'] {
@@ -46,4 +51,7 @@
   // See dark theme above — light needs a soft dark hairline instead of a
   // light one.
   --glass-border: rgba(0, 0, 0, 0.08);
+
+  // Same value as dark — see dark theme above.
+  --danger: #e5484d;
 }

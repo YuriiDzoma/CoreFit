@@ -6,6 +6,33 @@
   }
 }
 
+// Matches the mobile app's own Sign out button (`profile/settings.tsx`,
+// `profile/index.tsx`) — same `--danger` fill, same "no confirmation,
+// fires instantly" behavior, at the very end of the screen there too.
+// Sized like `base.scss`'s own `.submit` (the shared primary-action
+// convention already used for Save-type buttons here) rather than
+// `.button`'s smaller inline sizing.
+.signOut {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  margin-top: 16px;
+  padding: 4px 16px;
+  border-radius: 4px;
+  border: 2px solid var(--border-color);
+  background-color: var(--danger);
+  color: var(--text-color);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all .1s;
+}
+
+@media screen and (min-width: 768px) {
+  .signOut {
+    min-height: 60px;
+  }
+}
+
 .profile {
   form {
     width: 100%;

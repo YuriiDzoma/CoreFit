@@ -41,8 +41,12 @@
     border-radius: 4px;
   }
 
+  // Grown from 107 to fit the added Sign out row (one more row + one more
+  // `menu__content` gap) — matches the mobile app's own `MENU_PANEL_HEIGHT`
+  // (`components/header.tsx`), grown by the same amount there for the
+  // same reason.
   &__show {
-    height: 107px;
+    height: 151px;
   }
 
   &__btn {
@@ -74,6 +78,18 @@
 
     img {
       padding-bottom: 3px;
+    }
+  }
+
+  // Plain text, `--danger`-colored, not a filled button -- matches the
+  // mobile app's own dropdown Sign out row exactly (its Settings page
+  // gets the filled-red-button treatment instead, this compact popup
+  // just gets a colored hint, same weight as its Settings/Theme siblings).
+  &__signOut {
+    text-align: left;
+
+    span {
+      color: var(--danger);
     }
   }
 }
