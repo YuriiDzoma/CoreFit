@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchUserSettings } from "../../../../lib/userData";
 import { useAppSelector } from "../../../hooks/redux";
-import {getUserId, getLanguage, getIsDarkTheme} from "../../../../store/selectors";
+import {getUserId, getLanguage, getIsDarkTheme, getText} from "../../../../store/selectors";
 import {
     addGlobalProgramToUser,
     fetchGlobalProgramsWithDetails,
@@ -12,6 +12,7 @@ import {
 import styles from "./complexes.module.scss";
 import Link from "next/link";
 import { GlobalDay, GlobalExercise, GlobalProgram } from "../../../../types/training";
+import { useTypeText, useLevelText } from "../../../hooks/useDifficulty";
 
 import {
     Accordion,
@@ -26,6 +27,9 @@ const Complexes = () => {
     const isDark = useAppSelector(getIsDarkTheme);
     const userId = useAppSelector(getUserId);
     const language = useAppSelector(getLanguage);
+    const { base, training } = useAppSelector(getText);
+    const typeText = useTypeText();
+    const levelText = useLevelText();
     const [isTrainer, setIsTrainer] = useState(false);
     const [programs, setPrograms] = useState<GlobalProgram[]>([]);
     const [loading, setLoading] = useState(true);
@@ -66,7 +70,7 @@ const Complexes = () => {
 
     const handleToggleProgram = async (programId: string) => {
         if (!userId) {
-            alert("Please login first");
+            alert(training.pleaseLoginFirst);
             return;
         }
 
@@ -100,12 +104,12 @@ const Complexes = () => {
 
     return (
         <div>
-            <h2 className={'pageTitle'}>Complexes</h2>
+            <h2 className={'pageTitle'}>{base.complexes}</h2>
 
             {isTrainer && (
                 <div className={`${styles.createLink} submit`}>
                     <Link href="/training/create?global=1" className={styles.createButton}>
-                        <span>Create global program</span>
+                        <span>{training.createGlobalProgram}</span>
                     </Link>
                 </div>
             )}
@@ -113,10 +117,10 @@ const Complexes = () => {
             {loading ? (
                 <div style={{ textAlign: "center", marginTop: "20px" }}>
                     <CircularProgress />
-                    <p>Loading programs... preloader!</p>
+                    <p>{base.loading}</p>
                 </div>
             ) : programs.length === 0 ? (
-                <p>No global programs found.</p>
+                <p>{training.noGlobalProgramsFound}</p>
             ) : (
                 <div className={styles.programList}>
                     {programs.map((program) => (
@@ -162,7 +166,7 @@ const Complexes = () => {
                                 <div>
                                     <Typography variant="h6">{program.title}</Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        <span>Type: {program.type} | Level: {program.level}</span>
+                                        <span>{training.type}: {typeText(program.type)} | {training.difficulty}: {levelText(program.level)}</span>
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {/*<span>Author: {program.author.fullname}</span>*/}
@@ -178,7 +182,7 @@ const Complexes = () => {
                                 {program.days.map((day: GlobalDay) => (
                                     <div key={day.id} className={styles.dayBlock}>
                                         <Typography variant="subtitle1">
-                                            Day {day.day_number}
+                                            {training.dayNumber.replace('{value}', String(day.day_number))}
                                         </Typography>
                                         <ul>
                                             {day.exercises.map((ex: GlobalExercise) => (
@@ -206,10 +210,10 @@ const Complexes = () => {
                                         onClick={() => handleToggleProgram(program.id)}
                                     >
                                         {actionLoadingProgramId === program.id
-                                            ? "Loading..."
+                                            ? base.loading
                                             : userGlobalProgramMap[program.id]
-                                                ? "Remove from my programs"
-                                                : "Add to my programs"}
+                                                ? training.removeFromMyPrograms
+                                                : training.addToMyPrograms}
                                     </button>
                                 </div>
                             </AccordionDetails>
