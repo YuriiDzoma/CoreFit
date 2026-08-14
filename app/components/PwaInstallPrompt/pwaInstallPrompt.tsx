@@ -2,8 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import styles from './pwaInstallPrompt.module.scss';
 import Image from 'next/image';
+import { useAppSelector } from '../../hooks/redux';
+import { getText } from '../../../store/selectors';
 
 const PwaInstallPrompt = () => {
+    const { base } = useAppSelector(getText);
     const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null);
     const [showBanner, setShowBanner] = useState(false);
 
@@ -53,9 +56,9 @@ const PwaInstallPrompt = () => {
                         alt="close"
                     />
                 </button>
-                <span>Встановіть CoreFit як додаток</span>
+                <span>{base.installApp}</span>
                 <button className={styles.button} onClick={handleInstallClick}>
-                    Встановити
+                    {base.install}
                 </button>
             </div>
         </div>
