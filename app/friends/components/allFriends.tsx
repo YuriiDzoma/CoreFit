@@ -44,6 +44,17 @@ const AllFriends = () => {
         <div className={styles.allFriends}>
             <h2 className={'pageTitle'}>{base.friends}</h2>
 
+            {/* Discoverability path to /users -- previously reachable only
+                via the bottom nav's Users tab. Own-profile only, same
+                reasoning as the requests banner below: browsing to add new
+                friends doesn't belong on someone else's Friends page. */}
+            {isOwnProfile && (
+                <Link href="/users" className={styles.requestsBanner}>
+                    <span>{base.browseUsers}</span>
+                    <span>›</span>
+                </Link>
+            )}
+
             {/* Requests has no nav entry point of its own now that the
                 primary bar's Friends badge is a count only (not a link) —
                 this is the one path back to it, shown only on your own

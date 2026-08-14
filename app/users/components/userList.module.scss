@@ -6,6 +6,45 @@
     margin-bottom: 16px;
   }
 
+  // Matches wiki.module.scss's search field exactly (2px border, 8px
+  // radius) -- same visual language, not a new web-native field.
+  .searchRow {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0 16px;
+    margin-bottom: 16px;
+  }
+
+  .searchInput {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    height: 40px;
+    font-size: 16px;
+    color: var(--text-color);
+
+    &::placeholder {
+      color: var(--title-color);
+    }
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  .searchClear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--title-color);
+  }
+
   ul {
     display: flex;
     flex-direction: column;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { getText, getUserId } from '@/store/selectors';
 import { useAppSelector } from '@/app/hooks/redux';
 import styles from './userList.module.scss';
@@ -26,6 +26,7 @@ export default function UserList() {
 
     const [pendingIds, setPendingIds] = useState<string[]>([]);
     const [friendIds, setFriendIds] = useState<string[]>([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const init = async () => {
@@ -84,26 +85,57 @@ export default function UserList() {
         setIsPreloader(false);
     };
 
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    const filteredUsers = useMemo(
+        () =>
+            trimmedQuery
+                ? users.filter((user) => user.username.toLowerCase().includes(trimmedQuery))
+                : users,
+        [users, trimmedQuery],
+    );
+
     if (loading) return <UsersPageSkeleton />;
 
     return (
         <div className={styles.users}>
             <h2>{base.allUsers}</h2>
-            <ul>
-                {userId && users && users.map((user) => {
-                    return (
-                        <User key={user.id}
-                              user={user}
-                              userId={userId}
-                              pendingIds={pendingIds}
-                              friendIds={friendIds}
-                              cancelFriend={cancelFriend}
-                              addFriend={addFriend}
-                              removeFriend={removeFriend}
-                        />
-                    );
-                })}
-            </ul>
+
+            {users.length > 0 && (
+                <div className={styles.searchRow}>
+                    <input
+                        className={styles.searchInput}
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        placeholder={base.searchUsers}
+                        type="search"
+                    />
+                    {searchQuery.length > 0 && (
+                        <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
+                            ✕
+                        </button>
+                    )}
+                </div>
+            )}
+
+            {trimmedQuery && filteredUsers.length === 0 ? (
+                <p>{base.noUsersMatch.replace('{value}', searchQuery.trim())}</p>
+            ) : (
+                <ul>
+                    {userId && filteredUsers.map((user) => {
+                        return (
+                            <User key={user.id}
+                                  user={user}
+                                  userId={userId}
+                                  pendingIds={pendingIds}
+                                  friendIds={friendIds}
+                                  cancelFriend={cancelFriend}
+                                  addFriend={addFriend}
+                                  removeFriend={removeFriend}
+                            />
+                        );
+                    })}
+                </ul>
+            )}
             {isPreloader && <Preloader />}
         </div>
     );
