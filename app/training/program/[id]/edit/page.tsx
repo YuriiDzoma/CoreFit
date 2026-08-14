@@ -6,13 +6,13 @@ import CreateEditProgram from '@/app/training/create/components/CreateEditProgra
 import { ProgramFull } from '@/types/training';
 import { fetchProgramDetail } from '@/lib/programData';
 import Preloader from '@/ui/preloader/Preloader';
+import { useAppSelector } from '@/app/hooks/redux';
+import { getText } from '@/store/selectors';
 
 export default function EditProgramPage() {
     const params = useParams();
     const id = params?.id as string;
-
-    console.log(id)
-    console.log(params)
+    const { training } = useAppSelector(getText);
 
     const [program, setProgram] = useState<ProgramFull | null>(null);
     const [loading, setLoading] = useState(true);
@@ -27,7 +27,7 @@ export default function EditProgramPage() {
     }, [id]);
 
     if (loading) return <Preloader />;
-    if (!program) return <div>Program not found</div>;
+    if (!program) return <div>{training.programNotFound}</div>;
 
     return <CreateEditProgram initialProgram={program} />;
 }

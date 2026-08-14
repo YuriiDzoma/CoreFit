@@ -49,11 +49,11 @@ const Requests = () => {
     };
 
     if (!userId) return null;
-    if (isLoading) return <p>LOADING...</p>;
+    if (isLoading) return <p>{base.loading}</p>;
 
     return (
         <div>
-            <h2>Requests</h2>
+            <h2>{base.requests}</h2>
             <ul className={styles.requestsList}>
                 {requests.map((req) => {
                     const user = usersMap[req.user_id];
@@ -74,10 +74,10 @@ const Requests = () => {
 
                             <div className={styles.request__actions}>
                                 <button onClick={() => handleAccept(req.id)} className="button" disabled={isLoading}>
-                                    <span>Accept</span>
+                                    <span>{base.accept}</span>
                                 </button>
                                 <button onClick={() => handleDecline(req.id)} className="button" disabled={isLoading}>
-                                    <span>Decline</span>
+                                    <span>{base.decline}</span>
                                 </button>
                             </div>
                         </li>

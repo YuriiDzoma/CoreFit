@@ -116,7 +116,7 @@ const Menu = () => {
                                     />}
                             </button>
                             <button className={styles.menu__signOut} onClick={handleSignOut}>
-                                <span>Sign out</span>
+                                <span>{base.signOut}</span>
                             </button>
                         </div>
                     </div>

@@ -38,7 +38,7 @@ const AllFriends = () => {
         fetchData();
     }, [id]);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>{base.loading}</p>;
 
     return (
         <div className={styles.allFriends}>
@@ -50,7 +50,7 @@ const AllFriends = () => {
                 Friends page and only when there's something to act on. */}
             {isOwnProfile && requests.length > 0 && (
                 <Link href="/requests" className={styles.requestsBanner}>
-                    <span>Friend Requests ({requests.length > 99 ? '99+' : requests.length})</span>
+                    <span>{base.friendRequestsLabel.replace('{value}', requests.length > 99 ? '99+' : String(requests.length))}</span>
                     <span>›</span>
                 </Link>
             )}

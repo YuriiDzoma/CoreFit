@@ -189,7 +189,7 @@ const ProgramDetail = () => {
     if (!program) {
         return (
             <div className={styles.detail}>
-                <p>Program not found</p>
+                <p>{training.programNotFound}</p>
             </div>
         );
     }

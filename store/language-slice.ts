@@ -33,6 +33,7 @@ const initialState = {
             theme: 'Theme',
             seeAllFriends: 'See all friends',
             friends: 'Friends',
+            requests: 'Requests',
             signOut: 'Sign out',
             oops: 'Oops: ',
             tryAgain: 'Try again',
