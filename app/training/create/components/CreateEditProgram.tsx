@@ -11,7 +11,7 @@ import SelectExercisesStep from './ selectExercisesStep';
 import Preloader from '../../../../ui/preloader/Preloader';
 import {useRouter, useSearchParams} from 'next/navigation';
 import { useAppSelector } from '@/app/hooks/redux';
-import { getUserId, getLanguage } from '@/store/selectors';
+import { getUserId, getLanguage, getText } from '@/store/selectors';
 import { ProgramFull } from '@/types/training';
 import {
     createTrainingProgram,
@@ -38,6 +38,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
 
     const userId = useAppSelector(getUserId);
     const language = useAppSelector(getLanguage);
+    const { training } = useAppSelector(getText);
     const router = useRouter();
     const [isPreloader, setIsPreloader] = useState(false);
     const [step, setStep] = useState(1);
@@ -152,7 +153,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
     return (
         <div className={styles.wrapper}>
             <h2 className="title">
-                {isEdit ? 'Edit Training Program' : 'Create Training Program'}
+                {isEdit ? training.editTrainingProgram : training.createTrainingProgram}
             </h2>
             <Stepper activeStep={step} />
 

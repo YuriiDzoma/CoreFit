@@ -3,8 +3,11 @@ import { createClient } from '@/utils/supabase/client';
 import React from 'react';
 import Image from "next/image";
 import styles from './login.module.scss'
+import { useAppSelector } from '@/app/hooks/redux';
+import { getText } from '@/store/selectors';
 
 export default function GoogleLogin() {
+    const { base } = useAppSelector(getText);
     const handleLogin = async () => {
         const redirectTo =
             process.env.NODE_ENV === 'development'
@@ -26,9 +29,9 @@ export default function GoogleLogin() {
                 src="/icons/googleIcon.svg"
                 width={24}
                 height={24}
-                alt="Screenshots of the dashboard project showing desktop version"
+                alt="Google"
             />
-             <span>Auth with Google</span>
+             <span>{base.authWithGoogle}</span>
         </button>
     );
 }

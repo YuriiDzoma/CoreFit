@@ -1,4 +1,8 @@
 'use client';
+import { useAppSelector } from '@/app/hooks/redux';
+import { getText } from '@/store/selectors';
+
 export default function Error({ error, reset }: { error: Error; reset: () => void }) {
-    return <div>Oops: {error.message} <button onClick={reset}>Try again</button></div>;
+    const { base } = useAppSelector(getText);
+    return <div>{base.oops}{error.message} <button onClick={reset}>{base.tryAgain}</button></div>;
 }
