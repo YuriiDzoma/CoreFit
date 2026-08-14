@@ -7,7 +7,7 @@ import { House, Users, Dumbbell, MessageSquareText } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import useWindowSize from "../../hooks/useWindowSize";
 import { useAppSelector } from "../../hooks/redux";
-import { getUserId } from "@/store/selectors";
+import { getUserId, getText } from "@/store/selectors";
 import { useFriendRequestStore } from "@/store/useFriendRequestStore";
 import { fetchUserProfileById } from "../../../lib/userData";
 
@@ -17,6 +17,7 @@ const ICON_SIZE = 24;
 const Navigation = () => {
     const pathname = usePathname();
     const { width } = useWindowSize();
+    const { base } = useAppSelector(getText);
 
     if (width && width < MOBILE_BREAKPOINT) {
         return <FloatingNavigation pathname={pathname} />;
@@ -30,21 +31,21 @@ const Navigation = () => {
                 href="/profile"
                 className={pathname === '/profile' ? `${styles.link} ${styles.active}` : styles.link}
             >
-                <span>Profile</span>
+                <span>{base.profile}</span>
             </Link>
 
             <Link
                 href="/training"
                 className={`${styles.link} ${isActive('/training') ? styles.active : ''}`}
             >
-                <span>Training</span>
+                <span>{base.training}</span>
             </Link>
 
             <Link
                 href="/users"
                 className={pathname === '/users' ? `${styles.link} ${styles.active}` : styles.link}
             >
-                <span>Users</span>
+                <span>{base.users}</span>
             </Link>
         </div>
     );

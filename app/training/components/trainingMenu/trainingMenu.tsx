@@ -3,15 +3,17 @@ import Link from "next/link";
 import styles from "./trainingMenu.module.scss";
 import { usePathname } from "next/navigation";
 import useWindowSize from "../../../hooks/useWindowSize";
+import { useAppSelector } from "../../../hooks/redux";
+import { getText } from "@/store/selectors";
 
-const ITEMS = [
+const ITEM_DEFS = [
     {
-        label: 'Complexes',
+        key: 'complexes' as const,
         href: '/training/complexes',
         isActive: (pathname: string) => pathname.startsWith('/training/complexes'),
     },
     {
-        label: 'Programs',
+        key: 'programs' as const,
         href: '/training',
         isActive: (pathname: string) =>
             pathname.startsWith('/training') &&
@@ -19,7 +21,7 @@ const ITEMS = [
             !pathname.startsWith('/training/complexes'),
     },
     {
-        label: 'Wiki',
+        key: 'Wiki' as const,
         href: '/training/wiki',
         isActive: (pathname: string) => pathname.startsWith('/training/wiki'),
     },
@@ -32,19 +34,20 @@ const ITEMS = [
 const TrainingMenu = () => {
     const { width } = useWindowSize();
     const pathname = usePathname();
+    const { base } = useAppSelector(getText);
 
     if (width >= 768) return null;
 
     return (
         <div className={styles.floatingWrap}>
             <div className={styles.floatingBar}>
-                {ITEMS.map((item) => {
+                {ITEM_DEFS.map((item) => {
                     const active = item.isActive(pathname);
 
                     return (
-                        <Link key={item.label} href={item.href} className={styles.floatingItem}>
+                        <Link key={item.key} href={item.href} className={styles.floatingItem}>
                             <span className={active ? styles.floatingPillActive : styles.floatingPill} />
-                            <span className={active ? styles.labelActive : styles.label}>{item.label}</span>
+                            <span className={active ? styles.labelActive : styles.label}>{base[item.key]}</span>
                         </Link>
                     );
                 })}
