@@ -28,7 +28,7 @@ const Settings = () => {
             <ProfileSettings />
             <LanguagesBox />
             <button className={styles.signOut} onClick={handleSignOut}>
-                Sign out
+                {base.signOut}
             </button>
         </div>
     )
