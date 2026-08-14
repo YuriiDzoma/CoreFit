@@ -5,16 +5,21 @@ import React from "react";
 import {ProgramType} from "../../../../types/training";
 import {useAppSelector} from "../../../hooks/redux";
 import {getIsDarkTheme} from "../../../../store/selectors";
+import {useTypeText, useLevelText} from "../../../hooks/useDifficulty";
+import {useDayCountText} from "../../../hooks/useDayCountText";
 
 
 const ProgramItem = ({program}: { program: ProgramType }) => {
     const isDark = useAppSelector(getIsDarkTheme);
+    const typeText = useTypeText();
+    const levelText = useLevelText();
+    const dayCountText = useDayCountText();
 
     return (
         <Link href={`/training/program/${program.id}`} className={styles.programItem}>
             <li>
                 <span>{program.title}</span>
-                <p>{program.type} • {program.level} • {program.days_count} day{program.days_count > 1 ? 's' : ''}</p>
+                <p>{typeText(program.type)} • {levelText(program.level)} • {dayCountText(program.days_count)}</p>
             </li>
             <Image
                 src={isDark ? '/icons/linkToWhite.svg' : '/icons/linkToDark.svg'}
