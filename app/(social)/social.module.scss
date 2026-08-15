@@ -1,0 +1,27 @@
+// Mirrors training.module.scss exactly -- same reasoning: FriendsMenu is
+// `position: fixed` at narrow width (a floating glass pill bar, not
+// in-flow chrome), so `.content` needs its own bottom clearance rather
+// than `.menu` reserving space for it.
+.social {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+@media only screen and (max-width: 768px) {
+  .content {
+    padding-bottom: calc(136px + env(safe-area-inset-bottom));
+  }
+}
+
+.menu {
+  flex-shrink: 0;
+  margin-bottom: 8px;
+}
