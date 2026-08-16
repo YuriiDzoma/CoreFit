@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from './create.module.scss';
 import { useAppSelector } from '@/app/hooks/redux';
 import { getLanguage, getText } from '@/store/selectors';
@@ -32,6 +32,7 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
     const [exercises, setExercises] = useState<exerciseTypes[]>([]);
     const [selected, setSelected] = useState<string[]>([]);
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const shouldLoad = selectedDefault.length > 0 && selected.length === 0 && language;
@@ -87,19 +88,49 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
         return idx >= 0 ? idx + 1 : 0;
     };
 
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    const filteredExercises = useMemo(
+        () =>
+            trimmedQuery
+                ? exercises.filter((exercise) => exercise.name.toLowerCase().includes(trimmedQuery))
+                : exercises,
+        [exercises, trimmedQuery],
+    );
+
     return (
         <div className={styles.popupWrapper}>
             <button className={styles.popupCloser} onClick={() => setIsShowPopup(false)} />
 
             <div className={styles.popup}>
+                <div className={styles.searchRow}>
+                    <input
+                        className={styles.searchInput}
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        placeholder={training.searchExercises}
+                        type="search"
+                    />
+                    {searchQuery.length > 0 && (
+                        <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
+                            ✕
+                        </button>
+                    )}
+                </div>
+
                 <div className={styles.popup__content}>
                     <WikiNav activeTab={activeTab} handleChangeTab={setActiveTab} isCreate />
-                    <ExercisesList
-                        getExerciseIndex={getExerciseIndex}
-                        exercises={exercises}
-                        toggleSelect={toggleSelect}
-                        selected={selected}
-                    />
+                    {trimmedQuery && filteredExercises.length === 0 ? (
+                        <p className={styles.emptyState}>
+                            {training.noExercisesMatch.replace('{value}', searchQuery.trim())}
+                        </p>
+                    ) : (
+                        <ExercisesList
+                            getExerciseIndex={getExerciseIndex}
+                            exercises={filteredExercises}
+                            toggleSelect={toggleSelect}
+                            selected={selected}
+                        />
+                    )}
                 </div>
 
                 <div className={styles.popup__actions}>
