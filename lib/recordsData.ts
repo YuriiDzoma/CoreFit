@@ -1,14 +1,15 @@
 import { createClient } from '@/utils/supabase/client';
 
 /**
- * `get_random_exercise_leaderboard` (Postgres function, SECURITY DEFINER --
- * see the mobile repo's supabase/migrations/20260816062432_add_get_random_exercise_leaderboard_function.sql,
+ * `get_exercise_leaderboards` (Postgres function, SECURITY DEFINER -- see
+ * the mobile repo's supabase/migrations/20260816080011_replace_leaderboard_with_paginated_exercise_leaderboards.sql,
  * the single source of truth for this RPC, shared by both apps against the
- * same Supabase project) picks one random exercise among those with at
- * least one valid logged weight and returns up to the top 3 users by max
- * weight for it, one row per user (all rows share the same exercise
- * fields). An empty array means nobody has logged a parseable weight for
- * any exercise yet -- not an error.
+ * same Supabase project) returns a page of exercises (default 10,
+ * optionally filtered to one muscle group) that have at least one valid
+ * logged weight, each with up to its top 3 users by max weight -- flat
+ * rows, ordered by exercise name then rank, grouped into
+ * `ExerciseLeaderboard[]` below. An empty array means no exercise
+ * (matching the filter) has a parseable logged weight yet -- not an error.
  */
 type LeaderboardRow = {
     exercise_id: string;
@@ -16,6 +17,7 @@ type LeaderboardRow = {
     name_uk: string | null;
     name_ru: string | null;
     image_url: string | null;
+    rank: number;
     user_id: string;
     username: string | null;
     avatar_url: string | null;
@@ -27,6 +29,7 @@ export type LeaderboardEntry = {
     username: string | null;
     avatarUrl: string | null;
     weight: number;
+    rank: number;
 };
 
 export type ExerciseLeaderboard = {
@@ -35,6 +38,8 @@ export type ExerciseLeaderboard = {
     exerciseImageUrl: string | null;
     entries: LeaderboardEntry[];
 };
+
+export const RECORDS_PAGE_SIZE = 10;
 
 // Same field-map/fallback convention as trainingData.ts's fetchExercisesByGroup:
 // only en/uk/ru have DB columns, 'pl' falls back to English.
@@ -49,30 +54,63 @@ function localizeName(row: LeaderboardRow, lang: 'eng' | 'ukr' | 'rus' | 'pl'): 
     return (row[field] as string | null) ?? row.name_en ?? '';
 }
 
-export async function getRandomExerciseLeaderboard(
-    lang: 'eng' | 'ukr' | 'rus' | 'pl',
-): Promise<ExerciseLeaderboard | null> {
+export type GetExerciseLeaderboardsParams = {
+    muscleGroupId: string | null;
+    lang: 'eng' | 'ukr' | 'rus' | 'pl';
+    offset?: number;
+    limit?: number;
+};
+
+export async function getExerciseLeaderboards({
+    muscleGroupId,
+    lang,
+    offset = 0,
+    limit = RECORDS_PAGE_SIZE,
+}: GetExerciseLeaderboardsParams): Promise<ExerciseLeaderboard[]> {
     const supabase = createClient();
-    const { data, error } = await supabase.rpc('get_random_exercise_leaderboard');
+    const { data, error } = await supabase.rpc('get_exercise_leaderboards', {
+        p_muscle_group_id: muscleGroupId,
+        p_limit: limit,
+        p_offset: offset,
+    });
 
     if (error) {
-        console.error('Error fetching exercise leaderboard:', error.message);
-        return null;
+        console.error('Error fetching exercise leaderboards:', error.message);
+        return [];
     }
 
     const rows = (data ?? []) as LeaderboardRow[];
-    if (rows.length === 0) return null;
 
-    const [first] = rows;
-    return {
-        exerciseId: first.exercise_id,
-        exerciseName: localizeName(first, lang),
-        exerciseImageUrl: first.image_url,
-        entries: rows.map((row) => ({
-            userId: row.user_id,
-            username: row.username,
-            avatarUrl: row.avatar_url,
-            weight: row.weight,
-        })),
-    };
+    // Rows arrive already grouped by exercise (the RPC's own ORDER BY), so
+    // a single linear pass folds flat rows into one leaderboard per exercise.
+    const leaderboards: ExerciseLeaderboard[] = [];
+    for (const row of rows) {
+        const current = leaderboards.at(-1);
+        if (current?.exerciseId === row.exercise_id) {
+            current.entries.push({
+                userId: row.user_id,
+                username: row.username,
+                avatarUrl: row.avatar_url,
+                weight: row.weight,
+                rank: row.rank,
+            });
+            continue;
+        }
+        leaderboards.push({
+            exerciseId: row.exercise_id,
+            exerciseName: localizeName(row, lang),
+            exerciseImageUrl: row.image_url,
+            entries: [
+                {
+                    userId: row.user_id,
+                    username: row.username,
+                    avatarUrl: row.avatar_url,
+                    weight: row.weight,
+                    rank: row.rank,
+                },
+            ],
+        });
+    }
+
+    return leaderboards;
 }

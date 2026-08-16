@@ -7,12 +7,34 @@
   }
 }
 
+.list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 32px;
+  margin-top: 16px;
+
+  > button {
+    align-self: center;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+  }
+}
+
 .exerciseHeader {
   display: flex;
   align-items: center;
   justify-content: center;
   column-gap: 8px;
-  margin-bottom: 16px;
 
   img {
     width: 36px;
@@ -26,12 +48,6 @@
   font-weight: 700;
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  row-gap: 16px;
-}
-
 .row {
   display: flex;
   align-items: center;
@@ -42,7 +58,8 @@
 }
 
 .rank {
-  width: 20px;
+  width: 24px;
+  font-size: 18px;
 }
 
 .avatar {

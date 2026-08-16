@@ -39,6 +39,7 @@ const initialState = {
             records: 'Records',
             trainings: 'Trainings',
             noRecordsYet: 'No one has logged a weight yet.',
+            showMore: 'Show more',
             requests: 'Requests',
             signOut: 'Sign out',
             oops: 'Oops: ',
