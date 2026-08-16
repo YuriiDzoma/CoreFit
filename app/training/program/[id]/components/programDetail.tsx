@@ -196,7 +196,7 @@ const ProgramDetail = () => {
 
     return (
         <div className={styles.detail}>
-            <h2 className="title">{program.title}</h2>
+            <h2 className="pageTitle">{program.title}</h2>
 
             {isMyProgram && (
                 <button

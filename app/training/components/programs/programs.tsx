@@ -37,7 +37,7 @@ const Programs = () => {
 
     return (
         <div className={styles.programs}>
-            <h2 className="title">
+            <h2 className="pageTitle">
                 {isMyProfile ? training.myPrograms : base.programs}
             </h2>
 

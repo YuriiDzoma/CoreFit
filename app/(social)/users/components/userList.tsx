@@ -98,7 +98,7 @@ export default function UserList() {
 
     return (
         <div className={styles.users}>
-            <h2>{base.allUsers}</h2>
+            <h2 className="pageTitle">{base.allUsers}</h2>
 
             {users.length > 0 && (
                 <div className={styles.searchRow}>

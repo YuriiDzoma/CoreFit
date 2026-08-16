@@ -84,7 +84,7 @@ const Requests = () => {
 
     return (
         <div>
-            <h2>{base.requests}</h2>
+            <h2 className="pageTitle">{base.requests}</h2>
 
             <h3 className={styles.requestsTitle}>{base.friendRequestsTitle}</h3>
             {requests.length === 0 ? (

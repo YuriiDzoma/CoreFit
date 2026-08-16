@@ -205,7 +205,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
 
     return (
         <div className={styles.wrapper}>
-            <h2 className="title">
+            <h2 className="pageTitle">
                 {isEdit ? training.editTrainingProgram : training.createTrainingProgram}
             </h2>
             <Stepper activeStep={step} />

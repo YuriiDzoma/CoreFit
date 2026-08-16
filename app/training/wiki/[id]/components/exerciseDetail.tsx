@@ -40,7 +40,7 @@ const ExerciseDetail = () => {
 
     return (
         <div className={styles.exerciseDetail}>
-            <h2 className={`${styles.title} title`}>{data.name}</h2>
+            <h2 className={`${styles.title} pageTitle`}>{data.name}</h2>
             <div className={styles.exerciseDetail__info}>
                 <p><strong>{training.type}:</strong> {data.type === 'compound' ? training.compound : training.isolation}</p>
                 <p><strong>{training.secondaryMuscles}:</strong> {data.secondary ? data.secondary : training.none}</p>
