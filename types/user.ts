@@ -18,6 +18,10 @@ export type ProfileType = {
     username: string;
     avatar_url: string;
     created_at: string;
+    // Optional -- most fetchers here (fetchUsers, fetchProfilesByIds) don't
+    // select it, but lib/data/user.ts's getProfileById/getOwnProfile
+    // already do (needed for trainer-request gating on the profile page).
+    is_trainer?: boolean;
 };
 
 export type UserSettings = {

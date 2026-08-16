@@ -75,7 +75,7 @@ export const fetchUserSettings = async (userId: string): Promise<UserSettings> =
 
 export const updateUserProfile = async (
     userId: string,
-    updates: Partial<Pick<User, 'username' | 'language' | 'dark' | 'email' | 'program_view_density'>>
+    updates: Partial<Pick<User, 'username' | 'language' | 'dark' | 'email' | 'is_trainer' | 'program_view_density'>>
 ): Promise<User | null> => {
     const supabase = createClient();
 

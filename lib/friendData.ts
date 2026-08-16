@@ -155,3 +155,52 @@ export const getOutgoingPendingRequests = async (userId: string): Promise<string
 
     return data.map(r => r.friend_id);
 };
+
+// Both directions, any status, one row per relationship -- unlike
+// getAllFriendsOfUser above (accepted only, kept as-is since userList.tsx
+// already depends on that exact shape). Added for the profile page's
+// friend/trainer action buttons, which need to tell "no relationship" from
+// "outgoing pending" from "incoming pending" for one specific other user,
+// not just "are we friends".
+export const getAllFriendLinksOfUser = async (userId: string): Promise<FriendRecord[]> => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('friends')
+        .select('*')
+        .or(`user_id.eq.${userId},friend_id.eq.${userId}`);
+
+    if (error) {
+        console.error('Error fetching friend links:', error);
+        return [];
+    }
+
+    return data ?? [];
+};
+
+export type FriendshipState =
+    | { status: 'none' }
+    | { status: 'outgoing'; requestId: string }
+    | { status: 'incoming'; requestId: string }
+    | { status: 'accepted' };
+
+// Derives the viewer's relationship to one other user from the full
+// two-directional list getAllFriendLinksOfUser returns.
+export const getFriendshipState = (
+    links: FriendRecord[],
+    viewerId: string,
+    otherUserId: string,
+): FriendshipState => {
+    const match = links.find(
+        (link) =>
+            (link.user_id === viewerId && link.friend_id === otherUserId) ||
+            (link.friend_id === viewerId && link.user_id === otherUserId),
+    );
+    if (!match) return { status: 'none' };
+    if (match.status === 'accepted') return { status: 'accepted' };
+    if (match.status === 'pending') {
+        return match.user_id === viewerId
+            ? { status: 'outgoing', requestId: match.id }
+            : { status: 'incoming', requestId: match.id };
+    }
+    return { status: 'none' };
+};
