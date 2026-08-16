@@ -39,7 +39,7 @@
   }
 }
 
-.languages, .profile {
+.languages, .profile, .trainer {
   margin: 8px auto 0;
   display: flex;
   flex-direction: column;
@@ -105,4 +105,14 @@
     border-radius: 50%;
     background-color: var(--border-color);
   }
+}
+
+// Not part of the shared .languages/.profile/.trainer block above --
+// LanguagesBox's rows are self-explanatory, but "I am a trainer" gates a
+// second, unrelated feature (global program authoring) as a disclosed
+// side effect, so it gets an explanatory line the others don't need.
+.trainer__hint {
+  font-size: 14px;
+  color: var(--text-color);
+  opacity: 0.7;
 }

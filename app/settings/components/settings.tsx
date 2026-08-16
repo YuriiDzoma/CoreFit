@@ -3,6 +3,7 @@ import React from "react";
 import styles from './settings.module.scss';
 import {LanguagesBox} from "./languagesBox";
 import ProfileSettings from "./profileSettings";
+import TrainerSettings from "./trainerSettings";
 import {useAppSelector} from "../../hooks/redux";
 import {getText} from "../../../store/selectors";
 import {useRouter} from "next/navigation";
@@ -26,6 +27,7 @@ const Settings = () => {
         <div className={styles.settings}>
             <h2>{base.settings}</h2>
             <ProfileSettings />
+            <TrainerSettings />
             <LanguagesBox />
             <button className={styles.signOut} onClick={handleSignOut}>
                 {base.signOut}
