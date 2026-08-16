@@ -1,0 +1,62 @@
+.records {
+  h2 {
+    font-size: 18px;
+    text-align: center;
+    color: #f3e8dd;
+    margin-bottom: 16px;
+  }
+}
+
+.exerciseHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 8px;
+  margin-bottom: 16px;
+
+  img {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+  }
+}
+
+.exerciseName {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.rank {
+  width: 20px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.name {
+  flex: 1;
+  font-size: 16px;
+}
+
+.weight {
+  font-size: 14px;
+  font-weight: 700;
+}

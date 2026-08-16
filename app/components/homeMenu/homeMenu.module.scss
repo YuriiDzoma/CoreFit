@@ -1,0 +1,77 @@
+// Floating glass pill bar -- identical structure to friendsMenu.module.scss
+// (the mobile app's own HomeSubNav/FriendsSubNav visual language). Not
+// gated to narrow viewports here -- see homeMenu.tsx's own comment for why.
+.floatingWrap {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: calc(76px + env(safe-area-inset-bottom));
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+}
+
+.floatingBar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 420px;
+  height: 48px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(32px) saturate(180%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .floatingBar {
+    background-color: var(--bg-color);
+  }
+}
+
+.floatingItem {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floatingPill,
+.floatingPillActive {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  border-radius: 16px;
+  border: 2px solid var(--border-color);
+  background-color: var(--button-hover);
+  transition: opacity 0.2s ease;
+}
+
+.floatingPill {
+  opacity: 0;
+}
+
+.floatingPillActive {
+  opacity: 1;
+}
+
+.label,
+.labelActive {
+  position: relative;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--title-color);
+  transition: color 0.2s ease;
+}
+
+.labelActive {
+  color: var(--text-color);
+}

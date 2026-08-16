@@ -1,0 +1,26 @@
+// Mirrors (social)/social.module.scss exactly -- same reasoning: HomeMenu
+// is `position: fixed` at narrow width, so `.content` needs its own
+// bottom clearance rather than `.menu` reserving space for it.
+.home {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+@media only screen and (max-width: 768px) {
+  .content {
+    padding-bottom: calc(136px + env(safe-area-inset-bottom));
+  }
+}
+
+.menu {
+  flex-shrink: 0;
+  margin-bottom: 8px;
+}
