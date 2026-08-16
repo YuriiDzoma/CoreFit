@@ -146,6 +146,8 @@ const initialState = {
             dayNumber: 'Day {value}',
             programNotFound: 'Program not found',
             dayCount: { one: 'day', few: 'days', many: 'days', other: 'days' },
+            confirmRemovalTitle: 'Save changes?',
+            confirmRemovalBody: 'This will permanently remove {value} from this program, along with any related training history. Continue?',
         },
     }
 };

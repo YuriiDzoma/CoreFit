@@ -146,6 +146,8 @@ export const getLanguages = (value: AppLanguage | string = 'eng') => {
             dayNumber: 'Day {value}',
             programNotFound: 'Program not found',
             dayCount: { one: 'day', few: 'days', many: 'days', other: 'days' },
+            confirmRemovalTitle: 'Save changes?',
+            confirmRemovalBody: 'This will permanently remove {value} from this program, along with any related training history. Continue?',
         },
     };
 
@@ -293,6 +295,8 @@ export const getLanguages = (value: AppLanguage | string = 'eng') => {
             dayNumber: 'День {value}',
             programNotFound: 'Программа не найдена',
             dayCount: { one: 'день', few: 'дня', many: 'дней', other: 'дня' },
+            confirmRemovalTitle: 'Сохранить изменения?',
+            confirmRemovalBody: 'Это навсегда удалит {value} из этой программы, вместе со связанной историей тренировок. Продолжить?',
         },
     };
 
@@ -440,6 +444,8 @@ export const getLanguages = (value: AppLanguage | string = 'eng') => {
             dayNumber: 'День {value}',
             programNotFound: 'Програму не знайдено',
             dayCount: { one: 'день', few: 'дні', many: 'днів', other: 'дня' },
+            confirmRemovalTitle: 'Зберегти зміни?',
+            confirmRemovalBody: 'Це назавжди видалить {value} з цієї програми разом із пов’язаною історією тренувань. Продовжити?',
         },
     };
 
@@ -588,6 +594,8 @@ export const getLanguages = (value: AppLanguage | string = 'eng') => {
             dayNumber: 'Dzień {value}',
             programNotFound: 'Nie znaleziono programu',
             dayCount: { one: 'dzień', few: 'dni', many: 'dni', other: 'dnia' },
+            confirmRemovalTitle: 'Zapisać zmiany?',
+            confirmRemovalBody: 'To trwale usunie {value} z tego programu, wraz z powiązaną historią treningów. Kontynuować?',
         },
     };
 

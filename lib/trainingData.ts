@@ -518,7 +518,28 @@ export const updateTrainingProgram = async (
         dayIdMap.set(day.day_number, day.id);
     }
 
-    // 4. Додаємо відсутні дні
+    // 4. Видаляємо дні, яких більше немає (лише з хвоста -- day-count
+    // крок майстра сам завжди тримає дні послідовно 1..N, ніколи не
+    // перенумеровує). program_days має ON DELETE CASCADE на
+    // program_exercises/training_history, тож видалення дня прибирає й
+    // всю його історію тренувань -- саме тому це підтверджується окремим
+    // діалогом у CreateEditProgram, а не виконується мовчки.
+    const keptDayNumbers = new Set(days.map((d) => d.dayNumber));
+    const daysToRemove = existingDays.filter((d) => !keptDayNumbers.has(d.day_number));
+    if (daysToRemove.length > 0) {
+        const { error: removeDaysError } = await supabase
+            .from('program_days')
+            .delete()
+            .in('id', daysToRemove.map((d) => d.id));
+
+        if (removeDaysError) {
+            console.error('Error removing extra days:', removeDaysError.message);
+            return false;
+        }
+        daysToRemove.forEach((d) => dayIdMap.delete(d.day_number));
+    }
+
+    // 5. Додаємо відсутні дні
     const missingDays = days.filter((d) => !dayIdMap.has(d.dayNumber));
     if (missingDays.length > 0) {
         const newDaysToInsert = missingDays.map((d) => ({
@@ -542,20 +563,23 @@ export const updateTrainingProgram = async (
         });
     }
 
-    // 5. Мапимо programExerciseIds -> exerciseIds
-    const allProgramExerciseIds = days.flatMap((d) => d.exercises);
-    const exerciseIdMap = await fetchProgramExerciseMap(allProgramExerciseIds);
-
-    // 6. Оновлюємо вправи для кожного дня
+    // 6. Оновлюємо вправи для кожного дня -- diff за MEMBERSHIP exercise_id,
+    // не за позицією в масиві. day.exercises -- це масив exercise-catalog
+    // id (checkbox-вибір, дублікати структурно неможливі, порядок слотів
+    // ніде не відстежується), не program_exercises.id. Існуючий рядок або
+    // лишається недоторканим (exercise_id все ще обраний), або видаляється
+    // (exercise_id знято) -- ніколи не апдейтиться на місці: у
+    // program_exercises немає UPDATE RLS-політики (підтверджено живим
+    // запитом), і апдейт "у інший exercise" через спільний рядок ризикував
+    // би підмінити exercise_logs/training_history чужою вправою.
     for (const day of days) {
         const dayId = dayIdMap.get(day.dayNumber);
         if (!dayId) continue;
 
         const { data: existingExercises, error: exErr } = await supabase
             .from('program_exercises')
-            .select('id, exercise_id')
-            .eq('day_id', dayId)
-            .order('order_index', { ascending: true });
+            .select('id, exercise_id, order_index')
+            .eq('day_id', dayId);
 
         if (exErr) {
             console.error('Error fetching program_exercises:', exErr.message);
@@ -563,65 +587,34 @@ export const updateTrainingProgram = async (
         }
 
         const existing = existingExercises ?? [];
-        const updates = [];
-        const inserts = [];
+        const keptExerciseIds = new Set(day.exercises);
+        const existingExerciseIds = new Set(existing.map((e) => e.exercise_id));
 
-        for (let i = 0; i < day.exercises.length; i++) {
-            const programExerciseId = day.exercises[i];
-            const exerciseId = exerciseIdMap[programExerciseId] ?? programExerciseId;
+        const idsToDelete = existing
+            .filter((e) => !keptExerciseIds.has(e.exercise_id))
+            .map((e) => e.id);
 
-            if (existing[i]) {
-                if (existing[i].exercise_id !== exerciseId) {
-                    updates.push({
-                        id: existing[i].id,
-                        exercise_id: exerciseId,
-                        order_index: i + 1,
-                    });
-                } else {
-                    updates.push({
-                        id: existing[i].id,
-                        order_index: i + 1,
-                    });
-                }
-            } else {
-                inserts.push({
-                    day_id: dayId,
-                    exercise_id: exerciseId,
-                    order_index: i + 1,
-                });
-            }
-        }
-
-        // 7. Видаляємо зайві вправи
-        if (existing.length > day.exercises.length) {
-            const idsToDelete = existing.slice(day.exercises.length).map((ex) => ex.id);
-            if (idsToDelete.length > 0) {
-                const { error: delErr } = await supabase
-                    .from('program_exercises')
-                    .delete()
-                    .in('id', idsToDelete);
-
-                if (delErr) {
-                    console.error('Error deleting extra program_exercises:', delErr.message);
-                    return false;
-                }
-            }
-        }
-
-        // 8. Оновлюємо наявні вправи
-        if (updates.length > 0) {
-            const { error: updErr } = await supabase
+        if (idsToDelete.length > 0) {
+            const { error: delErr } = await supabase
                 .from('program_exercises')
-                .upsert(updates, { onConflict: 'id' });
+                .delete()
+                .in('id', idsToDelete);
 
-            if (updErr) {
-                console.error('Error updating program_exercises:', updErr.message);
+            if (delErr) {
+                console.error('Error deleting removed program_exercises:', delErr.message);
                 return false;
             }
         }
 
-        // 9. Додаємо нові вправи
-        if (inserts.length > 0) {
+        const newExerciseIds = day.exercises.filter((id) => !existingExerciseIds.has(id));
+        if (newExerciseIds.length > 0) {
+            const maxOrderIndex = existing.reduce((max, e) => Math.max(max, e.order_index), 0);
+            const inserts = newExerciseIds.map((exerciseId, index) => ({
+                day_id: dayId,
+                exercise_id: exerciseId,
+                order_index: maxOrderIndex + index + 1,
+            }));
+
             const { error: insErr } = await supabase
                 .from('program_exercises')
                 .insert(inserts);

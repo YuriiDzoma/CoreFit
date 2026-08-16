@@ -19,6 +19,7 @@ import {
     fetchExercisesByIds
 } from '@/lib/trainingData';
 import {createGlobalProgram} from "../../../../lib/complexesData";
+import GlobalPopup from "@/app/components/globalPopup/globalPopup";
 
 type EditableProgramDay = {
     dayNumber: number;
@@ -112,9 +113,52 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
         setExerciseMap((prevMap) => ({ ...prevMap, ...newMap }));
     };
 
+    // Days beyond the new count, and exercises unchecked from a kept day,
+    // both cascade-delete their training_history/exercise_logs rows on
+    // save (program_days/program_exercises FKs -- confirmed live via
+    // pg_constraint). Only relevant on edit; a brand-new program has
+    // nothing to lose yet.
+    const computeRemovalSummary = (): string | null => {
+        if (!isEdit || !initialProgram) return null;
+
+        const keptDayNumbers = new Set(programDays.map((d) => d.dayNumber));
+        const removedDays = initialProgram.days.filter((d) => !keptDayNumbers.has(d.day_number));
+        const removedDayNumbers = new Set(removedDays.map((d) => d.day_number));
+
+        let removedExercisesCount = 0;
+        for (const day of initialProgram.days) {
+            if (removedDayNumbers.has(day.day_number)) continue;
+            const newDay = programDays.find((d) => d.dayNumber === day.day_number);
+            if (!newDay) continue;
+            const keptExerciseIds = new Set(newDay.exercises);
+            removedExercisesCount += day.exercises.filter((ex) => !keptExerciseIds.has(ex.id)).length;
+        }
+
+        const parts: string[] = [];
+        if (removedDays.length > 0) parts.push(`${removedDays.length} ${training.days.toLowerCase()}`);
+        if (removedExercisesCount > 0) parts.push(`${removedExercisesCount} ${training.exercises.toLowerCase()}`);
+
+        return parts.length > 0 ? parts.join(', ') : null;
+    };
+
+    const [pendingRemovalSummary, setPendingRemovalSummary] = useState<string | null>(null);
+
     const handleSave = async () => {
         if (!userId) return;
 
+        const summary = computeRemovalSummary();
+        if (summary) {
+            setPendingRemovalSummary(summary);
+            return;
+        }
+
+        await performSave();
+    };
+
+    const performSave = async () => {
+        if (!userId) return;
+
+        setPendingRemovalSummary(null);
         setIsPreloader(true);
         const level = levelMap[difficulty - 1];
 
@@ -127,6 +171,15 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                 programType,
                 level,
                 programDays,
+            );
+        } else if (isEdit && initialProgram) {
+            // ✅ редагування існуючої програми (той самий id, не дублікат)
+            success = await updateTrainingProgram(
+                initialProgram.id,
+                programName,
+                programType,
+                level,
+                programDays
             );
         } else {
             // ✅ створення особистої програми
@@ -205,6 +258,15 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                     onNext={handleSave}
                     initialProgram={initialProgram}
                     isValid={isValidProgram}
+                />
+            )}
+
+            {pendingRemovalSummary && (
+                <GlobalPopup
+                    title={training.confirmRemovalTitle}
+                    message={training.confirmRemovalBody.replace('{value}', pendingRemovalSummary)}
+                    onConfirm={performSave}
+                    onCancel={() => setPendingRemovalSummary(null)}
                 />
             )}
 
