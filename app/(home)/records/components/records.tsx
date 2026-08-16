@@ -102,7 +102,7 @@ const Records = () => {
                                                 className={styles.avatar}
                                             />
                                             <span className={styles.name}>{entry.username}</span>
-                                            <span className={styles.weight}>{entry.weight}</span>
+                                            <span className={styles.weight}>{entry.weight} {base.kg}</span>
                                         </Link>
                                     </li>
                                 ))}

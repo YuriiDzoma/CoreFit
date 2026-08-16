@@ -40,6 +40,7 @@ const initialState = {
             trainings: 'Trainings',
             noRecordsYet: 'No one has logged a weight yet.',
             showMore: 'Show more',
+            kg: 'kg',
             requests: 'Requests',
             signOut: 'Sign out',
             oops: 'Oops: ',
