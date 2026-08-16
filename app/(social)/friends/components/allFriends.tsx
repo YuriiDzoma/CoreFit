@@ -1,14 +1,13 @@
 'use client'
 import React, {useEffect, useState} from "react";
-import {useAppSelector} from "../../hooks/redux";
+import {useAppSelector} from "@/app/hooks/redux";
 import { useParams } from "next/navigation";
-import {getText, getUserId} from "../../../store/selectors";
+import {getText, getUserId} from "@/store/selectors";
 import Link from "next/link";
-import Image from "next/image";
 import styles from '../components/allFriends.module.scss'
-import {ProfileType} from "../../../types/user";
-import {fetchLimitedFriendProfiles} from "../../../lib/userData";
-import {getAllFriendsOfUser} from "../../../lib/friendData";
+import {ProfileType} from "@/types/user";
+import {fetchLimitedFriendProfiles} from "@/lib/userData";
+import {getAllFriendsOfUser} from "@/lib/friendData";
 import {useFriendRequestStore} from "@/store/useFriendRequestStore";
 
 

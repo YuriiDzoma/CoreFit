@@ -13,6 +13,16 @@
   font-size: 16px;
 }
 
+// FriendsMenu (friendsMenu.tsx) covers this same "get to Requests/Users"
+// role at this width — its own floating pill bar, matching TrainingMenu's
+// identical narrow-only gating. Kept for desktop, where FriendsMenu
+// doesn't render (see its own comment for why).
+@media only screen and (max-width: 768px) {
+  .requestsBanner {
+    display: none;
+  }
+}
+
 .friendList {
   display: flex;
   flex-direction: column;

@@ -12,9 +12,9 @@ import {
     cancelFriendRequest,
     getAllFriendsOfUser,
 } from '@/lib/friendData';
-import {getOutgoingPendingRequests, removeFriendship} from "../../../lib/friendData";
+import {getOutgoingPendingRequests, removeFriendship} from "@/lib/friendData";
 import User from "./user";
-import Preloader from "../../../ui/preloader/Preloader";
+import Preloader from "@/ui/preloader/Preloader";
 
 export default function UserList() {
     const userId = useAppSelector(getUserId);

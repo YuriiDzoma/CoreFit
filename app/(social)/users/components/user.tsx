@@ -1,9 +1,9 @@
 import React from "react";
 import styles from './userList.module.scss';
 import Link from "next/link";
-import {ProfileType} from "../../../types/user";
-import {getText} from "../../../store/selectors";
-import {useAppSelector} from "../../hooks/redux";
+import {ProfileType} from "@/types/user";
+import {getText} from "@/store/selectors";
+import {useAppSelector} from "@/app/hooks/redux";
 
 interface FullPicturesProps {
     user: ProfileType,
