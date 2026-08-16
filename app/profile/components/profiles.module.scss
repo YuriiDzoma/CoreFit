@@ -37,6 +37,19 @@
   top: 4px;
 }
 
+.profile__actions {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 8px;
+  align-items: center;
+}
+
+.profile__pending {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
 .friends {
   margin-top: 16px;
   width: 100%;
