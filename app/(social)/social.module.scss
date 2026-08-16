@@ -15,9 +15,21 @@
   overflow: auto;
 }
 
+// See home.module.scss's identical comment -- same nested-scroll-region
+// bug (this file already says it mirrors that one), same fix: hand
+// scrolling back to AppShell's own outer `.content`, and only add the
+// *extra* height FriendsMenu's floating pill bar needs beyond what that
+// outer content already reserves for the main Navigation bar.
 @media only screen and (max-width: 768px) {
+  .social {
+    height: auto;
+    overflow: visible;
+  }
+
   .content {
-    padding-bottom: calc(136px + env(safe-area-inset-bottom));
+    flex: none;
+    overflow: visible;
+    padding-bottom: 56px;
   }
 }
 

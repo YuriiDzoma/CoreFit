@@ -14,9 +14,28 @@
   overflow: auto;
 }
 
+// `.home`/`.content`'s own `overflow:hidden`/`overflow:auto` (above) made
+// this a second, independent scroll region nested inside AppShell's own
+// already-scrolling `.content` (`app.module.scss`) -- content could only
+// ever scroll up to *this* box's own top edge, never past it into the
+// padding-top AppShell reserves for the floating Header, so it read as a
+// hard clip instead of scrolling behind the Header's blur the way
+// `app.module.scss`'s own comment says it should. Handing scrolling back
+// to that single outer region fixes it: AppShell's `.content` already
+// reserves `env(safe-area-inset-bottom)` once, so this only adds the
+// extra height HomeMenu's floating pill bar needs on top of that (its
+// own height 48px + the 8px gap above the main Navigation bar), not the
+// full 136px again.
 @media only screen and (max-width: 768px) {
+  .home {
+    height: auto;
+    overflow: visible;
+  }
+
   .content {
-    padding-bottom: calc(136px + env(safe-area-inset-bottom));
+    flex: none;
+    overflow: visible;
+    padding-bottom: 56px;
   }
 }
 

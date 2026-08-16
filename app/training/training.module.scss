@@ -24,9 +24,21 @@
 // `.content` for the main Navigation bar. `136px` = the sub-nav's own
 // `bottom` offset (76px) + its height (48px) + a little breathing room
 // (12px), mirroring the mobile app's `getFloatingSubNavClearance()`.
+// See home.module.scss's identical comment -- same nested-scroll-region
+// bug, same fix: hand scrolling back to AppShell's own outer `.content`,
+// and only add the *extra* height TrainingMenu's floating pill bar needs
+// beyond what that outer content already reserves for the main
+// Navigation bar.
 @media only screen and (max-width: 768px) {
+  .training {
+    height: auto;
+    overflow: visible;
+  }
+
   .content {
-    padding-bottom: calc(136px + env(safe-area-inset-bottom));
+    flex: none;
+    overflow: visible;
+    padding-bottom: 56px;
   }
 }
 
