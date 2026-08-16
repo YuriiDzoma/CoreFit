@@ -1,3 +1,13 @@
+// Matches "Friend requests" and "Trainer requests" to each other exactly
+// (same element, same size) -- previously the friend-requests section had
+// no heading of its own at all, an asymmetry that stood out once the
+// trainer section existed alongside it.
+.requestsTitle {
+  margin-top: 16px;
+  font-size: 16px;
+  color: var(--title-color);
+}
+
 .requestsList {
   margin-top: 16px;
   display: flex;
