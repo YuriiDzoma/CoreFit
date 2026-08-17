@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./records.module.scss";
 import WikiNav from "../../../training/wiki/components/wikiNav";
+import { RecordsSkeleton } from "@/ui/skeleton/skeleton";
 import { useAppSelector } from "@/app/hooks/redux";
 import { getLanguage, getText } from "@/store/selectors";
 import {
@@ -68,7 +69,7 @@ const Records = () => {
         setLoadingMore(false);
     };
 
-    if (loading) return <p>{base.loading}</p>;
+    if (loading) return <RecordsSkeleton/>;
 
     return (
         <div className={styles.records}>

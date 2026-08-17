@@ -7,6 +7,19 @@
     height: 20px;
     width: 30%;
     margin: 0 auto;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  // Matches userList.module.scss's `.searchRow` height exactly (its
+  // 40px input, not the row's own unset height) -- was missing
+  // entirely before this, so the search bar visibly popped in below an
+  // otherwise-stable skeleton once the real page replaced it.
+  &__search {
+    height: 40px;
+    width: 100%;
+    border-radius: 8px;
+    background-color: var(--skeleton-bg);
   }
 
   span {
@@ -62,6 +75,99 @@
     display: block;
     height: 16px;
     width: 100px;
+  }
+}
+
+// Matches records.module.scss's actual current layout exactly (measured,
+// not estimated): `.list`'s 16px row-gap, `.card`'s 8px padding/row-gap
+// and 1px border, and the 64x64 exercise image.
+.recordsPage {
+  &__tabs {
+    display: flex;
+    column-gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  &__tab {
+    width: 64px;
+    min-width: 64px;
+    height: 64px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+    margin-top: 16px;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px;
+  }
+
+  &__cardHeader {
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+  }
+
+  &__cardImage {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    border-radius: 8px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__cardName {
+    flex: 1;
+    height: 16px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__cardRow {
+    height: 14px;
+    width: 60%;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+}
+
+// Matches allFriends.module.scss's `.friendList` exactly (measured, not
+// estimated): 16px row-gap, 80px square avatar, 18px name text.
+.friendsListPage {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  margin-top: 8px;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+  }
+
+  &__img {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__name {
+    height: 18px;
+    width: 140px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
   }
 }
 

@@ -5,6 +5,7 @@ export function UsersPageSkeleton() {
     return (
         <div className={styles.usersPage}>
             <div className={styles.usersPage__title}/>
+            <div className={styles.usersPage__search}/>
             <UsersSkeleton/>
         </div>
     )
@@ -35,6 +36,66 @@ export function UsersSkeleton() {
                 <span className={styles.user__btn}/>
             </li>
         </ul>
+    )
+}
+
+export function RecordsSkeleton() {
+    return (
+        <div>
+            <span className={styles.title}/>
+            <div className={styles.recordsPage__tabs}>
+                <span className={styles.recordsPage__tab}/>
+                <span className={styles.recordsPage__tab}/>
+                <span className={styles.recordsPage__tab}/>
+                <span className={styles.recordsPage__tab}/>
+                <span className={styles.recordsPage__tab}/>
+            </div>
+            <div className={styles.recordsPage__list}>
+                <div className={styles.recordsPage__card}>
+                    <div className={styles.recordsPage__cardHeader}>
+                        <span className={styles.recordsPage__cardImage}/>
+                        <span className={styles.recordsPage__cardName}/>
+                    </div>
+                    <span className={styles.recordsPage__cardRow}/>
+                </div>
+                <div className={styles.recordsPage__card}>
+                    <div className={styles.recordsPage__cardHeader}>
+                        <span className={styles.recordsPage__cardImage}/>
+                        <span className={styles.recordsPage__cardName}/>
+                    </div>
+                    <span className={styles.recordsPage__cardRow}/>
+                </div>
+                <div className={styles.recordsPage__card}>
+                    <div className={styles.recordsPage__cardHeader}>
+                        <span className={styles.recordsPage__cardImage}/>
+                        <span className={styles.recordsPage__cardName}/>
+                    </div>
+                    <span className={styles.recordsPage__cardRow}/>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export function FriendsListSkeleton() {
+    return (
+        <div>
+            <span className={styles.title}/>
+            <div className={styles.friendsListPage}>
+                <div className={styles.friendsListPage__row}>
+                    <span className={styles.friendsListPage__img}/>
+                    <span className={styles.friendsListPage__name}/>
+                </div>
+                <div className={styles.friendsListPage__row}>
+                    <span className={styles.friendsListPage__img}/>
+                    <span className={styles.friendsListPage__name}/>
+                </div>
+                <div className={styles.friendsListPage__row}>
+                    <span className={styles.friendsListPage__img}/>
+                    <span className={styles.friendsListPage__name}/>
+                </div>
+            </div>
+        </div>
     )
 }
 

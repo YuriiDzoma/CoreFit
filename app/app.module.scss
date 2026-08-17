@@ -15,8 +15,18 @@
 }
 
 @media only screen and (max-width: 769px) {
+  // Was 8px — `.content` below it is a literal `height: 100vh` (see its
+  // own comment for why it has to be literal, not a calc), so any padding
+  // here pushed it 8px further down while its own height stayed a full
+  // 100vh, overflowing the actual viewport by that same 8px and leaving a
+  // permanent, pointless 8px of scroll room even on pages with barely any
+  // content (confirmed live: Complexes, two short cards, `documentElement.
+  // scrollHeight` was exactly 8px taller than `clientHeight`). Header and
+  // Navigation are both `position: fixed`, so they never read this
+  // padding anyway — zeroing it only affects `.content`, the one child
+  // still in normal flow.
   .container {
-    padding: 8px;
+    padding: 0;
     margin: 0 auto;
   }
 

@@ -91,7 +91,7 @@
   flex-direction: column;
   row-gap: 4px;
   align-items: center;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
   width: 64px;
   min-width: 64px;
   height: 64px;
@@ -105,8 +105,20 @@
   }
 }
 
+// `--submit-bg` (the fill) is `#fff` in light theme -- barely
+// distinguishable from the light page background it sits on, and border/
+// label weight weren't differentiated at all before this (both tabs
+// shared the exact same 1px border and regular label weight regardless
+// of selection). A bolder, more saturated border plus a bold label give
+// two more cues that hold up in both themes even where the fill swap
+// alone doesn't.
 .tabActive {
   background-color: var(--submit-bg);
+  border: 2px solid var(--border-color);
+
+  span {
+    font-weight: 700;
+  }
 }
 
 .exercisesList {

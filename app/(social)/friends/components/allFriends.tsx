@@ -9,6 +9,7 @@ import {ProfileType} from "@/types/user";
 import {fetchLimitedFriendProfiles} from "@/lib/userData";
 import {getAllFriendsOfUser} from "@/lib/friendData";
 import {useFriendRequestStore} from "@/store/useFriendRequestStore";
+import {FriendsListSkeleton} from "@/ui/skeleton/skeleton";
 
 
 const AllFriends = () => {
@@ -19,15 +20,26 @@ const AllFriends = () => {
     const [loading, setLoading] = useState(true);
     const { requests } = useFriendRequestStore();
 
-    const isOwnProfile = !!currentUserId && currentUserId === id;
+    // Bare `/friends` (no `[id]` segment -- reachable directly by URL even
+    // though nothing in the app links to it that way, see navigation.tsx's
+    // own `friendsHref` comment) has no subject of its own to fall back
+    // to but the viewer's own id, same as the mobile app's own
+    // `subjectId = paramUserId ?? user?.id`. Previously this just bailed
+    // out of the fetch entirely without ever clearing `loading`, hanging
+    // the skeleton forever instead of showing anything.
+    const effectiveId = typeof id === 'string' ? id : currentUserId;
+    const isOwnProfile = !!currentUserId && currentUserId === effectiveId;
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!id || typeof id !== 'string') return;
+            if (!effectiveId) {
+                setLoading(false);
+                return;
+            }
 
-            const friendLinks = await getAllFriendsOfUser(id);
+            const friendLinks = await getAllFriendsOfUser(effectiveId);
             const friendIds = friendLinks.map(r =>
-                r.user_id === id ? r.friend_id : r.user_id
+                r.user_id === effectiveId ? r.friend_id : r.user_id
             );
 
             const allFriends = await fetchLimitedFriendProfiles(friendIds, 100);
@@ -35,9 +47,9 @@ const AllFriends = () => {
             setLoading(false);
         };
         fetchData();
-    }, [id]);
+    }, [effectiveId]);
 
-    if (loading) return <p>{base.loading}</p>;
+    if (loading) return <FriendsListSkeleton/>;
 
     return (
         <div className={styles.allFriends}>
