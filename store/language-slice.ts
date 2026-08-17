@@ -62,6 +62,8 @@ const initialState = {
             pending: 'Pending',
             yourTrainer: 'Your trainer',
             yourClient: 'Your client',
+            clientsLabel: 'Clients',
+            trainerLabel: 'Trainer',
             removeFriendTitle: 'Remove friend?',
             removeFriendText: 'You will need to send a new request to become friends again.',
             removeTrainerTitle: 'Remove trainer?',

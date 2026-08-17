@@ -4,6 +4,7 @@ import styles from "./components/profiles.module.scss";
 
 import ProfileClient from "./components/Profile.client";
 import FriendsServer from "./components/Friends.server";
+import TrainerClientsServer from "./components/TrainerClients.server";
 import { getOwnProfile } from "@/lib/data/user";
 import { ProfileFriendsSkeleton } from "@/ui/skeleton/skeleton";
 
@@ -16,6 +17,9 @@ export default async function Page() {
             <ProfileClient profile={profile} />
             <Suspense fallback={<ProfileFriendsSkeleton />}>
                 <FriendsServer id={profile.id} />
+            </Suspense>
+            <Suspense fallback={null}>
+                <TrainerClientsServer id={profile.id} isTrainer={profile.is_trainer === true} />
             </Suspense>
         </div>
     );
