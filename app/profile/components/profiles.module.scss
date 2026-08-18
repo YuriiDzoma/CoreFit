@@ -29,6 +29,15 @@
       opacity: 0.4;
     }
   }
+
+  // The joined-date `<span>` above sits on its own line "for free" -- it's
+  // the only inline content between the block-level `<p>` name and the
+  // block-level `.programsLink` below it. A second `<span>` right after it
+  // would otherwise flow onto the same line (inline elements don't wrap
+  // onto a new line on their own).
+  &__city {
+    display: block;
+  }
 }
 
 .settings {

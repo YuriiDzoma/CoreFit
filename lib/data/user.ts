@@ -8,7 +8,7 @@ export async function getOwnProfile(): Promise<ProfileType | null> {
 
     const { data } = await sb
         .from('profiles')
-        .select('id, username, avatar_url, created_at, dark, language, is_trainer')
+        .select('id, username, avatar_url, created_at, dark, language, is_trainer, city, country')
         .eq('id', user.id)
         .maybeSingle();
 
@@ -19,7 +19,7 @@ export async function getProfileById(id: string): Promise<ProfileType | null> {
     const sb = await createServerSupabase();
     const { data } = await sb
         .from('profiles')
-        .select('id, username, avatar_url, created_at, dark, language, is_trainer')
+        .select('id, username, avatar_url, created_at, dark, language, is_trainer, city, country')
         .eq('id', id)
         .maybeSingle();
 

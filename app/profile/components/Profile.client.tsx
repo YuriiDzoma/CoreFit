@@ -147,6 +147,11 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                 <div>
                     <p>{profile.username}</p>
                     <span>{new Date(profile.created_at).toLocaleString()}</span>
+                    {profile.city && (
+                        <span className={styles.profile__city}>
+                            {profile.city}{profile.country ? `, ${profile.country}` : ''}
+                        </span>
+                    )}
                     <Link className={styles.programsLink} href={`/training/${profile.id}`}>
                         <span>{base.programs}</span>
                     </Link>

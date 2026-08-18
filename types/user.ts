@@ -22,8 +22,11 @@ export type ProfileType = {
     created_at: string;
     // Optional -- most fetchers here (fetchUsers, fetchProfilesByIds) don't
     // select it, but lib/data/user.ts's getProfileById/getOwnProfile
-    // already do (needed for trainer-request gating on the profile page).
+    // already do (needed for trainer-request gating and the city line on
+    // the profile page).
     is_trainer?: boolean;
+    city?: string | null;
+    country?: string | null;
 };
 
 export type UserSettings = {
