@@ -19,9 +19,9 @@ import {
     AccordionSummary,
     AccordionDetails,
     Typography,
-    CircularProgress
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ComplexesListSkeleton } from "../../../../ui/skeleton/skeleton";
 
 const Complexes = () => {
     const isDark = useAppSelector(getIsDarkTheme);
@@ -115,10 +115,7 @@ const Complexes = () => {
             )}
 
             {loading ? (
-                <div style={{ textAlign: "center", marginTop: "20px" }}>
-                    <CircularProgress />
-                    <p>{base.loading}</p>
-                </div>
+                <ComplexesListSkeleton />
             ) : programs.length === 0 ? (
                 <p>{training.noGlobalProgramsFound}</p>
             ) : (

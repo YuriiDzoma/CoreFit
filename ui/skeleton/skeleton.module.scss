@@ -317,6 +317,18 @@
   }
 }
 
+// Matches wiki.module.scss's `.searchRow` height (its 40px input, not
+// the row's own unset height) -- was missing entirely before this, same
+// gap `.usersPage__search` fixed on the Users skeleton.
+.wikiSearch {
+  display: block;
+  height: 40px;
+  width: 100%;
+  border-radius: 8px;
+  background-color: var(--skeleton-bg);
+  margin-bottom: 16px;
+}
+
 .wiki {
   display: flex;
   justify-content: space-between;

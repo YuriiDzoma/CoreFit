@@ -164,6 +164,7 @@ export function ExerciseListSkeleton() {
     return (
         <div>
             <span className={styles.title}/>
+            <span className={styles.wikiSearch}/>
             <div className={styles.wiki}>
                 <div className={styles.exercisesList}>
                     <div className={styles.exercisesList__row}>
@@ -243,6 +244,24 @@ export function ProgramsListSkeleton() {
                 <li  className={styles.programList__item}/>
             </ul>
         </div>
+    )
+}
+
+// Complexes' own title and (trainer-only) "create global program" link
+// already render unconditionally outside its loading check
+// (complexes.tsx), so this only needs the list itself -- reuses
+// `.programList__list`/`__item` verbatim (same flat, unbordered
+// rectangle as Programs' own skeleton), not a re-measured version of
+// Complexes' own `Accordion`-based card. "Analogous", per request, not a
+// pixel match of the MUI accordion's border/chevron.
+export function ComplexesListSkeleton() {
+    return (
+        <ul className={styles.programList__list}>
+            <li className={styles.programList__item}/>
+            <li className={styles.programList__item}/>
+            <li className={styles.programList__item}/>
+            <li className={styles.programList__item}/>
+        </ul>
     )
 }
 
