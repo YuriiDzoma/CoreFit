@@ -81,6 +81,11 @@ const initialState = {
             trainerSection: 'Trainer',
             trainerToggle: 'I am a trainer',
             trainerHint: 'Lets friends invite you to be their trainer, and lets you create global programs.',
+            locationSection: 'Location',
+            cityPlaceholder: 'Start typing a city…',
+            detectLocation: 'Detect automatically',
+            noMatches: 'No matching cities',
+            locationError: "Couldn't detect your location",
         },
         training: {
             programName: 'Name of program',

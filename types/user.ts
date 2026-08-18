@@ -11,6 +11,8 @@ export type User = {
     // ported here so the choice syncs across a user's devices. Null until
     // the user picks a density at least once.
     program_view_density: number | null;
+    city: string | null;
+    country: string | null;
 };
 
 export type ProfileType = {
@@ -29,4 +31,6 @@ export type UserSettings = {
     language: string;
     is_trainer?: boolean;
     program_view_density: number | null;
+    city: string | null;
+    country: string | null;
 };

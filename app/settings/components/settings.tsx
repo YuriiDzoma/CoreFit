@@ -4,6 +4,7 @@ import styles from './settings.module.scss';
 import {LanguagesBox} from "./languagesBox";
 import ProfileSettings from "./profileSettings";
 import TrainerSettings from "./trainerSettings";
+import CitySettings from "./citySettings";
 import {useAppSelector} from "../../hooks/redux";
 import {getText} from "../../../store/selectors";
 import {useRouter} from "next/navigation";
@@ -28,6 +29,7 @@ const Settings = () => {
             <h2>{base.settings}</h2>
             <ProfileSettings />
             <TrainerSettings />
+            <CitySettings />
             <LanguagesBox />
             <button className={styles.signOut} onClick={handleSignOut}>
                 {base.signOut}

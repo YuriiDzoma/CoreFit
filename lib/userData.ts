@@ -50,7 +50,7 @@ export const fetchUserSettings = async (userId: string): Promise<UserSettings> =
 
     const { data, error } = await supabase
         .from('profiles')
-        .select('dark, language, is_trainer, program_view_density')
+        .select('dark, language, is_trainer, program_view_density, city, country')
         .eq('id', userId)
         .single();
 
@@ -61,6 +61,8 @@ export const fetchUserSettings = async (userId: string): Promise<UserSettings> =
             language: 'english',
             is_trainer: false, // ✅ дефолт
             program_view_density: null,
+            city: null,
+            country: null,
         };
     }
 
@@ -69,13 +71,15 @@ export const fetchUserSettings = async (userId: string): Promise<UserSettings> =
         language: data.language ?? 'english',
         is_trainer: data.is_trainer ?? false, // ✅ беремо з профілю
         program_view_density: data.program_view_density ?? null,
+        city: data.city ?? null,
+        country: data.country ?? null,
     };
 };
 
 
 export const updateUserProfile = async (
     userId: string,
-    updates: Partial<Pick<User, 'username' | 'language' | 'dark' | 'email' | 'is_trainer' | 'program_view_density'>>
+    updates: Partial<Pick<User, 'username' | 'language' | 'dark' | 'email' | 'is_trainer' | 'program_view_density' | 'city' | 'country'>>
 ): Promise<User | null> => {
     const supabase = createClient();
 
