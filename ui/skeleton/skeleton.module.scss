@@ -103,12 +103,17 @@
     margin-top: 16px;
   }
 
+  // Filled-wrapper card matching NewsSkeleton's own `.news__item` exactly
+  // (`--skeleton-wrapper-bg`, no border, 4px radius) -- Records' real
+  // `.card` is border-only, but this is a deliberate style-unification
+  // request (match the Trainings/history feed's skeleton look), not a
+  // fidelity fix.
   &__card {
     display: flex;
     flex-direction: column;
     row-gap: 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    background-color: var(--skeleton-wrapper-bg);
+    border-radius: 4px;
     padding: 8px;
   }
 
@@ -133,9 +138,39 @@
     background-color: var(--skeleton-bg);
   }
 
-  &__cardRow {
+  // Mirrors `records.tsx`'s own `EntryRow` (rank/avatar/name/weight),
+  // not a generic single bar -- keeps the leaderboard shape recognizable.
+  &__entryRow {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+  }
+
+  &__entryRank {
+    width: 22px;
     height: 14px;
-    width: 60%;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__entryAvatar {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__entryName {
+    flex: 1;
+    height: 14px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__entryWeight {
+    width: 40px;
+    height: 14px;
     border-radius: 4px;
     background-color: var(--skeleton-bg);
   }

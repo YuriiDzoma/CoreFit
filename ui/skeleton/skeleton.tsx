@@ -51,27 +51,40 @@ export function RecordsSkeleton() {
                 <span className={styles.recordsPage__tab}/>
             </div>
             <div className={styles.recordsPage__list}>
-                <div className={styles.recordsPage__card}>
-                    <div className={styles.recordsPage__cardHeader}>
-                        <span className={styles.recordsPage__cardImage}/>
-                        <span className={styles.recordsPage__cardName}/>
-                    </div>
-                    <span className={styles.recordsPage__cardRow}/>
-                </div>
-                <div className={styles.recordsPage__card}>
-                    <div className={styles.recordsPage__cardHeader}>
-                        <span className={styles.recordsPage__cardImage}/>
-                        <span className={styles.recordsPage__cardName}/>
-                    </div>
-                    <span className={styles.recordsPage__cardRow}/>
-                </div>
-                <div className={styles.recordsPage__card}>
-                    <div className={styles.recordsPage__cardHeader}>
-                        <span className={styles.recordsPage__cardImage}/>
-                        <span className={styles.recordsPage__cardName}/>
-                    </div>
-                    <span className={styles.recordsPage__cardRow}/>
-                </div>
+                <RecordsSkeletonCard/>
+                <RecordsSkeletonCard/>
+                <RecordsSkeletonCard/>
+            </div>
+        </div>
+    )
+}
+
+// A filled-wrapper card (`--skeleton-wrapper-bg`, no border) matching
+// NewsSkeleton's own visual language on the Trainings/history feed, not
+// the real `.card`'s own border-only treatment -- an explicit request to
+// bring Records' skeleton into the same style, not a fidelity fix. Row
+// anatomy (rank/avatar/name/weight) still mirrors `records.tsx`'s own
+// `EntryRow` exactly, rather than collapsing to a single generic bar per
+// row the way NewsSkeleton's exercise lines do -- a leaderboard reads as
+// a leaderboard shape even as a placeholder.
+function RecordsSkeletonCard() {
+    return (
+        <div className={styles.recordsPage__card}>
+            <div className={styles.recordsPage__cardHeader}>
+                <span className={styles.recordsPage__cardImage}/>
+                <span className={styles.recordsPage__cardName}/>
+            </div>
+            <div className={styles.recordsPage__entryRow}>
+                <span className={styles.recordsPage__entryRank}/>
+                <span className={styles.recordsPage__entryAvatar}/>
+                <span className={styles.recordsPage__entryName}/>
+                <span className={styles.recordsPage__entryWeight}/>
+            </div>
+            <div className={styles.recordsPage__entryRow}>
+                <span className={styles.recordsPage__entryRank}/>
+                <span className={styles.recordsPage__entryAvatar}/>
+                <span className={styles.recordsPage__entryName}/>
+                <span className={styles.recordsPage__entryWeight}/>
             </div>
         </div>
     )
