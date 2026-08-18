@@ -329,24 +329,53 @@
   margin-bottom: 16px;
 }
 
+// Mirrors wiki.module.scss's own `.content`/`.nav`/`.tab` shape exactly:
+// column-reversed (the tab row sits above the list at every width, same
+// as `WikiNav` rendering after the list in DOM but appearing first) with
+// a horizontally-scrolling row of 64px placeholder tabs that grow to 90px
+// past the 768px breakpoint. The `<ul>/<li>` markup for this already
+// existed in `ExerciseListSkeleton`, but this class never matched the
+// real `WikiNav`'s actual (always horizontal, row-reversed-above-the-
+// list) layout -- it rendered as an unreachable vertical sidebar shape
+// (`flex-direction: column`, no responsive rule at all) that every real
+// screen width overrides away, so the tab skeleton was effectively
+// invisible/wrong-shaped rather than literally missing.
 .wiki {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column-reverse;
 
   &__groups {
     display: flex;
-    flex-direction: column;
-    row-gap: 16px;
-    padding-right: 10px;
+    flex-direction: row;
+    column-gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
   }
 
   &__group {
+    flex-shrink: 0;
     border-radius: 4px;
     background-color: var(--skeleton-bg);
     width: 64px;
     min-width: 64px;
     min-height: 64px;
     height: 64px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .wiki {
+    &__groups {
+      justify-content: center;
+      overflow-x: visible;
+    }
+
+    &__group {
+      width: 90px;
+      min-width: 90px;
+      height: 90px;
+      min-height: 90px;
+    }
   }
 }
 
