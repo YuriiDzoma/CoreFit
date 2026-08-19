@@ -28,6 +28,21 @@
   // exactly — the same value in both light and dark there too, not a
   // per-theme color.
   --danger: #e5484d;
+
+  // Trainer-level badge tiers (Profile page) — matches the mobile app's
+  // own `constants/theme.ts` values exactly. Iron is dark graphite
+  // rather than a light "raw metal" grey deliberately: an earlier
+  // light-grey version read as too close to Silver to tell apart at a
+  // glance (live feedback), so the two are now separated by
+  // brightness/saturation, not just hue.
+  --tier-iron: #9098A8;
+  --tier-iron-tint: #262A33;
+  --tier-bronze: #D68A3C;
+  --tier-bronze-tint: #3A2A18;
+  --tier-silver: #C7CCD6;
+  --tier-silver-tint: #2E323C;
+  --tier-gold: #E8C24A;
+  --tier-gold-tint: #3B330F;
 }
 
 [data-theme='light'] {
@@ -54,4 +69,14 @@
 
   // Same value as dark — see dark theme above.
   --danger: #e5484d;
+
+  // See dark theme above — same tier system, mobile-matched values.
+  --tier-iron: #454B57;
+  --tier-iron-tint: #DBDDE2;
+  --tier-bronze: #A8611F;
+  --tier-bronze-tint: #F3DFC7;
+  --tier-silver: #8A93A6;
+  --tier-silver-tint: #E8EAEF;
+  --tier-gold: #B8860B;
+  --tier-gold-tint: #F7E7B8;
 }

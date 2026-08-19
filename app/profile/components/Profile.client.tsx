@@ -17,6 +17,7 @@ import {
 } from "@/lib/friendData";
 import {
     getAllTrainerLinksOfUser,
+    getTrainerClientCount,
     getTrainerClientState,
     sendTrainerRequest,
     cancelTrainerRequest,
@@ -26,6 +27,7 @@ import type { FriendRecord } from "@/types/friends";
 import type { TrainerClientRecord } from "@/types/trainerClient";
 import {fetchUserSettings} from "@/lib/userData";
 import GlobalPopup from "@/app/components/globalPopup/globalPopup";
+import TrainerBadge from "./TrainerBadge";
 
 const Profile = ({profile}: {profile: ProfileType}) => {
     const { width } = useWindowSize();
@@ -43,6 +45,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
     const [friendLinks, setFriendLinks] = useState<FriendRecord[]>([]);
     const [trainerLinks, setTrainerLinks] = useState<TrainerClientRecord[]>([]);
     const [viewerIsTrainer, setViewerIsTrainer] = useState(false);
+    const [clientCount, setClientCount] = useState(0);
     const [isPreloader, setIsPreloader] = useState(false);
     const [pendingRemoval, setPendingRemoval] = useState<
         | { kind: 'friend' }
@@ -69,6 +72,14 @@ const Profile = ({profile}: {profile: ProfileType}) => {
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentId, isOwnProfile]);
+
+    // Own profile and someone else's both need this -- not folded into
+    // the viewer-relationship effect above, which deliberately skips
+    // `isOwnProfile`.
+    useEffect(() => {
+        if (!profile.is_trainer) return;
+        getTrainerClientCount(profile.id).then(setClientCount);
+    }, [profile.id, profile.is_trainer]);
 
     const friendState = currentId
         ? getFriendshipState(friendLinks, currentId, profile.id)
@@ -152,6 +163,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                             {profile.city}{profile.country ? `, ${profile.country}` : ''}
                         </span>
                     )}
+                    {profile.is_trainer && <TrainerBadge clientCount={clientCount} />}
                     <Link className={styles.programsLink} href={`/training/${profile.id}`}>
                         <span>{base.programs}</span>
                     </Link>

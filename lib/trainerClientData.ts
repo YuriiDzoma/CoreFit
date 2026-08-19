@@ -151,6 +151,41 @@ export const getAllTrainerLinksOfUser = async (userId: string): Promise<TrainerC
     return data ?? [];
 };
 
+// Backed by a SECURITY DEFINER RPC, not a plain select -- the SELECT RLS
+// policy on trainer_clients only lets a user read relationships they're
+// personally part of, so a profile that isn't the viewer's own would
+// otherwise be invisible here entirely. The RPC returns only a count,
+// never the underlying rows, so this can't be used to learn who a
+// trainer's clients actually are.
+export const getTrainerClientCount = async (trainerId: string): Promise<number> => {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc('get_trainer_client_count', {
+        target_trainer_id: trainerId,
+    });
+
+    if (error) {
+        console.error('Error fetching trainer client count:', error);
+        return 0;
+    }
+
+    return data ?? 0;
+};
+
+export type TrainerTier = 'iron' | 'bronze' | 'silver' | 'gold';
+
+// Thresholds are a product decision, not derived from anything -- chosen
+// alongside the badge's visual design (mobile repo's docs/decisions.md).
+// `0` returns `null` (no badge at all) rather than a tier, matching this
+// app's existing "don't show an empty state, just hide the block"
+// convention.
+export const getTrainerTier = (clientCount: number): TrainerTier | null => {
+    if (clientCount <= 0) return null;
+    if (clientCount <= 5) return 'iron';
+    if (clientCount <= 10) return 'bronze';
+    if (clientCount <= 15) return 'silver';
+    return 'gold';
+};
+
 export type TrainerClientState =
     | { status: 'none' }
     | { status: 'outgoing'; requestId: string }

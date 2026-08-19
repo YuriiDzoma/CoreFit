@@ -1,0 +1,53 @@
+// Mirrors the mobile app's own `trainer-badge.tsx` styling exactly --
+// same padding/radius/border, same icon+single-line-text layout (a
+// two-line version read as too large/heavy next to the rest of the
+// profile header per live feedback). Tier colors come from
+// ui/variables.scss's `--tier-*` custom properties (matched to
+// constants/theme.ts's mobile values), applied per tier via the
+// modifier classes below rather than inline styles.
+// `display: flex` (block-level outer display), not `inline-flex` --
+// the city span right before this (when present) forces its own line
+// via its own `display: block`, but city is optional (not every
+// profile has one) and this badge can't rely on that. `inline-flex`
+// would let it flow onto the *same* line as the plain `<span>` date
+// right above when there's no city between them (confirmed live: it
+// visibly overlapped the date on a profile with no city set).
+.badge {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  column-gap: 4px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 2px 10px;
+  margin-top: 4px;
+}
+
+.text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.iron {
+  background-color: var(--tier-iron-tint);
+  border-color: var(--tier-iron);
+  color: var(--tier-iron);
+}
+
+.bronze {
+  background-color: var(--tier-bronze-tint);
+  border-color: var(--tier-bronze);
+  color: var(--tier-bronze);
+}
+
+.silver {
+  background-color: var(--tier-silver-tint);
+  border-color: var(--tier-silver);
+  color: var(--tier-silver);
+}
+
+.gold {
+  background-color: var(--tier-gold-tint);
+  border-color: var(--tier-gold);
+  color: var(--tier-gold);
+}
