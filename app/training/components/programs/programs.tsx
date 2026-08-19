@@ -33,8 +33,6 @@ const Programs = () => {
         loadPrograms();
     }, [id]);
 
-    if (loading) return <ProgramsListSkeleton />;
-
     return (
         <div className={styles.programs}>
             <h2 className="pageTitle">
@@ -49,7 +47,9 @@ const Programs = () => {
                 </div>
             )}
 
-            {programs.length === 0 ? (
+            {loading ? (
+                <ProgramsListSkeleton />
+            ) : programs.length === 0 ? (
                 <p>{isMyProfile ? training.notHavePrograms : training.notHaveProgramsUser}</p>
             ) : (
                 <ul className={styles.programList}>

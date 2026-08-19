@@ -173,10 +173,12 @@ export function ProfileFriendsSkeleton() {
     )
 }
 
+// The real title renders unconditionally in Wiki.tsx now (not skipped
+// during loading), so this only covers what's actually still hidden
+// while loading: the search row, muscle-group tabs, and exercise list.
 export function ExerciseListSkeleton() {
     return (
         <div>
-            <span className={styles.title}/>
             <span className={styles.wikiSearch}/>
             <div className={styles.wiki}>
                 <div className={styles.exercisesList}>
@@ -245,18 +247,18 @@ export function ExerciseSkeleton() {
     )
 }
 
+// The real title and "+ Create new program" link render unconditionally
+// in programs.tsx now (not skipped during loading, matching Complexes'
+// own already-unconditional title/create-link) -- only the list itself
+// still needs a placeholder here.
 export function ProgramsListSkeleton() {
     return (
-        <div>
-            <span className={styles.title}/>
-            <span className={styles.programList__create}/>
-            <ul className={styles.programList__list}>
-                <li  className={styles.programList__item}/>
-                <li  className={styles.programList__item}/>
-                <li  className={styles.programList__item}/>
-                <li  className={styles.programList__item}/>
-            </ul>
-        </div>
+        <ul className={styles.programList__list}>
+            <li  className={styles.programList__item}/>
+            <li  className={styles.programList__item}/>
+            <li  className={styles.programList__item}/>
+            <li  className={styles.programList__item}/>
+        </ul>
     )
 }
 

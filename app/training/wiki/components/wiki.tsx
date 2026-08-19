@@ -54,41 +54,45 @@ export default function Wiki() {
         return exercises.filter((item) => item.name.toLowerCase().includes(trimmedQuery));
     }, [exercises, searchQuery]);
 
-    if (!exercises.length) return <ExerciseListSkeleton />
-
     return (
         <div>
             <h2 className={`pageTitle ${styles.title}`}>{base.Wiki}</h2>
 
-            <div className={styles.searchRow}>
-                <input
-                    className={styles.searchInput}
-                    value={searchQuery}
-                    onChange={(event) => setSearchQuery(event.target.value)}
-                    placeholder={training.searchExercises}
-                    type="search"
-                />
-                {searchQuery.length > 0 && (
-                    <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
-                        ✕
-                    </button>
-                )}
-            </div>
+            {!exercises.length ? (
+                <ExerciseListSkeleton />
+            ) : (
+                <>
+                    <div className={styles.searchRow}>
+                        <input
+                            className={styles.searchInput}
+                            value={searchQuery}
+                            onChange={(event) => setSearchQuery(event.target.value)}
+                            placeholder={training.searchExercises}
+                            type="search"
+                        />
+                        {searchQuery.length > 0 && (
+                            <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
+                                ✕
+                            </button>
+                        )}
+                    </div>
 
-            <div className={styles.content}>
-                <ul className={styles.exercisesList}>
-                    {filteredExercises.length === 0 ? (
-                        <li className={styles.emptyState}>
-                            {training.noExercisesMatch.replace('{value}', searchQuery.trim())}
-                        </li>
-                    ) : (
-                        filteredExercises.map((item, index) => (
-                            <Exercise key={index} item={item} />
-                        ))
-                    )}
-                </ul>
-                <WikiNav activeTab={activeTab} handleChangeTab={handleChangeTab} />
-            </div>
+                    <div className={styles.content}>
+                        <ul className={styles.exercisesList}>
+                            {filteredExercises.length === 0 ? (
+                                <li className={styles.emptyState}>
+                                    {training.noExercisesMatch.replace('{value}', searchQuery.trim())}
+                                </li>
+                            ) : (
+                                filteredExercises.map((item, index) => (
+                                    <Exercise key={index} item={item} />
+                                ))
+                            )}
+                        </ul>
+                        <WikiNav activeTab={activeTab} handleChangeTab={handleChangeTab} />
+                    </div>
+                </>
+            )}
             {isPreloader && <Preloader />}
         </div>
     );
