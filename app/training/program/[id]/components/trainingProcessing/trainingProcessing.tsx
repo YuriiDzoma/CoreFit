@@ -27,6 +27,15 @@ const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: Pro
     const { register, handleSubmit, setValue, watch } = useForm<FormValues>();
     const [dates, setDates] = useState<Record<number, string>>({});
     const [submittedDays, setSubmittedDays] = useState<Record<number, boolean>>({});
+    // Subscribes to every registered field (no argument), so this
+    // re-renders -- and the Complete button's disabled state below
+    // updates -- on every keystroke, not just on blur/submit.
+    const watchedValues = watch();
+
+    const hasAnyValueForDay = (dayIndex: number): boolean =>
+        program.days[dayIndex].exercises.some(
+            (exercise) => (watchedValues[exercise.programExerciseId] ?? '').trim().length > 0,
+        );
 
 
     useEffect(() => {
@@ -47,7 +56,7 @@ const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: Pro
 
     const onSubmitDay = async (dayIndex: number, dayId: string) => {
         const date = dates[dayIndex];
-        if (!userId || !date) return;
+        if (!userId || !date || !hasAnyValueForDay(dayIndex)) return;
         setIsPreloader(true);
         const success = await completeDay(userId, dayId, date);
         if (success) {
@@ -94,7 +103,7 @@ const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: Pro
                                 type="button"
                                 className={'button'}
                                 onClick={() => onSubmitDay(index, day.id)}
-                                disabled={submittedDays[index]}
+                                disabled={submittedDays[index] || !dates[index] || !hasAnyValueForDay(index)}
                             >
                                 <span>{training.complete}</span>
                             </button>
