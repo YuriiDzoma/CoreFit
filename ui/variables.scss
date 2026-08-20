@@ -43,6 +43,14 @@
   --tier-silver-tint: #2E323C;
   --tier-gold: #E8C24A;
   --tier-gold-tint: #3B330F;
+
+  // Shared "elevated" surface fill (ui/elevatedCard) — deliberately NOT
+  // `--bg-color`'s neutral reuse; a plain grey fill read as an ugly clash
+  // against this app's blue-toned dark palette per live feedback. Same
+  // navy hue family as `--bg-color`/`--border-color`, just lighter, so
+  // the card lifts by color rather than a mismatched fill. Matches the
+  // mobile app's own `theme.elevatedBg` exactly.
+  --elevated-bg: #1B2A47;
 }
 
 [data-theme='light'] {
@@ -79,4 +87,8 @@
   --tier-silver-tint: #E8EAEF;
   --tier-gold: #B8860B;
   --tier-gold-tint: #F7E7B8;
+
+  // See dark theme above — matches the mobile app's own `theme.elevatedBg`
+  // (same value as `--bg-color`'s element-fill counterpart there).
+  --elevated-bg: #F0F0F3;
 }

@@ -1,0 +1,17 @@
+// Shared "lifted" surface — filled + soft shadow in light mode, filled +
+// a brand-navy glow in dark mode (a plain shadow disappears against an
+// already-dark background). Matches the mobile app's own `ElevatedCard`
+// exactly. Meant to be reused by other card-like surfaces later, not
+// rebuilt per consumer — first user is `ProgramItem` on the My Programs
+// list, via `composes` (its root must stay an `<a>` for routing, so this
+// is a composable class, not a wrapper component).
+.elevated {
+  background-color: var(--elevated-bg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme='dark'] .elevated {
+  box-shadow:
+    0 0 0 1px rgba(70, 120, 190, 0.2),
+    0 4px 8px rgba(32, 72, 121, 0.45);
+}

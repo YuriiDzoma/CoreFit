@@ -48,6 +48,13 @@
   }
 }
 
+// Applied alongside .programItem — overrides its border only, since the
+// elevated look (composed `.elevated` from ui/elevatedCard) supplies its
+// own shadow/glow edge instead. See ProgramItem.tsx's `variant` prop.
+.programItemElevated {
+  border: none;
+}
+
 .programList {
   display: flex;
   flex-direction: column;

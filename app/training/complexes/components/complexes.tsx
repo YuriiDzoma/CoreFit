@@ -123,16 +123,33 @@ const Complexes = () => {
                     {programs.map((program) => (
                         <Accordion key={program.id} className={styles.programCard}
                                    sx={{
-                                       backgroundColor: "transparent",
+                                       // Same "elevated" recipe as ProgramItem/AllFriends
+                                       // (`ui/elevatedCard/elevatedCard.module.scss`) — set
+                                       // here via `sx` rather than composing that shared
+                                       // class, since MUI's own `sx`-generated styles would
+                                       // otherwise fight it for the same properties at
+                                       // matching specificity. `border-radius` stays in
+                                       // `complexes.module.scss` (not fought over).
+                                       backgroundColor: isDark ? "#1B2A47" : "#F0F0F3",
                                        color: isDark ? "#fff" : "#19355A",
-                                       border: "1px solid #204879",
-                                       borderRadius: "8px",
-                                       boxShadow: "none",
-                                       margin: "0 0 10px 0 !important",
-
-                                       "&.Mui-expanded": {
-                                           margin: "0 0 10px 0 !important",
-                                       },
+                                       border: "none",
+                                       // MUI's own `.MuiAccordion-rounded` only rounds the
+                                       // top corners of the first item and the bottom
+                                       // corners of the last (built for a flush, gap-free
+                                       // stack) -- wrong now that `.programList`'s `row-gap`
+                                       // gives every card real space around it, same as
+                                       // ProgramItem/AllFriends. `!important` needed since
+                                       // that built-in rule is more specific than this `sx`.
+                                       borderRadius: "4px !important",
+                                       boxShadow: isDark
+                                           ? "0 0 0 1px rgba(70, 120, 190, 0.2), 0 4px 8px rgba(32, 72, 121, 0.45)"
+                                           : "0 2px 5px rgba(0, 0, 0, 0.12)",
+                                       // No extra margin -- `.programList`'s own `row-gap:
+                                       // 8px` (`complexes.module.scss`) already provides the
+                                       // same list spacing ProgramItem/AllFriends use; a
+                                       // margin here on top of that gap would make this list
+                                       // visibly looser than the other two.
+                                       margin: "0 !important",
 
                                        "&:before": {
                                            display: "none",

@@ -1,10 +1,11 @@
 'use client'
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useAppSelector} from "@/app/hooks/redux";
 import { useParams } from "next/navigation";
 import {getText, getUserId} from "@/store/selectors";
 import Link from "next/link";
 import styles from '../components/allFriends.module.scss'
+import elevatedStyles from "../../../../ui/elevatedCard/elevatedCard.module.scss";
 import {ProfileType} from "@/types/user";
 import {fetchLimitedFriendProfiles} from "@/lib/userData";
 import {getAllFriendsOfUser} from "@/lib/friendData";
@@ -18,6 +19,7 @@ const AllFriends = () => {
     const { id } = useParams();
     const [friends, setFriends] = useState<ProfileType[]>([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
     const { requests } = useFriendRequestStore();
 
     // Bare `/friends` (no `[id]` segment -- reachable directly by URL even
@@ -49,6 +51,15 @@ const AllFriends = () => {
         fetchData();
     }, [effectiveId]);
 
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    const filteredFriends = useMemo(
+        () =>
+            trimmedQuery
+                ? friends.filter((friend) => (friend.username ?? '').toLowerCase().includes(trimmedQuery))
+                : friends,
+        [friends, trimmedQuery],
+    );
+
     if (loading) return <FriendsListSkeleton/>;
 
     return (
@@ -77,18 +88,39 @@ const AllFriends = () => {
                 </Link>
             )}
 
-            <ul className={styles.friendList}>
-                {friends.map(friend => (
-                    <Link
-                        href={`/profile/${friend.id}`}
-                        key={friend.id}
-                        className={styles.friendList__link}
-                    >
-                        <img src={friend.avatar_url} alt={friend.username}/>
-                        <span className={styles.friendList__name}>{friend.username}</span>
-                    </Link>
-                ))}
-            </ul>
+            {friends.length > 0 && (
+                <div className={styles.searchRow}>
+                    <input
+                        className={styles.searchInput}
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        placeholder={base.searchFriends}
+                        type="search"
+                    />
+                    {searchQuery.length > 0 && (
+                        <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
+                            ✕
+                        </button>
+                    )}
+                </div>
+            )}
+
+            {trimmedQuery && filteredFriends.length === 0 ? (
+                <p>{base.noFriendsMatch.replace('{value}', searchQuery.trim())}</p>
+            ) : (
+                <ul className={styles.friendList}>
+                    {filteredFriends.map(friend => (
+                        <Link
+                            href={`/profile/${friend.id}`}
+                            key={friend.id}
+                            className={`${styles.friendList__link} ${elevatedStyles.elevated}`}
+                        >
+                            <img src={friend.avatar_url} alt={friend.username}/>
+                            <span className={styles.friendList__name}>{friend.username}</span>
+                        </Link>
+                    ))}
+                </ul>
+            )}
         </div>
     )
 }

@@ -54,7 +54,11 @@ const Programs = () => {
             ) : (
                 <ul className={styles.programList}>
                     {programs.map((program) => (
-                        <ProgramItem program={program} key={program.id} />
+                        <ProgramItem
+                            program={program}
+                            key={program.id}
+                            variant={isMyProfile ? 'elevated' : 'outlined'}
+                        />
                     ))}
                 </ul>
             )}

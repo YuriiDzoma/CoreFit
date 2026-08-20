@@ -26,6 +26,8 @@ const initialState = {
             allUsers: 'All users',
             searchUsers: 'Search users',
             noUsersMatch: 'No users match "{value}".',
+            searchFriends: 'Search friends',
+            noFriendsMatch: 'No friends match "{value}".',
             edit: 'Edit',
             save: 'Save',
             cancelRequest: 'Cancel request',

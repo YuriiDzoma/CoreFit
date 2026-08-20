@@ -12,9 +12,15 @@
 }
 
 .programCard {
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 12px;
+  // Matches ProgramItem's/AllFriends' own padding and radius exactly —
+  // fill/shadow themselves are set inline in complexes.tsx's `sx` prop
+  // (an MUI `sx` override is more reliable than composing the shared
+  // `ui/elevatedCard` class here, since `sx` injects at a specificity
+  // this component's own `sx`-based border/background overrides would
+  // otherwise fight with, tie-broken by injection order rather than
+  // anything deterministic).
+  border-radius: 4px;
+  padding: 8px;
 
   &__header {
     display: flex;

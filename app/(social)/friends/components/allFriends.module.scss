@@ -23,20 +23,72 @@
   }
 }
 
+// Matches userList.module.scss's own search field exactly (same 2px
+// border, 8px radius) -- same visual language as Users' search box.
+.searchRow {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.searchInput {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  height: 40px;
+  font-size: 16px;
+  color: var(--text-color);
+
+  &::placeholder {
+    color: var(--title-color);
+  }
+
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.searchClear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--title-color);
+}
+
 .friendList {
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  row-gap: 8px;
 
   &__link {
     display: flex;
-    column-gap: 16px;
+    align-items: center;
+    column-gap: 12px;
+    padding: 8px;
+    // Matches ProgramItem's own `.programItem` (`programs.module.scss`)
+    // exactly -- was 8px, which combined with the 48px photo below to
+    // overshoot ProgramItem's real 50px/4px measured card by a visible
+    // margin (64px/8px). Same 8px padding both already shared, so
+    // radius + photo size were the only two values actually out of sync.
+    border-radius: 4px;
 
+    // 34px, not an arbitrary shrink -- with this row's 8px padding on
+    // each side, that's the exact photo size that makes this card's
+    // total height match ProgramItem's real 50px (34 + 8 + 8).
     img {
-      height: 80px;
-      max-height: 80px;
-      width: 80px;
-      max-width: 80px;
+      height: 34px;
+      max-height: 34px;
+      width: 34px;
+      max-width: 34px;
+      border-radius: 50%;
+      object-fit: cover;
     }
   }
 
