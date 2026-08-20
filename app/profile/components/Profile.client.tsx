@@ -234,7 +234,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                                     }
                                     disabled={isPreloader}
                                 >
-                                    <span>{viewerIsClientOfLink ? base.yourTrainer : base.yourClient}</span>
+                                    <span>{viewerIsClientOfLink ? base.removeTrainer : base.removeClient}</span>
                                 </button>
                             )}
                         </>
