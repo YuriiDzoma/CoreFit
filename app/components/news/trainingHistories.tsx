@@ -2,6 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import styles from './trainingHistories.module.scss';
+import elevatedStyles from "../../../ui/elevatedCard/elevatedCard.module.scss";
 import {useAppSelector} from "../../hooks/redux";
 import {getLanguage, getText} from "../../../store/selectors";
 import {
@@ -74,7 +75,7 @@ const TrainingHistories = () => {
     return (
         <div className={`${styles.histories} container`}>
             {histories.map((entry) => (
-                <div key={entry.id} className={styles.historyCard}>
+                <div key={entry.id} className={`${styles.historyCard} ${elevatedStyles.elevated}`}>
                     <div className={styles.historyCard__header}>
                         <Link href={`/profile/${entry.profiles.id}`} className={styles.userInfo}>
                             <img src={entry.profiles.avatar_url} width='32px' height={'32px'} alt="avatar"/>

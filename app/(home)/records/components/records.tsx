@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./records.module.scss";
+import elevatedStyles from "@/ui/elevatedCard/elevatedCard.module.scss";
 import WikiNav from "../../../training/wiki/components/wikiNav";
 import { RecordsSkeleton } from "@/ui/skeleton/skeleton";
 import { useAppSelector } from "@/app/hooks/redux";
@@ -82,7 +83,7 @@ const Records = () => {
             ) : (
                 <div className={styles.list}>
                     {leaderboards.map((leaderboard) => (
-                        <div className={styles.card} key={leaderboard.exerciseId}>
+                        <div className={`${styles.card} ${elevatedStyles.elevated}`} key={leaderboard.exerciseId}>
                             <div className={styles.exerciseHeader}>
                                 {leaderboard.exerciseImageUrl && (
                                     <img src={leaderboard.exerciseImageUrl} alt={leaderboard.exerciseName} />

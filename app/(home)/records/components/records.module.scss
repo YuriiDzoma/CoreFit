@@ -1,7 +1,10 @@
 .list {
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  // Matches ProgramItem/AllFriends/Complexes/Home's own list gap — was
+  // 16px, the one place this app's card lists didn't already agree on
+  // 8px.
+  row-gap: 8px;
   margin-top: 16px;
 
   > button {
@@ -10,11 +13,16 @@
 }
 
 .card {
+  // Fill/shadow come from the composed .elevated class
+  // (ui/elevatedCard/elevatedCard.module.scss) applied in records.tsx —
+  // border removed, radius corrected 8px → 4px to match
+  // ProgramItem/AllFriends/Complexes/Home exactly. Padding already
+  // matched (8px). Height stays content-driven (leaderboard entry count
+  // varies per exercise).
   display: flex;
   flex-direction: column;
   row-gap: 8px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 8px;
 
   ul {

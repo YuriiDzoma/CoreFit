@@ -1,12 +1,18 @@
 .histories {
-  //border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  // Matches ProgramItem/AllFriends/Complexes' own list gap -- was 16px,
+  // the one place this app's card lists didn't already agree on 8px.
+  row-gap: 8px;
 }
 
 .historyCard {
-  border: 1px solid var(--border-color);
+  // Fill/shadow come from the composed .elevated class
+  // (ui/elevatedCard/elevatedCard.module.scss) applied in
+  // trainingHistories.tsx -- border-radius/padding already matched
+  // ProgramItem/AllFriends/Complexes (4px/8px), so only the border needed
+  // to go. Height is intentionally left content-driven (variable
+  // exercise-list length per entry), not matched to any other card.
   border-radius: 4px;
   padding: 8px;
   display: flex;
