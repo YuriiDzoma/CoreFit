@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import InputBox from "../../components/inputBox/inputBox";
 import {emailOptions, firstNameOptions, lastNameOptions, passwordOptions} from "../../../lib/validations";
@@ -21,22 +21,50 @@ type signInForm = {
 
 const SignInForm = () => {
     const { base } = useAppSelector(getText)
-    const { register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<signInForm>();
+    const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors } = useForm<signInForm>();
+    // Not an error -- Supabase requires clicking a confirmation link
+    // before a genuinely new signup gets a session, so there's nothing
+    // to redirect to yet. Kept separate from `errors` (react-hook-form's
+    // own error state) since it's a positive outcome, not a validation
+    // failure.
+    const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
 
     const router = useRouter();
 
     const onSubmit = async (data: signInForm) => {
         const fullName = `${data.firstName.trim()} ${data.lastName.trim()}`;
 
-        const { error } = await registerUserWithEmail(fullName, data.email, data.password);
+        const { error, status } = await registerUserWithEmail(fullName, data.email, data.password);
 
         if (error) {
             setError("email", { message: error });
             return;
         }
 
+        if (status === 'already-registered') {
+            setError("email", { message: base.alreadyRegisteredError });
+            return;
+        }
+
+        if (status === 'confirmation-required') {
+            setConfirmationEmail(data.email);
+            return;
+        }
+
         router.push('/');
     };
+
+    if (confirmationEmail) {
+        return (
+            <div className={'form'}>
+                <h2 className={'title'}>{base.authorization}</h2>
+                <p>{base.confirmEmailBody.replace('{value}', confirmationEmail)}</p>
+                <div className={'toSign'}>
+                    <Link href={'/login'}>{base.login}</Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <form className={'form'} onSubmit={handleSubmit(onSubmit)}>
@@ -81,7 +109,7 @@ const SignInForm = () => {
                     }),
                 }}
             />
-            <button type={"submit"} className={`submit`}>
+            <button type={"submit"} className={`submit`} disabled={isSubmitting}>
                 <span>{base.signUp}</span>
             </button>
             <div className={'toSign'}>

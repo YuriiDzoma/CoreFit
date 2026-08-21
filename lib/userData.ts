@@ -133,14 +133,26 @@ export const fetchLimitedFriendProfiles = async (friendIds: string[], limit = 12
     return data ?? [];
 };
 
+export type SignUpStatus = 'signed-in' | 'confirmation-required' | 'already-registered';
+
+// Matches the mobile app's own signUpWithPassword (src/lib/supabase/auth.ts)
+// exactly, including its own detection comment for the identities-array
+// trick -- Supabase's `signUp` never returns an error for an email that
+// already belongs to a confirmed account (deliberate, anti-enumeration),
+// so `data.session === null` alone doesn't distinguish "genuinely new,
+// pending confirmation" from "this account already exists." Confirmed
+// live against this project's own data before writing this: a real user
+// retrying signup with their already-Google-linked email landed on a
+// silent "success" here previously, then couldn't log in, with no
+// confirmation email actually sent for that case either.
 export const registerUserWithEmail = async (
     fullName: string,
     email: string,
     password: string
-): Promise<{ error?: string }> => {
+): Promise<{ error?: string; status?: SignUpStatus }> => {
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -152,8 +164,9 @@ export const registerUserWithEmail = async (
     });
 
     if (error) return { error: error.message };
-
-    return {};
+    if (data.session) return { status: 'signed-in' };
+    if (data.user?.identities?.length === 0) return { status: 'already-registered' };
+    return { status: 'confirmation-required' };
 };
 
 

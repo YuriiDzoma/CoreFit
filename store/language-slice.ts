@@ -23,6 +23,8 @@ const initialState = {
             plHolPass: 'Password',
             notHaveAcc: 'If you don\'t have an account',
             haveAcc: 'If you have an account',
+            alreadyRegisteredError: 'This email is already registered. Try signing in instead.',
+            confirmEmailBody: 'We sent a confirmation link to {value}. Please check your inbox and click it before signing in.',
             allUsers: 'All users',
             searchUsers: 'Search users',
             noUsersMatch: 'No users match "{value}".',

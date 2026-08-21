@@ -20,7 +20,7 @@ const Login = () => {
         password: string;
     };
 
-    const { register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<LoginForm>();
+    const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors } = useForm<LoginForm>();
 
     const onSubmit = async (data: LoginForm) => {
         try {
@@ -67,7 +67,7 @@ const Login = () => {
                 }}
             />
             <div className={styles.actions}>
-                <button type={"submit"} className={`submit`}>
+                <button type={"submit"} className={`submit`} disabled={isSubmitting}>
                     <span>{base.login}</span>
                 </button>
                 <GoogleLogin />

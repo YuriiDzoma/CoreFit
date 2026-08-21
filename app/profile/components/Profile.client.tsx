@@ -148,7 +148,15 @@ const Profile = ({profile}: {profile: ProfileType}) => {
             <div className={styles.profile__header}>
 
                 <Image
-                    src={profile.avatar_url}
+                    // Falls back to the same ui-avatars.com initials image
+                    // registerUserWithEmail (lib/userData.ts) already
+                    // generates at signup time -- avatar_url is nullable in
+                    // the database despite ProfileType typing it as a plain
+                    // string, so a profile can genuinely lack one (found
+                    // live: a directly-inserted test account had none, and
+                    // Next's Image threw on an empty src instead of just
+                    // rendering a broken image).
+                    src={profile.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.username)}`}
                     width={width < 768 ? 96 : 150}
                     height={width < 768 ? 96 : 150}
                     alt="avatar"

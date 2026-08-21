@@ -38,6 +38,11 @@ export const nameOptions = {
     },
 };
 
+// \p{L} matches a letter in any script (Latin, Cyrillic, etc.), not just
+// A-Z -- the previous ASCII-only pattern rejected Cyrillic names outright.
+// Space/apostrophe/hyphen allowed for multi-word and hyphenated names
+// (matches nameOptions' own precedent below, minus digits -- a program
+// title can contain a number, a person's name shouldn't).
 export const firstNameOptions = {
     required: "First name",
     minLength: {
@@ -45,7 +50,7 @@ export const firstNameOptions = {
         message: "First name should be at-least 3 characters"
     },
     pattern: {
-        value: /^[A-Za-z]+$/i,
+        value: /^[\p{L}\s'-]+$/u,
         message: "First name is not valid"
     }
 }
@@ -57,7 +62,7 @@ export const lastNameOptions = {
         message: "Last name should be at-least 3 characters"
     },
     pattern: {
-        value: /^[A-Za-z]+$/i,
+        value: /^[\p{L}\s'-]+$/u,
         message: "Last name is not valid"
     }
 }
