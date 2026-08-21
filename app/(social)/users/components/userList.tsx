@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { getText, getUserId } from '@/store/selectors';
 import { useAppSelector } from '@/app/hooks/redux';
 import styles from './userList.module.scss';
-import { UsersPageSkeleton } from '@/ui/skeleton/skeleton';
+import { UsersSkeleton } from '@/ui/skeleton/skeleton';
 import { fetchUsers } from '@/lib/userData';
 import { ProfileType } from '@/types/user';
 import {
@@ -94,47 +94,51 @@ export default function UserList() {
         [users, trimmedQuery],
     );
 
-    if (loading) return <UsersPageSkeleton />;
-
     return (
         <div className={styles.users}>
             <h2 className="pageTitle">{base.allUsers}</h2>
 
-            {users.length > 0 && (
-                <div className={styles.searchRow}>
-                    <input
-                        className={styles.searchInput}
-                        value={searchQuery}
-                        onChange={(event) => setSearchQuery(event.target.value)}
-                        placeholder={base.searchUsers}
-                        type="search"
-                    />
-                    {searchQuery.length > 0 && (
-                        <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
-                            ✕
-                        </button>
-                    )}
-                </div>
-            )}
-
-            {trimmedQuery && filteredUsers.length === 0 ? (
-                <p>{base.noUsersMatch.replace('{value}', searchQuery.trim())}</p>
+            {loading ? (
+                <UsersSkeleton />
             ) : (
-                <ul>
-                    {userId && filteredUsers.map((user) => {
-                        return (
-                            <User key={user.id}
-                                  user={user}
-                                  userId={userId}
-                                  pendingIds={pendingIds}
-                                  friendIds={friendIds}
-                                  cancelFriend={cancelFriend}
-                                  addFriend={addFriend}
-                                  removeFriend={removeFriend}
+                <>
+                    {users.length > 0 && (
+                        <div className={styles.searchRow}>
+                            <input
+                                className={styles.searchInput}
+                                value={searchQuery}
+                                onChange={(event) => setSearchQuery(event.target.value)}
+                                placeholder={base.searchUsers}
+                                type="search"
                             />
-                        );
-                    })}
-                </ul>
+                            {searchQuery.length > 0 && (
+                                <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
+                                    ✕
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {trimmedQuery && filteredUsers.length === 0 ? (
+                        <p>{base.noUsersMatch.replace('{value}', searchQuery.trim())}</p>
+                    ) : (
+                        <ul>
+                            {userId && filteredUsers.map((user) => {
+                                return (
+                                    <User key={user.id}
+                                          user={user}
+                                          userId={userId}
+                                          pendingIds={pendingIds}
+                                          friendIds={friendIds}
+                                          cancelFriend={cancelFriend}
+                                          addFriend={addFriend}
+                                          removeFriend={removeFriend}
+                                    />
+                                );
+                            })}
+                        </ul>
+                    )}
+                </>
             )}
             {isPreloader && <Preloader />}
         </div>

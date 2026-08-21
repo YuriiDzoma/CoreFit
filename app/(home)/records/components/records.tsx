@@ -70,15 +70,15 @@ const Records = () => {
         setLoadingMore(false);
     };
 
-    if (loading) return <RecordsSkeleton/>;
-
     return (
         <div className={styles.records}>
             <h2 className={'pageTitle'}>{base.records}</h2>
 
             <WikiNav activeTab={activeTab} handleChangeTab={handleChangeTab} />
 
-            {leaderboards.length === 0 ? (
+            {loading ? (
+                <RecordsSkeleton/>
+            ) : leaderboards.length === 0 ? (
                 <p>{base.noRecordsYet}</p>
             ) : (
                 <div className={styles.list}>

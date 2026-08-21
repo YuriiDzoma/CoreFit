@@ -60,8 +60,6 @@ const AllFriends = () => {
         [friends, trimmedQuery],
     );
 
-    if (loading) return <FriendsListSkeleton/>;
-
     return (
         <div className={styles.allFriends}>
             <h2 className={'pageTitle'}>{base.friends}</h2>
@@ -88,38 +86,44 @@ const AllFriends = () => {
                 </Link>
             )}
 
-            {friends.length > 0 && (
-                <div className={styles.searchRow}>
-                    <input
-                        className={styles.searchInput}
-                        value={searchQuery}
-                        onChange={(event) => setSearchQuery(event.target.value)}
-                        placeholder={base.searchFriends}
-                        type="search"
-                    />
-                    {searchQuery.length > 0 && (
-                        <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
-                            ✕
-                        </button>
-                    )}
-                </div>
-            )}
-
-            {trimmedQuery && filteredFriends.length === 0 ? (
-                <p>{base.noFriendsMatch.replace('{value}', searchQuery.trim())}</p>
+            {loading ? (
+                <FriendsListSkeleton/>
             ) : (
-                <ul className={styles.friendList}>
-                    {filteredFriends.map(friend => (
-                        <Link
-                            href={`/profile/${friend.id}`}
-                            key={friend.id}
-                            className={`${styles.friendList__link} ${elevatedStyles.elevated}`}
-                        >
-                            <img src={friend.avatar_url} alt={friend.username}/>
-                            <span className={styles.friendList__name}>{friend.username}</span>
-                        </Link>
-                    ))}
-                </ul>
+                <>
+                    {friends.length > 0 && (
+                        <div className={styles.searchRow}>
+                            <input
+                                className={styles.searchInput}
+                                value={searchQuery}
+                                onChange={(event) => setSearchQuery(event.target.value)}
+                                placeholder={base.searchFriends}
+                                type="search"
+                            />
+                            {searchQuery.length > 0 && (
+                                <button className={styles.searchClear} onClick={() => setSearchQuery('')}>
+                                    ✕
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {trimmedQuery && filteredFriends.length === 0 ? (
+                        <p>{base.noFriendsMatch.replace('{value}', searchQuery.trim())}</p>
+                    ) : (
+                        <ul className={styles.friendList}>
+                            {filteredFriends.map(friend => (
+                                <Link
+                                    href={`/profile/${friend.id}`}
+                                    key={friend.id}
+                                    className={`${styles.friendList__link} ${elevatedStyles.elevated}`}
+                                >
+                                    <img src={friend.avatar_url} alt={friend.username}/>
+                                    <span className={styles.friendList__name}>{friend.username}</span>
+                                </Link>
+                            ))}
+                        </ul>
+                    )}
+                </>
             )}
         </div>
     )

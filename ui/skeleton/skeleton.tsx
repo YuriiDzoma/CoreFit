@@ -1,16 +1,6 @@
 import styles from './skeleton.module.scss'
 import React from "react";
 
-export function UsersPageSkeleton() {
-    return (
-        <div className={styles.usersPage}>
-            <div className={styles.usersPage__title}/>
-            <div className={styles.usersPage__search}/>
-            <UsersSkeleton/>
-        </div>
-    )
-}
-
 export function UsersSkeleton() {
     return (
         <ul className={styles.users}>
@@ -39,22 +29,16 @@ export function UsersSkeleton() {
     )
 }
 
+// Title and WikiNav's tabs render for real above this now (chrome, not
+// data-dependent) -- only the leaderboard-card list itself is a
+// placeholder, matching ProgramsListSkeleton/ExerciseListSkeleton's own
+// title-less shape.
 export function RecordsSkeleton() {
     return (
-        <div>
-            <span className={styles.title}/>
-            <div className={styles.recordsPage__tabs}>
-                <span className={styles.recordsPage__tab}/>
-                <span className={styles.recordsPage__tab}/>
-                <span className={styles.recordsPage__tab}/>
-                <span className={styles.recordsPage__tab}/>
-                <span className={styles.recordsPage__tab}/>
-            </div>
-            <div className={styles.recordsPage__list}>
-                <RecordsSkeletonCard/>
-                <RecordsSkeletonCard/>
-                <RecordsSkeletonCard/>
-            </div>
+        <div className={styles.recordsPage__list}>
+            <RecordsSkeletonCard/>
+            <RecordsSkeletonCard/>
+            <RecordsSkeletonCard/>
         </div>
     )
 }
@@ -93,7 +77,6 @@ function RecordsSkeletonCard() {
 export function FriendsListSkeleton() {
     return (
         <div>
-            <span className={styles.title}/>
             <div className={styles.friendsListPage}>
                 <div className={styles.friendsListPage__row}>
                     <span className={styles.friendsListPage__img}/>
