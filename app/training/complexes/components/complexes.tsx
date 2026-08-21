@@ -177,14 +177,26 @@ const Complexes = () => {
                                 }}
                                 className={styles.programCard__header}
                             >
-                                <div>
-                                    <Typography variant="h6">{program.title}</Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        <span>{training.type}: {typeText(program.type)} | {training.difficulty}: {levelText(program.level)}</span>
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {/*<span>Author: {program.author.fullname}</span>*/}
-                                    </Typography>
+                                <div className={styles.summaryContent}>
+                                    <div>
+                                        <Typography variant="h6">{program.title}</Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            <span>{training.type}: {typeText(program.type)} | {training.difficulty}: {levelText(program.level)}</span>
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {/*<span>Author: {program.author.fullname}</span>*/}
+                                        </Typography>
+                                    </div>
+                                    {/* A filled checkmark, not text -- shown on the collapsed
+                                        header itself so an already-added program is
+                                        recognizable without expanding it, per direct request. */}
+                                    {Boolean(userGlobalProgramMap[program.id]) && (
+                                        <span className={styles.addedBadge}>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                                                <path d="M5 13l4 4L19 7" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </span>
+                                    )}
                                 </div>
                             </AccordionSummary>
                             <AccordionDetails

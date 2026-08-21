@@ -29,6 +29,12 @@
   // per-theme color.
   --danger: #e5484d;
 
+  // Same value in both light and dark, like `--danger` above — a
+  // semantic "already added" checkmark color. Matches the mobile app's
+  // own `theme.success`. First use: Complexes' collapsed accordion
+  // header.
+  --success: #22C55E;
+
   // Trainer-level badge tiers (Profile page) — matches the mobile app's
   // own `constants/theme.ts` values exactly. Iron is dark graphite
   // rather than a light "raw metal" grey deliberately: an earlier
@@ -77,6 +83,9 @@
 
   // Same value as dark — see dark theme above.
   --danger: #e5484d;
+
+  // Same value as dark — see dark theme above.
+  --success: #22C55E;
 
   // See dark theme above — same tier system, mobile-matched values.
   --tier-iron: #454B57;
