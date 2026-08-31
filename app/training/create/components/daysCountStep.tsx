@@ -10,10 +10,14 @@ interface Props {
     onChange: (value: number) => void;
     onNext: () => void;
     onBack: () => void;
+    /** Present only in edit mode -- see `programNameStep.tsx`'s own doc
+     * comment for why this exists. */
+    onSave?: () => void;
+    canSave?: boolean;
 }
 
-export const DaysCountStep: React.FC<Props> = ({ value, onChange, onNext, onBack }) => {
-    const { training } = useAppSelector(getText);
+export const DaysCountStep: React.FC<Props> = ({ value, onChange, onNext, onBack, onSave, canSave }) => {
+    const { training, base } = useAppSelector(getText);
 
     const marks = [
         { value: 1, label: `1 ${training.day}`, description: `1-${training.generalTraining}`},
@@ -53,10 +57,15 @@ export const DaysCountStep: React.FC<Props> = ({ value, onChange, onNext, onBack
                 </Box>
                 <p className={styles.difficulty__value}>{marks[value - 1].description}</p>
             </div>
-            <div className={styles.actions} style={{marginTop: '0px'}}>
+            <div className={styles.actions}>
                 <button className={'submit'} onClick={onBack}>{training.back}</button>
                 <button className={'submit'} onClick={onNext}>{training.next}</button>
             </div>
+            {onSave && (
+                <button className={'submit'} onClick={onSave} disabled={!canSave}>
+                    {base.save}
+                </button>
+            )}
         </div>
     );
 };

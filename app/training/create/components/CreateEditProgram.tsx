@@ -142,32 +142,43 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
     };
 
     const [pendingRemovalSummary, setPendingRemovalSummary] = useState<string | null>(null);
+    // Only ProgramNameStep's own Save button ever passes this -- its typed
+    // name hasn't reached `programName` state yet at the moment Save is
+    // clicked (that only happens via `onChange`, and a state setter's new
+    // value isn't visible in this same closure until the next render), so
+    // the freshly-submitted value has to ride along explicitly rather than
+    // being read back out of `programName` here. Carried in state (not just
+    // a function argument) so it survives into `performSave` even when the
+    // removal-confirmation popup interrupts the save with an extra click.
+    const [pendingTitle, setPendingTitle] = useState<string | undefined>(undefined);
 
-    const handleSave = async () => {
+    const handleSave = async (titleOverride?: string) => {
         if (!userId) return;
 
         const summary = computeRemovalSummary();
         if (summary) {
             setPendingRemovalSummary(summary);
+            setPendingTitle(titleOverride);
             return;
         }
 
-        await performSave();
+        await performSave(titleOverride);
     };
 
-    const performSave = async () => {
+    const performSave = async (titleOverride?: string) => {
         if (!userId) return;
 
         setPendingRemovalSummary(null);
         setIsPreloader(true);
         const level = levelMap[difficulty - 1];
+        const title = titleOverride ?? programName;
 
         let success: string | boolean | null;
 
         if (isGlobal) {
             // ✅ створення глобальної програми
             success = await createGlobalProgram(
-                programName,
+                title,
                 programType,
                 level,
                 programDays,
@@ -176,7 +187,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
             // ✅ редагування існуючої програми (той самий id, не дублікат)
             success = await updateTrainingProgram(
                 initialProgram.id,
-                programName,
+                title,
                 programType,
                 level,
                 programDays
@@ -185,7 +196,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
             // ✅ створення особистої програми
             success = await createTrainingProgram(
                 userId!,
-                programName,
+                title,
                 programType,
                 level,
                 programDays
@@ -203,15 +214,27 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
     };
 
 
+    // Gate for the per-step Save button (edit mode only) -- the same
+    // constraints `performSave` itself effectively needs, surfaced here so
+    // every step's Save button can disable proactively rather than
+    // silently doing nothing on click.
+    const canSaveEarly = Boolean(programType) && isValidProgram && !isPreloader;
+
     return (
         <div className={styles.wrapper}>
             <h2 className="pageTitle">
                 {isEdit ? training.editTrainingProgram : training.createTrainingProgram}
             </h2>
-            <Stepper activeStep={step} />
+            <Stepper activeStep={step} onStepChange={setStep} />
 
             {step === 1 && (
-                <ProgramNameStep value={programName} onChange={setProgramName} onNext={handleNext} />
+                <ProgramNameStep
+                    value={programName}
+                    onChange={setProgramName}
+                    onNext={handleNext}
+                    onSave={isEdit ? handleSave : undefined}
+                    canSave={canSaveEarly}
+                />
             )}
             {step === 2 && (
                 <ProgramTypeStep
@@ -219,6 +242,8 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                     onChange={setProgramType}
                     onNext={handleNext}
                     onBack={handleBack}
+                    onSave={isEdit ? handleSave : undefined}
+                    canSave={canSaveEarly}
                 />
             )}
             {step === 3 && (
@@ -227,6 +252,8 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                     onChange={setDifficulty}
                     onNext={handleNext}
                     onBack={handleBack}
+                    onSave={isEdit ? handleSave : undefined}
+                    canSave={canSaveEarly}
                 />
             )}
             {step === 4 && (
@@ -247,6 +274,8 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
 
                     onNext={handleNext}
                     onBack={handleBack}
+                    onSave={isEdit ? handleSave : undefined}
+                    canSave={canSaveEarly}
                 />
             )}
             {step === 5 && (
@@ -265,8 +294,11 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                 <GlobalPopup
                     title={training.confirmRemovalTitle}
                     message={training.confirmRemovalBody.replace('{value}', pendingRemovalSummary)}
-                    onConfirm={performSave}
-                    onCancel={() => setPendingRemovalSummary(null)}
+                    onConfirm={() => performSave(pendingTitle)}
+                    onCancel={() => {
+                        setPendingRemovalSummary(null);
+                        setPendingTitle(undefined);
+                    }}
                 />
             )}
 

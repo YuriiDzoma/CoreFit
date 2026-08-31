@@ -19,3 +19,23 @@
 .MuiStepIcon-text {
   fill: var(--text-color) !important;
 }
+
+// A completed step's icon and the active one share the exact same fill
+// (MUI's own default `StepIcon` look), so fill color alone can't tell
+// "already done" from "you're here right now" apart -- confirmed live,
+// read as ambiguous at a glance. The active icon gets an extra soft glow
+// ring on top of that shared fill, matching mobile's own `activeRing`
+// treatment -- it's the only cue that's genuinely unique to "current".
+.MuiStepIcon-root.Mui-active {
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.35);
+}
+
+.MuiStepLabel-label.Mui-active {
+  font-weight: 700 !important;
+  color: var(--text-color) !important;
+}
+
+.MuiStepButton-root {
+  cursor: pointer;
+}

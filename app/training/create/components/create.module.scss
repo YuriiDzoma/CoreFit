@@ -46,7 +46,6 @@
     align-items: center;
     column-gap: 16px;
     width: 100%;
-    padding: 0 16px;
 
     button {
       height: 40px;
@@ -78,12 +77,18 @@
   }
 }
 
+// No `margin-top`/`padding` here -- both were redundant with the parent
+// step container's own `row-gap` (already spaces this row from whatever
+// comes before it) and its own horizontal padding/lack thereof (`.type`/
+// `.difficulty`/`.days` have none by design, `.exercisesStep` already has
+// its own 16px) -- doubling the top gap to 32px, and, since Save (a plain
+// sibling button, not wrapped in `.actions`) has no such inset of its own,
+// insetting Back/Next 16px further than Save on the type/difficulty/days
+// steps specifically -- confirmed live, Save read as visibly wider.
 .actions {
-  margin-top: 16px;
   display: flex;
   column-gap: 16px;
   width: 100%;
-  padding: 0 16px;
 
   button {
     width: 100%;

@@ -8,6 +8,10 @@ interface ProgramTypeStepProps {
     onChange: (value: 'aerobic' | 'anaerobic' | 'crossfit') => void;
     onNext: () => void;
     onBack: () => void;
+    /** Present only in edit mode -- see `programNameStep.tsx`'s own doc
+     * comment for why this exists. */
+    onSave?: () => void;
+    canSave?: boolean;
 }
 
 const options: { label: string; value: 'aerobic' | 'anaerobic' | 'crossfit' }[] = [
@@ -17,8 +21,8 @@ const options: { label: string; value: 'aerobic' | 'anaerobic' | 'crossfit' }[] 
 ];
 
 
-const ProgramTypeStep: React.FC<ProgramTypeStepProps> = ({ value, onChange, onNext, onBack }) => {
-    const { training } = useAppSelector(getText);
+const ProgramTypeStep: React.FC<ProgramTypeStepProps> = ({ value, onChange, onNext, onBack, onSave, canSave }) => {
+    const { training, base } = useAppSelector(getText);
     const isDark = useAppSelector(getIsDarkTheme);
 
     return (
@@ -49,6 +53,11 @@ const ProgramTypeStep: React.FC<ProgramTypeStepProps> = ({ value, onChange, onNe
                     Next
                 </button>
             </div>
+            {onSave && (
+                <button onClick={onSave} disabled={!canSave} className={'submit'}>
+                    {base.save}
+                </button>
+            )}
         </div>
     );
 };

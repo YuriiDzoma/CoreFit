@@ -11,12 +11,16 @@ interface Props {
     onChange: (value: number) => void;
     onNext: () => void;
     onBack: () => void;
+    /** Present only in edit mode -- see `programNameStep.tsx`'s own doc
+     * comment for why this exists. */
+    onSave?: () => void;
+    canSave?: boolean;
 }
 
 
 
-export const DifficultyLevelStep: React.FC<Props> = ({ value, onChange, onNext, onBack }) => {
-    const { training } = useAppSelector(getText);
+export const DifficultyLevelStep: React.FC<Props> = ({ value, onChange, onNext, onBack, onSave, canSave }) => {
+    const { training, base } = useAppSelector(getText);
 
     const marks = [
         { value: 1, label: training.beginner },
@@ -58,6 +62,11 @@ export const DifficultyLevelStep: React.FC<Props> = ({ value, onChange, onNext, 
                 <button className={'submit'} onClick={onBack}>{training.back}</button>
                 <button className={'submit'} onClick={onNext}>{training.next}</button>
             </div>
+            {onSave && (
+                <button className={'submit'} onClick={onSave} disabled={!canSave}>
+                    {base.save}
+                </button>
+            )}
         </div>
     );
 };
