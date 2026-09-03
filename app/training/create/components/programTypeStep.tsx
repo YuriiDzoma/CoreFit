@@ -54,7 +54,13 @@ const ProgramTypeStep: React.FC<ProgramTypeStepProps> = ({ value, onChange, onNe
                 </button>
             </div>
             {onSave && (
-                <button onClick={onSave} disabled={!canSave} className={'submit'}>
+                // `() => onSave()`, not `onClick={onSave}` -- `onClick`
+                // passes the click event as the first argument, which
+                // `onSave(titleOverride?: string)` would otherwise pick up
+                // as the title itself (any object is truthy), corrupting
+                // the save (confirmed live: a circular-structure JSON error
+                // from Supabase trying to serialize the DOM event).
+                <button onClick={() => onSave()} disabled={!canSave} className={'submit'}>
                     {base.save}
                 </button>
             )}

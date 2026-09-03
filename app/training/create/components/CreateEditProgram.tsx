@@ -171,7 +171,15 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
         setPendingRemovalSummary(null);
         setIsPreloader(true);
         const level = levelMap[difficulty - 1];
-        const title = titleOverride ?? programName;
+        // `typeof ... === 'string'`, not `titleOverride ?? programName` --
+        // every call site is now careful to only ever pass a real string or
+        // nothing, but this used to be reachable with a raw DOM click event
+        // instead (any `onClick={handleSave}`-style direct reference passes
+        // the event as the first argument, and an event object is just as
+        // truthy as a string) -- confirmed live, corrupted the save with a
+        // circular-structure JSON error from Supabase trying to serialize
+        // it. Guards the whole class of bug, not just today's call sites.
+        const title = typeof titleOverride === 'string' ? titleOverride : programName;
 
         let success: string | boolean | null;
 

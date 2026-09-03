@@ -63,7 +63,9 @@ export const DifficultyLevelStep: React.FC<Props> = ({ value, onChange, onNext, 
                 <button className={'submit'} onClick={onNext}>{training.next}</button>
             </div>
             {onSave && (
-                <button className={'submit'} onClick={onSave} disabled={!canSave}>
+                // `() => onSave()`, not `onClick={onSave}` -- see
+                // `programTypeStep.tsx`'s identical comment.
+                <button className={'submit'} onClick={() => onSave()} disabled={!canSave}>
                     {base.save}
                 </button>
             )}

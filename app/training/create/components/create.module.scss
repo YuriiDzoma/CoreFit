@@ -146,11 +146,17 @@
 .popup {
   position: fixed;
   left: 8px;
-  top: 8px;
+  // Was `top: 8px` -- `.header` is `z-index: 20` (see that rule's own
+  // comment) so it visually sat on top of this popup's own top strip
+  // (search box, top of the exercise list) and, being on top, intercepted
+  // every click/scroll gesture there too, not just hidden it. Same 80px
+  // clearance every other scrollable page already reserves for the
+  // floating header (`app.module.scss`'s own `.content`, mobile
+  // breakpoint).
+  top: calc(80px + env(safe-area-inset-top));
   z-index: 12;
-  height: calc(100vh - 16px);
+  height: calc(100vh - 80px - env(safe-area-inset-top) - 8px);
   width: calc(100vw - 16px);
-  border: 2px solid var(--border-color);
   background-color: var(--bg-color);
   padding: 8px;
 
@@ -163,7 +169,12 @@
 
   &__actions {
     position: fixed;
-    bottom: 16px;
+    // Was `bottom: 16px`, then `80px`, then `136px` -- entirely (then
+    // partially) behind the floating bottom chrome (`z-index: 20` vs this
+    // popup's own `12`, same as `.header`'s own fix above); `80px` only
+    // cleared the main Navigation bar, not TrainingMenu stacked above it
+    // too on this page. `132px`, live-tuned in DevTools.
+    bottom: calc(132px + env(safe-area-inset-bottom));
     left: 16px;
     display: flex;
     column-gap: 8px;
@@ -220,8 +231,14 @@
 }
 
 .exercisesList {
-  max-height: calc(100vh - 84px);
-  padding-bottom: 40px;
+  // 150px/164px, live-tuned in DevTools against the actual floating-chrome
+  // stack on this page (TrainingMenu + Navigation) and confirmed correct
+  // there -- same pair `.navCreate` uses (`wiki.module.scss`), supersedes
+  // the earlier 156px/136px estimate both derived from the app-wide
+  // `136px` figure (`training.module.scss`'s own `.content`), which
+  // undershot what this `position: fixed` popup actually needed.
+  max-height: calc(100vh - 150px - env(safe-area-inset-top));
+  padding-bottom: calc(164px + env(safe-area-inset-bottom));
   overflow-y: auto;
 }
 

@@ -30,9 +30,13 @@ const SelectExercisesStep: React.FC<Props> = ({
                                                   isValid,
                                                   initialProgram
                                               }) => {
-    const { training } = useAppSelector(getText);
+    const { training, base } = useAppSelector(getText);
     const [isShowPopup, setIsShowPopup] = useState(false);
     const [currentDayIndex, setCurrentDayIndex] = useState<number | null>(null);
+    // Mirrors mobile's own `isEditMode ? saveChanges : createTitle` switch
+    // on this same final-step button -- web always said "Create" here,
+    // even when editing an existing program.
+    const isEdit = Boolean(initialProgram);
 
     const handleEditClick = (index: number) => {
         setCurrentDayIndex(index);
@@ -92,8 +96,15 @@ const SelectExercisesStep: React.FC<Props> = ({
                 <button onClick={onBack} className="submit">
                     {training.back}
                 </button>
-                <button onClick={onNext} className="submit" disabled={!isValid}>
-                    {training.create}
+                {/* `() => onNext()`, not `onClick={onNext}` -- `onNext` is
+                    `handleSave` here (`CreateEditProgram.tsx`), and `onClick`
+                    passing the raw click event as its `titleOverride`
+                    argument would corrupt the save (or the create -- this
+                    button is shared by both modes) with a DOM event instead
+                    of the actual title. Same bug class as the per-step Save
+                    buttons above (`programTypeStep.tsx` etc). */}
+                <button onClick={() => onNext()} className="submit" disabled={!isValid}>
+                    {isEdit ? base.save : training.create}
                 </button>
             </div>
 

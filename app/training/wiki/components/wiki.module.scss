@@ -80,8 +80,22 @@
 }
 
 .navCreate {
-  max-width: 60px;
-  overflow-y: inherit;
+  // Was `60px`, then `64px` -- the original `60px` was narrower than this
+  // column's own `.tab`/`.tabActive` children (`width: 64px` below,
+  // unchanged from the full Wiki page's own nav), so every tab overflowed
+  // its column by 4px: a permanent horizontal scrollbar on the whole
+  // popup, and the overflowing tabs visually bleeding into
+  // `.popup__actions`'s Cancel button next to them. `70px` widens it
+  // further still, live-tuned in DevTools.
+  max-width: 70px;
+  // On a short viewport the 8 muscle-group tabs don't fit in one screen's
+  // worth of height; scrollable on its own, independent of the exercise
+  // list's own scroll. 150px/164px, live-tuned in DevTools against the
+  // actual floating-chrome stack on this page (TrainingMenu + Navigation)
+  // and confirmed correct there.
+  height: calc(100vh - 150px - env(safe-area-inset-top));
+  overflow-y: auto;
+  padding-bottom: calc(164px + env(safe-area-inset-bottom));
   padding-right: 0;
   row-gap: 8px;
 }
