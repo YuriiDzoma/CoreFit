@@ -20,6 +20,19 @@ type FormValues = {
     [exerciseId: string]: string;
 };
 
+// Constrains the weight/reps input to what the stored value format
+// ("weight/reps", `x{sets}` appended separately at save time) actually
+// needs: digits, "/", and "." (decimal weights like "27.5/10" are real,
+// existing data). "\" and space are normalized to "/" and "," to "."
+// rather than just stripped, since those are the most likely typos/IME
+// substitutions for the intended character, not garbage input.
+function sanitizeWeightRepsValue(text: string): string {
+    return text
+        .replace(/,/g, '.')
+        .replace(/[\\ ]/g, '/')
+        .replace(/[^0-9./]/g, '');
+}
+
 const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: ProgramDaysListTypes) => {
     const { training } = useAppSelector(getText);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
@@ -91,7 +104,11 @@ const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: Pro
                                 className={styles.input}
                                 style={activeTab === 1 ? { height: '30px' } : undefined}
                                 placeholder="XXX/YY"
-                                {...register(exercise.programExerciseId)}
+                                {...register(exercise.programExerciseId, {
+                                    onChange: (e) => {
+                                        e.target.value = sanitizeWeightRepsValue(e.target.value);
+                                    },
+                                })}
                                 onBlur={(e) => {
                                     if (!userId) return;
                                     saveDraft(userId, exercise.programExerciseId, day.id, e.target.value);
