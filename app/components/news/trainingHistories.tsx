@@ -17,7 +17,7 @@ const TrainingHistories = () => {
     const [histories, setHistories] = useState<any[]>([]);
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
     const language = useAppSelector(getLanguage);
-    const {training} = useAppSelector(getText);
+    const {training, base} = useAppSelector(getText);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isMap, setIsMap] = useState<boolean>(true);
 
@@ -70,10 +70,17 @@ const TrainingHistories = () => {
         });
     };
 
-    if (isMap) return <NewsSkeleton/>
+    if (isMap) return (
+        <div>
+            <h2 className="pageTitle">{base.trainings}</h2>
+            <NewsSkeleton/>
+        </div>
+    );
 
     return (
-        <div className={`${styles.histories} container`}>
+        <div>
+            <h2 className="pageTitle">{base.trainings}</h2>
+            <div className={`${styles.histories} container`}>
             {histories.map((entry) => (
                 <div key={entry.id} className={`${styles.historyCard} ${elevatedStyles.elevated}`}>
                     <div className={styles.historyCard__header}>
@@ -107,6 +114,7 @@ const TrainingHistories = () => {
                     </ul>
                 </div>
             ))}
+            </div>
         </div>
     );
 };
