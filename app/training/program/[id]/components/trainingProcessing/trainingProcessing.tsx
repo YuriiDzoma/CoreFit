@@ -83,17 +83,21 @@ const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: Pro
                     />
 
                     {day.exercises.map((exercise, idx) => (
-                        <li key={exercise.programExerciseId} className={activeTab === 1 ? styles.bigField : ''}>
+                        <li
+                            key={exercise.programExerciseId}
+                            className={`${styles.valueRow} ${activeTab === 1 ? styles.bigField : ''}`}
+                        >
                             <input
                                 className={styles.input}
                                 style={activeTab === 1 ? { height: '30px' } : undefined}
-                                placeholder={`XXX/YY ×${exercise.sets}`}
+                                placeholder="XXX/YY"
                                 {...register(exercise.programExerciseId)}
                                 onBlur={(e) => {
                                     if (!userId) return;
                                     saveDraft(userId, exercise.programExerciseId, day.id, e.target.value);
                                 }}
                             />
+                            <span className={styles.setsLabel}>×{exercise.sets}</span>
                         </li>
                     ))}
 
