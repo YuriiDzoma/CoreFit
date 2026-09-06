@@ -87,7 +87,7 @@ const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: Pro
                             <input
                                 className={styles.input}
                                 style={activeTab === 1 ? { height: '30px' } : undefined}
-                                placeholder="XXX/YYxZ"
+                                placeholder={`XXX/YY ×${exercise.sets}`}
                                 {...register(exercise.programExerciseId)}
                                 onBlur={(e) => {
                                     if (!userId) return;

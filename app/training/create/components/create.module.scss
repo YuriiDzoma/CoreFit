@@ -124,6 +124,36 @@
 
 }
 
+.exerciseList {
+  // Was unstyled (bare browser <ul>/<li> spacing) -- each row now carries
+  // a sets <select> beside its name, so rows need real room between them
+  // or the selects crowd/overlap their neighbors.
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+}
+
+.exerciseRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 16px;
+}
+
+.exerciseRowName {
+  flex: 1;
+  min-width: 0;
+}
+
+.setsSelect {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  color: inherit;
+}
+
 .popupWrapper {
   position: fixed;
   left: 0;

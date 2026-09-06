@@ -176,7 +176,7 @@ export const createTrainingProgram = async (
     title: string,
     type: string,
     level: string,
-    days: { dayNumber: number; exercises: string[] }[]
+    days: { dayNumber: number; exercises: { exerciseId: string; sets: number }[] }[]
 ): Promise<string | null> => {
     const supabase = createClient();
 
@@ -217,10 +217,11 @@ export const createTrainingProgram = async (
     const dayIdMap = new Map(insertedDays.map((d) => [d.day_number, d.id]));
 
     const exercisesToInsert = days.flatMap((day) =>
-        day.exercises.map((exerciseId, index) => ({
+        day.exercises.map((slot, index) => ({
             day_id: dayIdMap.get(day.dayNumber),
-            exercise_id: exerciseId,
+            exercise_id: slot.exerciseId,
             order_index: index + 1,
+            sets: slot.sets,
         }))
     );
 
@@ -365,10 +366,30 @@ export const completeDay = async (
         return false;
     }
 
+    const nonEmptyDrafts = drafts.filter((d) => d.value?.trim());
+
+    // `x{sets}` is appended here, at final-save time, not when the draft
+    // itself was saved -- so a resumed draft still shows plain "weight/reps"
+    // in the input, never something the user never typed themselves.
+    let setsByProgramExerciseId = new Map<string, number>();
+    if (nonEmptyDrafts.length > 0) {
+        const { data: exerciseRows, error: setsError } = await supabase
+            .from('program_exercises')
+            .select('id, sets')
+            .in('id', nonEmptyDrafts.map((d) => d.program_exercise_id));
+
+        if (setsError) {
+            console.error('Error fetching program_exercises sets:', setsError.message);
+            return false;
+        }
+        setsByProgramExerciseId = new Map((exerciseRows ?? []).map((row) => [row.id, row.sets]));
+    }
+
     const valuesMap = Object.fromEntries(
-        drafts
-            .filter((d) => d.value?.trim())
-            .map((d) => [d.program_exercise_id, d.value])
+        nonEmptyDrafts.map((d) => [
+            d.program_exercise_id,
+            `${d.value}x${setsByProgramExerciseId.get(d.program_exercise_id) ?? 3}`,
+        ])
     );
 
     // 1. insert into exercise_logs
@@ -469,7 +490,7 @@ export const updateTrainingProgram = async (
     title: string,
     type: string,
     level: string,
-    days: { dayNumber: number; exercises: string[] }[]
+    days: { dayNumber: number; exercises: { exerciseId: string; sets: number }[] }[]
 ): Promise<boolean> => {
     const supabase = createClient();
 
@@ -568,17 +589,19 @@ export const updateTrainingProgram = async (
     // id (checkbox-вибір, дублікати структурно неможливі, порядок слотів
     // ніде не відстежується), не program_exercises.id. Існуючий рядок або
     // лишається недоторканим (exercise_id все ще обраний), або видаляється
-    // (exercise_id знято) -- ніколи не апдейтиться на місці: у
-    // program_exercises немає UPDATE RLS-політики (підтверджено живим
-    // запитом), і апдейт "у інший exercise" через спільний рядок ризикував
-    // би підмінити exercise_logs/training_history чужою вправою.
+    // (exercise_id знято) -- апдейт "у інший exercise" через спільний рядок
+    // ризикував би підмінити exercise_logs/training_history чужою вправою.
+    // Єдиний виняток -- `sets`: якщо exercise_id лишився тим самим, але
+    // sets змінився (степер/select у SelectExercisesStep), рядок
+    // оновлюється на місці через нову UPDATE RLS-політику
+    // (program_exercises раніше підтримувала лише insert/delete).
     for (const day of days) {
         const dayId = dayIdMap.get(day.dayNumber);
         if (!dayId) continue;
 
         const { data: existingExercises, error: exErr } = await supabase
             .from('program_exercises')
-            .select('id, exercise_id, order_index')
+            .select('id, exercise_id, order_index, sets')
             .eq('day_id', dayId);
 
         if (exErr) {
@@ -587,8 +610,8 @@ export const updateTrainingProgram = async (
         }
 
         const existing = existingExercises ?? [];
-        const keptExerciseIds = new Set(day.exercises);
-        const existingExerciseIds = new Set(existing.map((e) => e.exercise_id));
+        const keptExerciseIds = new Set(day.exercises.map((slot) => slot.exerciseId));
+        const existingByExerciseId = new Map(existing.map((e) => [e.exercise_id, e]));
 
         const idsToDelete = existing
             .filter((e) => !keptExerciseIds.has(e.exercise_id))
@@ -606,13 +629,31 @@ export const updateTrainingProgram = async (
             }
         }
 
-        const newExerciseIds = day.exercises.filter((id) => !existingExerciseIds.has(id));
-        if (newExerciseIds.length > 0) {
+        const setsUpdates = day.exercises.filter((slot) => {
+            const existingRow = existingByExerciseId.get(slot.exerciseId);
+            return existingRow && existingRow.sets !== slot.sets;
+        });
+        for (const slot of setsUpdates) {
+            const existingRow = existingByExerciseId.get(slot.exerciseId)!;
+            const { error: updErr } = await supabase
+                .from('program_exercises')
+                .update({ sets: slot.sets })
+                .eq('id', existingRow.id);
+
+            if (updErr) {
+                console.error('Error updating program_exercises sets:', updErr.message);
+                return false;
+            }
+        }
+
+        const newExercises = day.exercises.filter((slot) => !existingByExerciseId.has(slot.exerciseId));
+        if (newExercises.length > 0) {
             const maxOrderIndex = existing.reduce((max, e) => Math.max(max, e.order_index), 0);
-            const inserts = newExerciseIds.map((exerciseId, index) => ({
+            const inserts = newExercises.map((slot, index) => ({
                 day_id: dayId,
-                exercise_id: exerciseId,
+                exercise_id: slot.exerciseId,
                 order_index: maxOrderIndex + index + 1,
+                sets: slot.sets,
             }));
 
             const { error: insErr } = await supabase

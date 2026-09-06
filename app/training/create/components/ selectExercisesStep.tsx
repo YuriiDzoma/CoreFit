@@ -7,11 +7,15 @@ import { getText } from '@/store/selectors';
 import ExercisesChooser from './exercisesChooser';
 import { ProgramFull } from '../../../../types/training';
 
+const MIN_SETS = 1;
+const MAX_SETS = 7;
+const SETS_OPTIONS = Array.from({ length: MAX_SETS - MIN_SETS + 1 }, (_, i) => MIN_SETS + i);
+
 interface Props {
-    days: { dayNumber: number; exercises: string[] }[];
+    days: { dayNumber: number; exercises: { exerciseId: string; sets: number }[] }[];
     onUpdateDay: (
         dayIndex: number,
-        exercises: string[],
+        exercises: { exerciseId: string; sets: number }[],
         map: Record<string, { name: string; image: string }>
     ) => void;
     onBack: () => void;
@@ -48,9 +52,26 @@ const SelectExercisesStep: React.FC<Props> = ({
         map: Record<string, { name: string; image: string }>
     ) => {
         if (currentDayIndex !== null) {
-            onUpdateDay(currentDayIndex, selected, map);
+            // Preserves each kept exercise's already-configured `sets`;
+            // newly-selected exercises default to 3 -- mirrors mobile's
+            // exercise-picker.tsx `handleConfirm` exactly.
+            const existingSetsByExerciseId = new Map(
+                days[currentDayIndex].exercises.map((slot) => [slot.exerciseId, slot.sets])
+            );
+            const exercises = selected.map((exerciseId) => ({
+                exerciseId,
+                sets: existingSetsByExerciseId.get(exerciseId) ?? 3,
+            }));
+            onUpdateDay(currentDayIndex, exercises, map);
             setIsShowPopup(false);
         }
+    };
+
+    const handleSetsChange = (dayIndex: number, exerciseId: string, sets: number) => {
+        const updated = days[dayIndex].exercises.map((slot) =>
+            slot.exerciseId === exerciseId ? { ...slot, sets } : slot
+        );
+        onUpdateDay(dayIndex, updated, exerciseMap);
     };
 
     return (
@@ -68,15 +89,30 @@ const SelectExercisesStep: React.FC<Props> = ({
 
                             {hasExercises && (
                                 <ul className={styles.exerciseList}>
-                                    {day.exercises.map((exId, indexEx) => (
+                                    {day.exercises.map((slot, indexEx) => (
                                         <li
-                                            key={`${exId}-${indexEx}`}
-                                            className={
-                                                !exerciseMap[exId] ? styles.unknownExercise : ''
-                                            }
+                                            key={`${slot.exerciseId}-${indexEx}`}
+                                            className={`${styles.exerciseRow} ${
+                                                !exerciseMap[slot.exerciseId] ? styles.unknownExercise : ''
+                                            }`}
                                         >
-                                            <span>{indexEx + 1}. </span>
-                                            {exerciseMap[exId]?.name || `Unknown (${exId})`}
+                                            <span className={styles.exerciseRowName}>
+                                                <span>{indexEx + 1}. </span>
+                                                {exerciseMap[slot.exerciseId]?.name || `Unknown (${slot.exerciseId})`}
+                                            </span>
+                                            <select
+                                                className={styles.setsSelect}
+                                                value={slot.sets}
+                                                onChange={(e) =>
+                                                    handleSetsChange(index, slot.exerciseId, Number(e.target.value))
+                                                }
+                                            >
+                                                {SETS_OPTIONS.map((option) => (
+                                                    <option key={option} value={option}>
+                                                        ×{option}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </li>
                                     ))}
                                 </ul>
@@ -111,11 +147,7 @@ const SelectExercisesStep: React.FC<Props> = ({
             {isShowPopup && currentDayIndex !== null && (
                 <ExercisesChooser
                     setIsShowPopup={setIsShowPopup}
-                    selectedDefault={
-                        days[currentDayIndex]?.exercises?.filter(
-                            (id): id is string => typeof id === 'string'
-                        ) ?? []
-                    }
+                    selectedDefault={days[currentDayIndex]?.exercises?.map((slot) => slot.exerciseId) ?? []}
                     onSelect={handleSelect}
                 />
             )}

@@ -40,7 +40,8 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
                 program_exercises (
                     id,
                     exercise_id,
-                    order_index
+                    order_index,
+                    sets
                 )
             )
         `)
@@ -60,6 +61,7 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
             .map((ex: any) => ({
                 id: ex.exercise_id,
                 programExerciseId: ex.id,
+                sets: ex.sets,
             })),
     }));
 

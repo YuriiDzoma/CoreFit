@@ -23,7 +23,7 @@ import GlobalPopup from "@/app/components/globalPopup/globalPopup";
 
 type EditableProgramDay = {
     dayNumber: number;
-    exercises: string[];
+    exercises: { exerciseId: string; sets: number }[];
 };
 
 interface Props {
@@ -66,7 +66,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
         if (initialProgram?.days) {
             return initialProgram.days.map((day) => ({
                 dayNumber: day.day_number,
-                exercises: day.exercises.map((ex) => ex.id),
+                exercises: day.exercises.map((ex) => ({ exerciseId: ex.id, sets: ex.sets })),
             }));
         }
 
@@ -85,7 +85,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
 
     useEffect(() => {
         const loadExerciseMap = async () => {
-            const allIds = programDays.flatMap((d) => d.exercises);
+            const allIds = programDays.flatMap((d) => d.exercises.map((ex) => ex.exerciseId));
             const uniqueIds = Array.from(new Set(allIds)).filter((id) => !!id);
 
             if (uniqueIds.length === 0) return;
@@ -104,7 +104,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
 
     const handleDayExercisesUpdate = (
         dayIndex: number,
-        exercises: string[],
+        exercises: { exerciseId: string; sets: number }[],
         newMap: Record<string, { name: string; image: string }>
     ) => {
         setProgramDays((prev) =>
@@ -130,7 +130,7 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
             if (removedDayNumbers.has(day.day_number)) continue;
             const newDay = programDays.find((d) => d.dayNumber === day.day_number);
             if (!newDay) continue;
-            const keptExerciseIds = new Set(newDay.exercises);
+            const keptExerciseIds = new Set(newDay.exercises.map((ex) => ex.exerciseId));
             removedExercisesCount += day.exercises.filter((ex) => !keptExerciseIds.has(ex.id)).length;
         }
 
@@ -184,12 +184,16 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
         let success: string | boolean | null;
 
         if (isGlobal) {
-            // ✅ створення глобальної програми
+            // ✅ створення глобальної програми -- global_program_exercises
+            // не має власного стовпця `sets`, тож sets тут не передається.
             success = await createGlobalProgram(
                 title,
                 programType,
                 level,
-                programDays,
+                programDays.map((day) => ({
+                    dayNumber: day.dayNumber,
+                    exercises: day.exercises.map((ex) => ex.exerciseId),
+                })),
             );
         } else if (isEdit && initialProgram) {
             // ✅ редагування існуючої програми (той самий id, не дублікат)
