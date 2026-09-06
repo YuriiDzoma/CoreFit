@@ -42,6 +42,8 @@ const initialState = {
             browseUsers: 'Find new friends',
             records: 'Records',
             trainings: 'Trainings',
+            news: 'News',
+            newsEmpty: 'No news yet.',
             noRecordsYet: 'No one has logged a weight yet.',
             showMore: 'Show more',
             kg: 'kg',

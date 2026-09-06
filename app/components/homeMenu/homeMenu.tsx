@@ -17,6 +17,11 @@ const ITEM_DEFS = [
         href: '/',
         isActive: (pathname: string) => pathname === '/',
     },
+    {
+        key: 'news' as const,
+        href: '/news',
+        isActive: (pathname: string) => pathname === '/news',
+    },
 ];
 
 // Records/Trainings -- Home's own floating glass pill bar, same structure
