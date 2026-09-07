@@ -2,6 +2,12 @@
   display: flex;
   flex-direction: column;
   row-gap: 40px;
+}
+
+// Each day's own scroll container now (was the parent .trainingHistory
+// wrapping every day in one shared scrollable area) -- scrolling one day's
+// history no longer drags every other day's columns along with it.
+.historyBlock {
   max-width: calc(100vw - 30% - 100px);
   width: calc(100vw - 30% - 100px);
   overflow-x: auto;

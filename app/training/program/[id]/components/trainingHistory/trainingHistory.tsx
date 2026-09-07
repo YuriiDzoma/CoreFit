@@ -24,27 +24,28 @@ const TrainingHistory: React.FC<Props> = ({
                                               activeTab,
                                               history,
                                           }) => {
-    // `.trainingHistory` is one shared horizontally-scrollable container
-    // across every day's history columns (oldest-first, per day -- the
-    // most recent entry is meant to read as the last, rightmost column).
-    // Completing a day refetches `history` and appends a new column at the
-    // end, but a browser never resets an element's own scroll position
-    // just because its content changed -- if the container wasn't already
-    // scrolled all the way right, the freshly-added column landed
-    // off-screen, making the update look like it silently didn't happen.
-    // Jumping to the end on every `history` change is what actually
-    // surfaces it.
-    const containerRef = useRef<HTMLDivElement>(null);
+    // Each day's `.historyBlock` scrolls horizontally on its own now (was
+    // one shared container across every day -- scrolling to see an older
+    // entry on one day used to drag every other day's columns along with
+    // it). Oldest-first, per day -- the most recent entry is meant to read
+    // as the last, rightmost column. Completing a day refetches `history`
+    // and appends a new column at the end for *that* day, but a browser
+    // never resets an element's own scroll position just because its
+    // content changed -- if that day's block wasn't already scrolled all
+    // the way right, the freshly-added column landed off-screen, making
+    // the update look like it silently didn't happen. Jumping every
+    // block's own scroll to its end on every `history` change is what
+    // actually surfaces it, without touching any other day's scroll state.
+    const blockRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
     useEffect(() => {
-        if (containerRef.current) {
-            containerRef.current.scrollLeft = containerRef.current.scrollWidth;
+        for (const el of Object.values(blockRefs.current)) {
+            if (el) el.scrollLeft = el.scrollWidth;
         }
     }, [history]);
 
     return (
         <div
-            ref={containerRef}
             className={styles.trainingHistory}
             style={activeTab === 1 ? {rowGap: '38px'} : undefined}
         >
@@ -52,7 +53,13 @@ const TrainingHistory: React.FC<Props> = ({
                 const records = history[day.id] || [];
 
                 return (
-                    <div key={day.id} className={styles.historyBlock}>
+                    <div
+                        key={day.id}
+                        ref={(el) => {
+                            blockRefs.current[day.id] = el;
+                        }}
+                        className={styles.historyBlock}
+                    >
                         <ul className={styles.exerciseRows}>
                             <div
                                 className={styles.dateRow}
