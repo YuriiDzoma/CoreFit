@@ -37,15 +37,17 @@ const getDateTime = (value?: string | null) => {
     return value ? new Date(value).getTime() : 0;
 };
 
+// Oldest-first -- TrainingHistory renders these left-to-right, and the
+// most recent entry is meant to read as the last (rightmost) column.
 const sortHistoryRecords = (records: HistoryRecord[]) => {
     return [...records].sort((a, b) => {
-        const dateDiff = getDateTime(b.date) - getDateTime(a.date);
+        const dateDiff = getDateTime(a.date) - getDateTime(b.date);
 
         if (dateDiff !== 0) {
             return dateDiff;
         }
 
-        return getDateTime(b.created_at) - getDateTime(a.created_at);
+        return getDateTime(a.created_at) - getDateTime(b.created_at);
     });
 };
 

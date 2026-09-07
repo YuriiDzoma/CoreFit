@@ -243,11 +243,14 @@ export const fetchTrainingHistory = async (
 ): Promise<{ date: string; values: Record<string, string> }[]> => {
     const supabase = createClient();
 
+    // Oldest-first -- TrainingHistory renders these left-to-right, and the
+    // most recent entry is meant to read as the last (rightmost) column,
+    // not the first. Matches mobile's identical ordering.
     const {data, error} = await supabase
         .from('training_history')
         .select('date, values')
         .eq('day_id', dayId)
-        .order('date', {ascending: false});
+        .order('date', {ascending: true});
 
     if (error) {
         console.error('Error fetching training history:', error.message);

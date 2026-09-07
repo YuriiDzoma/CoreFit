@@ -25,18 +25,21 @@ const TrainingHistory: React.FC<Props> = ({
                                               history,
                                           }) => {
     // `.trainingHistory` is one shared horizontally-scrollable container
-    // across every day's history columns (most-recent-first, per day).
-    // Completing a day refetches `history` and prepends a new leftmost
-    // column, but a browser never resets an element's own scroll position
-    // just because its content changed -- if the container had been
-    // scrolled right (e.g. to see an older entry on a different day), the
-    // freshly-added column landed off-screen to the left, making the
-    // update look like it silently didn't happen. Scrolling back to the
-    // start on every `history` change is what actually surfaces it.
+    // across every day's history columns (oldest-first, per day -- the
+    // most recent entry is meant to read as the last, rightmost column).
+    // Completing a day refetches `history` and appends a new column at the
+    // end, but a browser never resets an element's own scroll position
+    // just because its content changed -- if the container wasn't already
+    // scrolled all the way right, the freshly-added column landed
+    // off-screen, making the update look like it silently didn't happen.
+    // Jumping to the end on every `history` change is what actually
+    // surfaces it.
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        containerRef.current?.scrollTo({ left: 0 });
+        if (containerRef.current) {
+            containerRef.current.scrollLeft = containerRef.current.scrollWidth;
+        }
     }, [history]);
 
     return (
