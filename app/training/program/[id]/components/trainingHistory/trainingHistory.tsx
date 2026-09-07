@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import styles from './trainingHistory.module.scss';
 import {ProgramFull} from '@/types/training';
 
@@ -24,8 +24,24 @@ const TrainingHistory: React.FC<Props> = ({
                                               activeTab,
                                               history,
                                           }) => {
+    // `.trainingHistory` is one shared horizontally-scrollable container
+    // across every day's history columns (most-recent-first, per day).
+    // Completing a day refetches `history` and prepends a new leftmost
+    // column, but a browser never resets an element's own scroll position
+    // just because its content changed -- if the container had been
+    // scrolled right (e.g. to see an older entry on a different day), the
+    // freshly-added column landed off-screen to the left, making the
+    // update look like it silently didn't happen. Scrolling back to the
+    // start on every `history` change is what actually surfaces it.
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        containerRef.current?.scrollTo({ left: 0 });
+    }, [history]);
+
     return (
         <div
+            ref={containerRef}
             className={styles.trainingHistory}
             style={activeTab === 1 ? {rowGap: '38px'} : undefined}
         >
