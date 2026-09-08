@@ -11,6 +11,7 @@ import {
 } from "@/lib/trainingData";
 import {fetchProgramExerciseMap} from "../../../lib/trainingData";
 import {NewsSkeleton} from "../../../ui/skeleton/skeleton";
+import {avatarFallbackUrl} from "@/lib/avatarFallback";
 import Link from "next/link";
 
 const TrainingHistories = () => {
@@ -85,7 +86,16 @@ const TrainingHistories = () => {
                 <div key={entry.id} className={`${styles.historyCard} ${elevatedStyles.elevated}`}>
                     <div className={styles.historyCard__header}>
                         <Link href={`/profile/${entry.profiles.id}`} className={styles.userInfo}>
-                            <img src={entry.profiles.avatar_url} width='32px' height={'32px'} alt="avatar"/>
+                            <img
+                                src={entry.profiles.avatar_url || avatarFallbackUrl(entry.profiles.username)}
+                                width='32px'
+                                height={'32px'}
+                                alt="avatar"
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = avatarFallbackUrl(entry.profiles.username);
+                                }}
+                            />
                             <p>{entry.profiles.username}</p>
                         </Link>
 

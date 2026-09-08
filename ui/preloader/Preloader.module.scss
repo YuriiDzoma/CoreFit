@@ -9,7 +9,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeOut 0.5s ease-out 2s forwards;
 }
 
 .inner {
@@ -60,12 +59,5 @@
   50% {
     transform: scale(1.1);
     opacity: 1;
-  }
-}
-
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    visibility: hidden;
   }
 }
