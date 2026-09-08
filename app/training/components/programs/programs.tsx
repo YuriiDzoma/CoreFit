@@ -7,7 +7,7 @@ import {fetchUserPrograms} from "../../../../lib/programData";
 import {ProgramType} from "../../../../types/training";
 import {useAppSelector} from "../../../hooks/redux";
 import {getText, getUserId} from "../../../../store/selectors";
-import {ProgramsListSkeleton} from "../../../../ui/skeleton/skeleton";
+import {ProgramCreateSkeleton, ProgramsListSkeleton} from "../../../../ui/skeleton/skeleton";
 import ProgramItem from "./ProgramItem";
 
 const Programs = () => {
@@ -40,11 +40,15 @@ const Programs = () => {
             </h2>
 
             {isMyProfile && (
-                <div className={`${styles.createLink} submit`}>
-                    <Link href="/training/create" className={styles.createButton}>
-                        <span>+  {training.createProgram}</span>
-                    </Link>
-                </div>
+                loading ? (
+                    <ProgramCreateSkeleton/>
+                ) : (
+                    <div className={`${styles.createLink} submit`}>
+                        <Link href="/training/create" className={styles.createButton}>
+                            <span>+  {training.createProgram}</span>
+                        </Link>
+                    </div>
+                )
             )}
 
             {loading ? (

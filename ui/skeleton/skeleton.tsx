@@ -230,10 +230,9 @@ export function ExerciseSkeleton() {
     )
 }
 
-// The real title and "+ Create new program" link render unconditionally
-// in programs.tsx now (not skipped during loading, matching Complexes'
-// own already-unconditional title/create-link) -- only the list itself
-// still needs a placeholder here.
+// The real title renders unconditionally in programs.tsx (not skipped
+// during loading, matching Complexes' own already-unconditional title)
+// -- only the list itself needs a placeholder here.
 export function ProgramsListSkeleton() {
     return (
         <ul className={styles.programList__list}>
@@ -243,6 +242,14 @@ export function ProgramsListSkeleton() {
             <li  className={styles.programList__item}/>
         </ul>
     )
+}
+
+// The "+ Create new program" button, shown in place of the real link
+// while `loading` is true. `.programList__create` already existed
+// (pre-dating the title/create-link unconditional-render refactor) but
+// had gone unused since -- reinstated per explicit request.
+export function ProgramCreateSkeleton() {
+    return <span className={styles.programList__create}/>;
 }
 
 // Complexes' own title and (trainer-only) "create global program" link
