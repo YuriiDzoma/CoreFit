@@ -498,7 +498,12 @@
     width: 100%;
     height: 40px;
     display: block;
-    margin: 16px 0;
+    // Matches the real `.createLink` exactly (`programs.module.scss`) --
+    // bottom-only. The parent `.programs` is a flex column, so unlike
+    // normal block flow, adjacent margins here don't collapse: a top
+    // margin here would stack with the title's own `margin-bottom`,
+    // pushing this down 16px further than the real button ever sits.
+    margin-bottom: 16px;
 
     @media only screen and (min-width: 768px) {
       height: 60px;
@@ -517,8 +522,11 @@
     }
   }
 
+  // 50px, not 52px -- the real `ProgramItem` (8px padding + a name line +
+  // a 12px subtitle line) measures 50px live; the 2px gap made every row
+  // visibly jump by 2px the moment real content replaced the skeleton.
   &__item {
-    height: 52px;
+    height: 50px;
     width: 100%;
     border-radius: 4px;
     background-color: var(--skeleton-bg);
