@@ -88,10 +88,10 @@ export default function UserList() {
     const trimmedQuery = searchQuery.trim().toLowerCase();
     const filteredUsers = useMemo(
         () =>
-            trimmedQuery
-                ? users.filter((user) => user.username.toLowerCase().includes(trimmedQuery))
-                : users,
-        [users, trimmedQuery],
+            users
+                .filter((user) => user.id !== userId)
+                .filter((user) => trimmedQuery ? user.username.toLowerCase().includes(trimmedQuery) : true),
+        [users, userId, trimmedQuery],
     );
 
     return (
@@ -127,7 +127,6 @@ export default function UserList() {
                                 return (
                                     <User key={user.id}
                                           user={user}
-                                          userId={userId}
                                           pendingIds={pendingIds}
                                           friendIds={friendIds}
                                           cancelFriend={cancelFriend}

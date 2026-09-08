@@ -11,7 +11,6 @@ import {avatarFallbackUrl} from "@/lib/avatarFallback";
 
 interface FullPicturesProps {
     user: ProfileType,
-    userId: string,
     pendingIds: string[],
     friendIds: string[],
     cancelFriend: (values: string) => void,
@@ -20,7 +19,7 @@ interface FullPicturesProps {
 }
 
 
-const User = ({user, userId, pendingIds, friendIds, cancelFriend, addFriend, removeFriend}: FullPicturesProps) => {
+const User = ({user, pendingIds, friendIds, cancelFriend, addFriend, removeFriend}: FullPicturesProps) => {
     const { base } = useAppSelector(getText);
     const isOnline = formatLastActive(user.last_active_at)?.isOnline ?? false;
 
@@ -45,7 +44,7 @@ const User = ({user, userId, pendingIds, friendIds, cancelFriend, addFriend, rem
                 </div>
             </Link>
 
-            {user.id === userId ? null : pendingIds.includes(user.id) ? (
+            {pendingIds.includes(user.id) ? (
                 <button
                     className={`${styles.userLink__btn} button ${styles.pending}`}
                     onClick={() => cancelFriend(user.id)}
