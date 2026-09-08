@@ -13,6 +13,7 @@ import {fetchProgramExerciseMap} from "../../../lib/trainingData";
 import {NewsSkeleton} from "../../../ui/skeleton/skeleton";
 import {avatarFallbackUrl} from "@/lib/avatarFallback";
 import Link from "next/link";
+import Image from "next/image";
 
 const TrainingHistories = () => {
     const [histories, setHistories] = useState<any[]>([]);
@@ -86,10 +87,10 @@ const TrainingHistories = () => {
                 <div key={entry.id} className={`${styles.historyCard} ${elevatedStyles.elevated}`}>
                     <div className={styles.historyCard__header}>
                         <Link href={`/profile/${entry.profiles.id}`} className={styles.userInfo}>
-                            <img
+                            <Image
                                 src={entry.profiles.avatar_url || avatarFallbackUrl(entry.profiles.username)}
-                                width='32px'
-                                height={'32px'}
+                                width={32}
+                                height={32}
                                 alt="avatar"
                                 onError={(e) => {
                                     e.currentTarget.onerror = null;
