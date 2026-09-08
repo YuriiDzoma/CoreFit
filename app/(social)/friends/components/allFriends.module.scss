@@ -67,19 +67,31 @@
   flex-direction: column;
   row-gap: 8px;
 
+  // The card surface -- matches ProgramItem's own `.programItem`
+  // (`programs.module.scss`) exactly (8px padding/4px radius). Used to
+  // sit directly on `&__link` back when the whole row was one plain
+  // link with no action button; now split out so a sibling remove
+  // button (Users page parity) can share the same card.
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 12px;
+    padding: 8px;
+    border-radius: 4px;
+  }
+
   &__link {
     display: flex;
     align-items: center;
     column-gap: 12px;
-    padding: 8px;
-    // Matches ProgramItem's own `.programItem` (`programs.module.scss`)
-    // exactly -- was 8px, which combined with the 48px photo below to
-    // overshoot ProgramItem's real 50px/4px measured card by a visible
-    // margin (64px/8px). Same 8px padding both already shared, so
-    // radius + photo size were the only two values actually out of sync.
-    border-radius: 4px;
+    // Matches userList.module.scss's own `.userLink` exactly -- lets this
+    // side shrink instead of pushing the fixed-width button out of the
+    // card (a flex item's min-width defaults to its content size, not 0).
+    flex: 1;
+    min-width: 0;
 
-    // 34px, not an arbitrary shrink -- with this row's 8px padding on
+    // 34px, not an arbitrary shrink -- with the card's 8px padding on
     // each side, that's the exact photo size that makes this card's
     // total height match ProgramItem's real 50px (34 + 8 + 8).
     img {
@@ -92,7 +104,42 @@
     }
   }
 
+  // Matches userList.module.scss's own `.avatarWrap`/`.onlineDot` exactly
+  // -- same green (--success), same 2px --elevated-bg cutout border.
+  .avatarWrap {
+    position: relative;
+    flex-shrink: 0;
+    line-height: 0;
+  }
+
+  .onlineDot {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success);
+    border: 2px solid var(--elevated-bg);
+  }
+
   &__name {
     font-size: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  // Matches userList.module.scss's own `.userLink__btn` exactly -- same
+  // 156px fixed width, so "Видалити друга" here and "Додати до друзів"/
+  // "Скасувати запит" on the Users page all render the same size.
+  &__btn {
+    flex-shrink: 0;
+    width: 156px;
+
+    span {
+      white-space: nowrap;
+    }
   }
 }

@@ -15,11 +15,16 @@ import {setCurrentUserId, setIsDarkTheme, setLanguage, setProgramViewDensity} fr
 
 import {getLanguages} from '../lib/languages';
 import {useSupabaseSession} from '@/lib/authClient';
-import {fetchUserSettings} from '../lib/userData';
+import {fetchUserSettings, updateUserProfile} from '../lib/userData';
 import {getDefaultLanguageByRegion, AppLanguage} from '../lib/defaultLanguage';
 
 const START_PRELOADER_DELAY = 1000;
 const LANGUAGE_STORAGE_KEY = 'app_language';
+const LAST_ACTIVE_HEARTBEAT_MS = 60_000;
+
+function touchLastActive(userId: string) {
+    updateUserProfile(userId, {last_active_at: new Date().toISOString()}).catch(() => {});
+}
 
 const isAppLanguage = (value?: string | null): value is AppLanguage => {
     return value === 'eng' || value === 'rus' || value === 'ukr' || value === 'pl';
@@ -110,6 +115,45 @@ const AppShell = ({children}: { children: React.ReactNode }) => {
             }
         };
     }, [dispatch, session?.user?.id]);
+
+    // Heartbeat for the "Онлайн"/last-seen line on profile pages (see
+    // lib/lastActive.ts) -- a plain polled timestamp, not a live socket.
+    // The interval only runs while the tab is visible, so a backgrounded
+    // tab stops extending its own "online" window; regaining visibility
+    // touches immediately rather than waiting for the next tick.
+    useEffect(() => {
+        const userId = session?.user?.id;
+        if (!userId) return;
+
+        let interval: ReturnType<typeof setInterval> | null = null;
+
+        const start = () => {
+            touchLastActive(userId);
+            interval = setInterval(() => touchLastActive(userId), LAST_ACTIVE_HEARTBEAT_MS);
+        };
+
+        const stop = () => {
+            if (interval) clearInterval(interval);
+            interval = null;
+        };
+
+        if (document.visibilityState === 'visible') start();
+
+        const onVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                if (!interval) start();
+            } else {
+                stop();
+            }
+        };
+
+        document.addEventListener('visibilitychange', onVisibilityChange);
+
+        return () => {
+            stop();
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+        };
+    }, [session?.user?.id]);
 
     return (
         <>

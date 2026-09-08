@@ -26,6 +26,7 @@ import {
 import type { FriendRecord } from "@/types/friends";
 import type { TrainerClientRecord } from "@/types/trainerClient";
 import {fetchUserSettings} from "@/lib/userData";
+import {formatLastActive} from "@/lib/lastActive";
 import GlobalPopup from "@/app/components/globalPopup/globalPopup";
 import TrainerBadge from "./TrainerBadge";
 
@@ -36,6 +37,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
     const isDark = useAppSelector(getIsDarkTheme);
 
     const isOwnProfile = currentId === profile.id;
+    const lastActive = formatLastActive(profile.last_active_at);
 
     // The viewer's own relationships/flag -- a different fetch from
     // `profile` itself, which is the *viewed* user's data. Only run when
@@ -160,12 +162,25 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                     width={width < 768 ? 96 : 150}
                     height={width < 768 ? 96 : 150}
                     alt="avatar"
-                    unoptimized
                 />
 
                 <div>
                     <p>{profile.username}</p>
-                    <span>{new Date(profile.created_at).toLocaleString()}</span>
+                    <span>
+                        {base.registered}{' '}
+                        {new Date(profile.created_at).toLocaleDateString('uk-UA', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                        })}
+                    </span>
+                    {!isOwnProfile && lastActive && (
+                        <span
+                            className={`${styles.profile__lastActive} ${lastActive.isOnline ? styles.profile__online : ''}`}
+                        >
+                            {lastActive.text}
+                        </span>
+                    )}
                     {profile.city && (
                         <span className={styles.profile__city}>
                             {profile.city}{profile.country ? `, ${profile.country}` : ''}

@@ -13,6 +13,11 @@ export type User = {
     program_view_density: number | null;
     city: string | null;
     country: string | null;
+    // Heartbeat written roughly every 60s while the app is in the
+    // foreground (see AppShell.tsx) -- drives the "Онлайн"/last-seen line
+    // on the profile page. Null for any row that predates this column, or
+    // that simply hasn't opened the app since.
+    last_active_at: string | null;
 };
 
 export type ProfileType = {
@@ -27,6 +32,7 @@ export type ProfileType = {
     is_trainer?: boolean;
     city?: string | null;
     country?: string | null;
+    last_active_at?: string | null;
 };
 
 export type UserSettings = {

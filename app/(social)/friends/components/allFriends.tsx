@@ -4,13 +4,17 @@ import {useAppSelector} from "@/app/hooks/redux";
 import { useParams } from "next/navigation";
 import {getText, getUserId} from "@/store/selectors";
 import Link from "next/link";
+import Image from "next/image";
 import styles from '../components/allFriends.module.scss'
 import elevatedStyles from "../../../../ui/elevatedCard/elevatedCard.module.scss";
 import {ProfileType} from "@/types/user";
 import {fetchLimitedFriendProfiles} from "@/lib/userData";
-import {getAllFriendsOfUser} from "@/lib/friendData";
+import {getAllFriendsOfUser, removeFriendship} from "@/lib/friendData";
 import {useFriendRequestStore} from "@/store/useFriendRequestStore";
 import {FriendsListSkeleton} from "@/ui/skeleton/skeleton";
+import Preloader from "@/ui/preloader/Preloader";
+import {formatLastActive} from "@/lib/lastActive";
+import {avatarFallbackUrl} from "@/lib/avatarFallback";
 
 
 const AllFriends = () => {
@@ -20,6 +24,7 @@ const AllFriends = () => {
     const [friends, setFriends] = useState<ProfileType[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isPreloader, setIsPreloader] = useState(false);
     const { requests } = useFriendRequestStore();
 
     // Bare `/friends` (no `[id]` segment -- reachable directly by URL even
@@ -50,6 +55,18 @@ const AllFriends = () => {
         };
         fetchData();
     }, [effectiveId]);
+
+    // Own list only -- matches userList.tsx's own removeFriend, immediate
+    // (no confirm dialog) so the two pages' remove actions behave, not
+    // just look, the same.
+    const removeFriend = async (friendId: string) => {
+        setIsPreloader(true);
+        const res = await removeFriendship(friendId);
+        if (res) {
+            setFriends((prev) => prev.filter((friend) => friend.id !== friendId));
+        }
+        setIsPreloader(false);
+    };
 
     const trimmedQuery = searchQuery.trim().toLowerCase();
     const filteredFriends = useMemo(
@@ -111,20 +128,47 @@ const AllFriends = () => {
                         <p>{base.noFriendsMatch.replace('{value}', searchQuery.trim())}</p>
                     ) : (
                         <ul className={styles.friendList}>
-                            {filteredFriends.map(friend => (
-                                <Link
-                                    href={`/profile/${friend.id}`}
-                                    key={friend.id}
-                                    className={`${styles.friendList__link} ${elevatedStyles.elevated}`}
-                                >
-                                    <img src={friend.avatar_url} alt={friend.username}/>
-                                    <span className={styles.friendList__name}>{friend.username}</span>
-                                </Link>
-                            ))}
+                            {filteredFriends.map(friend => {
+                                const isOnline = formatLastActive(friend.last_active_at)?.isOnline ?? false;
+
+                                return (
+                                <li key={friend.id} className={`${styles.friendList__item} ${elevatedStyles.elevated}`}>
+                                    <Link
+                                        href={`/profile/${friend.id}`}
+                                        className={styles.friendList__link}
+                                    >
+                                        <div className={styles.avatarWrap}>
+                                            <Image
+                                                src={friend.avatar_url || avatarFallbackUrl(friend.username)}
+                                                width={34}
+                                                height={34}
+                                                alt={friend.username}
+                                                onError={(e) => {
+                                                    e.currentTarget.onerror = null;
+                                                    e.currentTarget.src = avatarFallbackUrl(friend.username);
+                                                }}
+                                            />
+                                            {isOnline && <span className={styles.onlineDot}/>}
+                                        </div>
+                                        <span className={styles.friendList__name}>{friend.username}</span>
+                                    </Link>
+
+                                    {isOwnProfile && (
+                                        <button
+                                            className={`${styles.friendList__btn} button`}
+                                            onClick={() => removeFriend(friend.id)}
+                                        >
+                                            <span>{base.removeFriend}</span>
+                                        </button>
+                                    )}
+                                </li>
+                                );
+                            })}
                         </ul>
                     )}
                 </>
             )}
+            {isPreloader && <Preloader/>}
         </div>
     )
 }

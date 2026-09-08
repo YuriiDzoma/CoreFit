@@ -41,18 +41,18 @@
   ul {
     display: flex;
     flex-direction: column;
-    row-gap: 16px;
+    row-gap: 8px;
 
+    // Matches allFriends.module.scss's `.friendList__link` exactly (same
+    // 8px padding/4px radius/34px circular avatar) -- both pages list the
+    // same kind of thing (a user row linking to a profile) and should
+    // read as the same component.
     li {
       display: flex;
-      column-gap: 8px;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    img {
-      width: 60px;
-      height: 60px;
+      column-gap: 12px;
+      padding: 8px;
       border-radius: 4px;
     }
   }
@@ -60,19 +60,69 @@
 
 .userLink {
   display: flex;
-
+  align-items: center;
+  column-gap: 12px;
+  // Lets this side of the row actually shrink instead of pushing the
+  // fixed-width button (below) out of the card -- a flex item's min-width
+  // defaults to its content size, not 0, so without this a long
+  // username/email refuses to shrink at all.
+  flex: 1;
+  min-width: 0;
 
   &__info {
     display: flex;
-    column-gap: 16px;
+    align-items: center;
+    column-gap: 12px;
+    flex: 1;
+    min-width: 0;
+
+    img {
+      height: 34px;
+      max-height: 34px;
+      width: 34px;
+      max-width: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    p {
+      font-size: 18px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
-  p {
-    margin-top: 8px;
+  // Wraps just the avatar so the online dot can be positioned relative
+  // to it, not the whole row.
+  .avatarWrap {
+    position: relative;
+    flex-shrink: 0;
+    line-height: 0;
   }
 
+  // Same green as the profile page's "Онлайн" text (--success). Border
+  // matches the elevated card's own background (--elevated-bg, not the
+  // page background) since that's what's actually behind it, punching
+  // the dot out from the avatar photo underneath.
+  .onlineDot {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success);
+    border: 2px solid var(--elevated-bg);
+  }
+
+  // Fixed, not content-width -- so "Додати до друзів" / "Скасувати
+  // запит" / "Видалити друга" all render the same size regardless of
+  // label length. 156px comfortably fits the widest label
+  // ("Додати до друзів", ~149px) with the button's own padding.
   &__btn {
-    margin-top: 8px;
+    flex-shrink: 0;
+    width: 156px;
 
     span {
       white-space: nowrap;

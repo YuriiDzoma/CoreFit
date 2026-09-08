@@ -1,11 +1,12 @@
 import { createClient } from '@/utils/supabase/client';
 import {ProfileType, User, UserSettings} from "../types/user";
+import {avatarFallbackUrl} from "./avatarFallback";
 
 export const fetchUsers = async (): Promise<ProfileType[]> => {
     const supabase = createClient();
     const { data, error } = await supabase
         .from('profiles')
-        .select('id, username, avatar_url, created_at');
+        .select('id, username, avatar_url, created_at, last_active_at');
 
     if (error) {
         console.error('Error fetching users:', error);
@@ -79,7 +80,7 @@ export const fetchUserSettings = async (userId: string): Promise<UserSettings> =
 
 export const updateUserProfile = async (
     userId: string,
-    updates: Partial<Pick<User, 'username' | 'language' | 'dark' | 'email' | 'is_trainer' | 'program_view_density' | 'city' | 'country'>>
+    updates: Partial<Pick<User, 'username' | 'language' | 'dark' | 'email' | 'is_trainer' | 'program_view_density' | 'city' | 'country' | 'last_active_at'>>
 ): Promise<User | null> => {
     const supabase = createClient();
 
@@ -158,7 +159,7 @@ export const registerUserWithEmail = async (
         options: {
             data: {
                 full_name: fullName,
-                avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`
+                avatar_url: avatarFallbackUrl(fullName)
             },
         },
     });

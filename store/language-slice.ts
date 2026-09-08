@@ -11,6 +11,7 @@ const initialState = {
             users: 'Users',
             complexes: 'Complexes',
             programs: 'Programs',
+            registered: 'Registered:',
             Wiki: 'Wiki',
             authorization: 'Authorization',
             lblEmail: 'Your E-mail',

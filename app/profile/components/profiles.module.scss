@@ -38,6 +38,18 @@
   &__city {
     display: block;
   }
+
+  // Same "own line" reasoning as `&__city` above. Overrides the inherited
+  // `.profile__header span { opacity: 0.4; }` when online -- a dim green
+  // reads as muted/off, not as an active status.
+  &__lastActive {
+    display: block;
+  }
+
+  &__online {
+    opacity: 1;
+    color: var(--success);
+  }
 }
 
 .settings {
