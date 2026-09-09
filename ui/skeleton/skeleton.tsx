@@ -3,29 +3,32 @@ import React from "react";
 
 export function UsersSkeleton() {
     return (
-        <ul className={styles.users}>
-            <li className={styles.user}>
-                <div className={styles.user__info}>
-                    <span className={styles.user__img}/>
-                    <span className={styles.user__name}/>
-                </div>
-                <span className={styles.user__btn}/>
-            </li>
-            <li className={styles.user}>
-                <div className={styles.user__info}>
-                    <span className={styles.user__img}/>
-                    <span className={styles.user__name}/>
-                </div>
-                <span className={styles.user__btn}/>
-            </li>
-            <li className={styles.user}>
-                <div className={styles.user__info}>
-                    <span className={styles.user__img}/>
-                    <span className={styles.user__name}/>
-                </div>
-                <span className={styles.user__btn}/>
-            </li>
-        </ul>
+        <>
+            <span className={styles.searchSkeleton}/>
+            <ul className={styles.users}>
+                <li className={styles.user}>
+                    <div className={styles.user__info}>
+                        <span className={styles.user__img}/>
+                        <span className={styles.user__name}/>
+                    </div>
+                    <span className={styles.user__btn}/>
+                </li>
+                <li className={styles.user}>
+                    <div className={styles.user__info}>
+                        <span className={styles.user__img}/>
+                        <span className={styles.user__name}/>
+                    </div>
+                    <span className={styles.user__btn}/>
+                </li>
+                <li className={styles.user}>
+                    <div className={styles.user__info}>
+                        <span className={styles.user__img}/>
+                        <span className={styles.user__name}/>
+                    </div>
+                    <span className={styles.user__btn}/>
+                </li>
+            </ul>
+        </>
     )
 }
 
@@ -76,22 +79,26 @@ function RecordsSkeletonCard() {
 
 export function FriendsListSkeleton() {
     return (
-        <div>
+        <>
+            <span className={styles.searchSkeleton}/>
             <div className={styles.friendsListPage}>
                 <div className={styles.friendsListPage__row}>
                     <span className={styles.friendsListPage__img}/>
                     <span className={styles.friendsListPage__name}/>
+                    <span className={styles.friendsListPage__btn}/>
                 </div>
                 <div className={styles.friendsListPage__row}>
                     <span className={styles.friendsListPage__img}/>
                     <span className={styles.friendsListPage__name}/>
+                    <span className={styles.friendsListPage__btn}/>
                 </div>
                 <div className={styles.friendsListPage__row}>
                     <span className={styles.friendsListPage__img}/>
                     <span className={styles.friendsListPage__name}/>
+                    <span className={styles.friendsListPage__btn}/>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

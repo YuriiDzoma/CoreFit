@@ -1,0 +1,83 @@
+.avatarMenu {
+  position: relative;
+  line-height: 0;
+
+  &__trigger {
+    display: block;
+    border-radius: 4px;
+    cursor: pointer;
+
+    img {
+      border-radius: 4px;
+      display: block;
+      // Without this, a non-square uploaded photo gets stretched to fit
+      // the fixed width/height box instead of cropped.
+      object-fit: cover;
+    }
+  }
+
+  &__hiddenInput {
+    display: none;
+  }
+
+  // Portaled to document.body (see AvatarMenu.tsx) -- position: fixed with
+  // top/left from the trigger's own measured position, same technique as
+  // header/menu.tsx's dropdown. max-height (not a fixed height) since the
+  // row count here varies (2 or 3 rows depending on whether a real photo
+  // exists), unlike that menu's own always-3-row shape.
+  &__hide, &__show {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.15s ease;
+    position: fixed;
+    background-color: var(--bg-color);
+    z-index: 9999;
+    border-radius: 4px;
+  }
+
+  &__show {
+    max-height: 220px;
+  }
+
+  &__content {
+    width: max-content;
+    min-width: 180px;
+    background-color: var(--bg-color);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+
+    button {
+      text-align: left;
+    }
+
+    span {
+      font-size: 16px;
+    }
+  }
+
+  &__delete span {
+    color: var(--danger);
+  }
+
+  &__error {
+    font-size: 13px;
+    color: var(--danger);
+    max-width: 220px;
+  }
+}
+
+.shadow, .shadowActive {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background-color: transparent;
+  transition: all 0.15s;
+}
+
+.shadowActive {
+  background-color: rgba(0, 0, 0, 0.3);
+}

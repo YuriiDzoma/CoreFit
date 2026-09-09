@@ -1,3 +1,22 @@
+// Matches userList.module.scss/allFriends.module.scss's own `.searchRow` +
+// `.searchInput` exactly (2px border + 40px input height = 44px, 8px
+// radius) -- shared by both UsersSkeleton and FriendsListSkeleton since
+// both real search fields are pixel-identical. Only shows once loaded
+// (both pages gate it on the list being non-empty), so without this the
+// skeleton had nothing standing in for it and the page visibly grew a
+// search box the instant loading finished.
+.searchSkeleton {
+  // A <span> is display:inline by default, which ignores width/height
+  // entirely -- without this the element was genuinely in the DOM but
+  // rendered at zero visible size.
+  display: block;
+  width: 100%;
+  height: 44px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  background-color: var(--skeleton-bg);
+}
+
 .usersPage {
   display: flex;
   flex-direction: column;
@@ -32,49 +51,51 @@
   display: flex;
   flex-direction: column;
   row-gap: 8px;
-
-  span {
-    border-radius: 4px;
-    background-color: var(--skeleton-bg);
-  }
 }
 
+// Matches user.tsx's real row exactly (same elevated card, 34px circular
+// avatar, 156px button as friendsListPage's own row -- Sprint 87 made
+// Users' and Friends' rows visually identical, but this skeleton still
+// had the old pre-redesign 60px-square-avatar/124px-button shape).
 .user {
   display: flex;
-  column-gap: 8px;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  column-gap: 12px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--skeleton-wrapper-bg);
 
   &__info {
     display: flex;
-    column-gap: 16px;
+    align-items: center;
+    column-gap: 12px;
+    flex: 1;
+    min-width: 0;
   }
 
   &__btn {
-    margin-top: 8px;
     height: 28px;
     border-radius: 4px;
     background-color: var(--skeleton-bg);
-    width: 124px;
-  }
-
-  span {
-    border-radius: 4px;
-    background-color: var(--skeleton-bg);
+    width: 156px;
+    flex-shrink: 0;
   }
 
   &__img {
     display: block;
-    width: 60px;
-    min-width: 60px;
-    height: 60px;
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--skeleton-bg);
   }
 
   &__name {
-    margin-top: 8px;
     display: block;
-    height: 16px;
-    width: 100px;
+    height: 21px;
+    flex: 1;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
   }
 }
 
@@ -178,29 +199,48 @@
 
 // Matches allFriends.module.scss's `.friendList` exactly (measured, not
 // estimated): 16px row-gap, 80px square avatar, 18px name text.
+// Matches allFriends.tsx's real row exactly (measured live: 50px card,
+// 34px circular avatar, 156px/28px button) -- was a leftover 80px-square-
+// avatar/fixed-140px-name shape from before that row was redesigned
+// (Sprint 87/88), visibly jumping to a different layout once real content
+// replaced it.
 .friendsListPage {
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  row-gap: 8px;
   margin-top: 8px;
 
   &__row {
     display: flex;
     align-items: center;
-    column-gap: 16px;
+    column-gap: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    // Same wrapper-fill convention as RecordsSkeletonCard's own elevated
+    // surface -- distinct from `--skeleton-bg`, used below for the
+    // individual placeholder shapes inside.
+    background-color: var(--skeleton-wrapper-bg);
   }
 
   &__img {
-    width: 80px;
-    height: 80px;
-    min-width: 80px;
-    border-radius: 4px;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
     background-color: var(--skeleton-bg);
   }
 
   &__name {
-    height: 18px;
-    width: 140px;
+    flex: 1;
+    height: 21px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__btn {
+    width: 156px;
+    height: 28px;
+    flex-shrink: 0;
     border-radius: 4px;
     background-color: var(--skeleton-bg);
   }

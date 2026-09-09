@@ -1,7 +1,11 @@
 export type User = {
     id: string;
     username: string;
-    avatar_url: string;
+    // Nullable in the DB (a profile can genuinely have none) despite the
+    // non-null type further down on ProfileType -- avatar_url needs to be
+    // settable back to null here specifically, for deleting a photo
+    // (AvatarMenu.tsx) to revert to the generated initials fallback.
+    avatar_url: string | null;
     created_at: string;
     email: string;
     language: string;

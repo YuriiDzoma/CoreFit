@@ -22,6 +22,12 @@
   &__info {
     display: flex;
     column-gap: 16px;
+
+    // Without this, a non-square photo gets stretched to fit the fixed
+    // 96x96 box instead of cropped.
+    img {
+      object-fit: cover;
+    }
   }
 
   &__actions {

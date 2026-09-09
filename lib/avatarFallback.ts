@@ -13,3 +13,11 @@
 export function avatarFallbackUrl(name?: string | null): string {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || '?')}&format=png`;
 }
+
+// A profile always has *some* avatar_url (a real photo, or this generated
+// fallback) -- this distinguishes the two, for anything that should only
+// apply to a genuine photo (the fullscreen viewer, the "Видалити фото"
+// menu option).
+export function hasRealAvatar(url?: string | null): boolean {
+    return Boolean(url) && !url!.includes('ui-avatars.com');
+}

@@ -13,6 +13,11 @@
 
     img {
       border-radius: 4px;
+      // Without this, a non-square uploaded photo gets stretched to fit
+      // the fixed width/height box instead of cropped -- a plain <img
+      // width height> with no object-fit distorts the image rather than
+      // preserving its aspect ratio.
+      object-fit: cover;
     }
 
     p, input {
@@ -28,6 +33,15 @@
     span {
       opacity: 0.4;
     }
+  }
+
+  &__avatarBtn {
+    display: block;
+    border: none;
+    background: none;
+    padding: 0;
+    line-height: 0;
+    cursor: pointer;
   }
 
   // The joined-date `<span>` above sits on its own line "for free" -- it's
@@ -85,6 +99,8 @@
       width: 64px;
       height: 64px;
       max-height: 64px;
+      object-fit: cover;
+      border-radius: 4px;
     }
   }
 

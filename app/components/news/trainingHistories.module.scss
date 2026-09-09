@@ -44,6 +44,12 @@
   column-gap: 8px;
   justify-content: center;
 
+  // Without this, a non-square photo gets stretched to fit the fixed
+  // 32x32 box instead of cropped.
+  img {
+    object-fit: cover;
+  }
+
   p {
     font-size: 16px;
   }

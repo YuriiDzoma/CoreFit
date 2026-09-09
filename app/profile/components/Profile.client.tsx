@@ -27,8 +27,11 @@ import type { FriendRecord } from "@/types/friends";
 import type { TrainerClientRecord } from "@/types/trainerClient";
 import {fetchUserSettings} from "@/lib/userData";
 import {formatLastActive} from "@/lib/lastActive";
+import {avatarFallbackUrl, hasRealAvatar} from "@/lib/avatarFallback";
 import GlobalPopup from "@/app/components/globalPopup/globalPopup";
 import TrainerBadge from "./TrainerBadge";
+import AvatarMenu from "./AvatarMenu";
+import FullscreenImage from "@/app/components/fullscreenImage/FullscreenImage";
 
 const Profile = ({profile}: {profile: ProfileType}) => {
     const { width } = useWindowSize();
@@ -38,6 +41,12 @@ const Profile = ({profile}: {profile: ProfileType}) => {
 
     const isOwnProfile = currentId === profile.id;
     const lastActive = formatLastActive(profile.last_active_at);
+
+    // Server-fetched prop -- needs a local override so a successful
+    // upload/delete (AvatarMenu.tsx) reflects immediately without a full
+    // page reload.
+    const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || avatarFallbackUrl(profile.username));
+    const [viewerOpen, setViewerOpen] = useState(false);
 
     // The viewer's own relationships/flag -- a different fetch from
     // `profile` itself, which is the *viewed* user's data. Only run when
@@ -149,20 +158,31 @@ const Profile = ({profile}: {profile: ProfileType}) => {
         <div className={styles.profile}>
             <div className={styles.profile__header}>
 
-                <Image
-                    // Falls back to the same ui-avatars.com initials image
-                    // registerUserWithEmail (lib/userData.ts) already
-                    // generates at signup time -- avatar_url is nullable in
-                    // the database despite ProfileType typing it as a plain
-                    // string, so a profile can genuinely lack one (found
-                    // live: a directly-inserted test account had none, and
-                    // Next's Image threw on an empty src instead of just
-                    // rendering a broken image).
-                    src={profile.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.username)}`}
-                    width={width < 768 ? 96 : 150}
-                    height={width < 768 ? 96 : 150}
-                    alt="avatar"
-                />
+                {isOwnProfile ? (
+                    <AvatarMenu
+                        userId={profile.id}
+                        username={profile.username}
+                        avatarUrl={avatarUrl}
+                        size={width < 768 ? 96 : 150}
+                        onAvatarChange={(newUrl) => setAvatarUrl(newUrl || avatarFallbackUrl(profile.username))}
+                    />
+                ) : (
+                    <button
+                        className={styles.profile__avatarBtn}
+                        onClick={() => hasRealAvatar(avatarUrl) && setViewerOpen(true)}
+                    >
+                        <Image
+                            src={avatarUrl}
+                            width={width < 768 ? 96 : 150}
+                            height={width < 768 ? 96 : 150}
+                            alt="avatar"
+                        />
+                    </button>
+                )}
+
+                {viewerOpen && (
+                    <FullscreenImage src={avatarUrl} alt={profile.username} onClose={() => setViewerOpen(false)}/>
+                )}
 
                 <div>
                     <p>{profile.username}</p>
