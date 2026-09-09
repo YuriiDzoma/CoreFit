@@ -5,7 +5,11 @@
   width: 100vw;
   height: 100vh;
   background: rgba(6, 9, 16, 0.6);
-  z-index: 9999;
+  // A blocking loader must outrank any dropdown/backdrop it might appear
+  // over -- comfortably above header/menu.tsx's own portaled dropdown
+  // (`.menu__show`, 9999) and shadow (`.shadow`, 9998), the highest
+  // z-indexes elsewhere in the app.
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;

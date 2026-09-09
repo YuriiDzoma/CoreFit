@@ -292,7 +292,7 @@
   border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 8px;
-  margin-top: 8px;
+  margin: 16px auto 0;
 
   &__title {
     height: 18px;
@@ -338,6 +338,78 @@
   &__btn {
     margin: 16px auto 0;
     max-width: 800px;
+  }
+}
+
+// Shared shape for TrainerSettings/CitySettings while loading -- mirrors
+// the real `.languages, .profile, .trainer, .location` bordered-box block
+// in settings.module.scss (same border/padding/margin), each skeleton
+// filling in only the placeholders that block actually renders.
+.settingsSection {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px;
+  margin: 16px auto 0;
+
+  &__title {
+    height: 18px;
+    width: 80px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+    display: block;
+    margin: 0 auto;
+
+    @media only screen and (min-width: 768px) {
+      height: 21px;
+    }
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+  }
+
+  &__name {
+    height: 16px;
+    width: 100px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+    display: block;
+  }
+
+  &__checkbox {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--skeleton-bg);
+    display: block;
+  }
+
+  &__hint {
+    height: 14px;
+    width: 65%;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+    display: block;
+  }
+
+  &__input {
+    height: 40px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+    display: block;
+  }
+
+  &__link {
+    height: 15px;
+    width: 130px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+    display: block;
   }
 }
 

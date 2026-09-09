@@ -4,6 +4,7 @@ import styles from './settings.module.scss';
 import { useAppSelector } from "../../hooks/redux";
 import { getText, getUserId } from "../../../store/selectors";
 import { fetchUserSettings, updateUserProfile } from "../../../lib/userData";
+import { TrainerSettingsSkeleton } from "../../../ui/skeleton/skeleton";
 import Preloader from "../../../ui/preloader/Preloader";
 
 // Same instant-apply, single-toggle-row shape as LanguagesBox above it,
@@ -37,7 +38,7 @@ const TrainerSettings = () => {
         setIsPreloader(false);
     };
 
-    if (loading) return null;
+    if (loading) return <TrainerSettingsSkeleton />;
 
     return (
         <div className={styles.trainer}>

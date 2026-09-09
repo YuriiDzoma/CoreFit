@@ -6,6 +6,7 @@ import { getIsDarkTheme, getLanguage, getText, getUserId } from "../../../store/
 import { fetchUserSettings, updateUserProfile } from "../../../lib/userData";
 import { searchCities, getNearestCity, resolveCityLabel, type City } from "../../../lib/citiesData";
 import type { AppLanguage } from "../../../lib/defaultLanguage";
+import { CitySettingsSkeleton } from "../../../ui/skeleton/skeleton";
 import Preloader from "../../../ui/preloader/Preloader";
 
 const DEBOUNCE_MS = 250;
@@ -117,7 +118,7 @@ const CitySettings = () => {
         );
     };
 
-    if (loading) return null;
+    if (loading) return <CitySettingsSkeleton />;
 
     const showSuggestions = dirty && suggestions.length > 0;
     const showNoMatches =

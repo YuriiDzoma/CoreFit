@@ -134,6 +134,33 @@ export function ProfileSettingsSkeleton() {
     )
 }
 
+// Matches TrainerSettings' own `.trainer` block: title, a single
+// name+checkbox toggle row, and the explanatory hint line beneath it.
+export function TrainerSettingsSkeleton() {
+    return (
+        <div className={styles.settingsSection}>
+            <span className={styles.settingsSection__title}/>
+            <div className={styles.settingsSection__row}>
+                <span className={styles.settingsSection__name}/>
+                <span className={styles.settingsSection__checkbox}/>
+            </div>
+            <span className={styles.settingsSection__hint}/>
+        </div>
+    )
+}
+
+// Matches CitySettings' own `.location` block: title, the city text
+// input, and the "detect automatically" link beneath it.
+export function CitySettingsSkeleton() {
+    return (
+        <div className={styles.settingsSection}>
+            <span className={styles.settingsSection__title}/>
+            <span className={styles.settingsSection__input}/>
+            <span className={styles.settingsSection__link}/>
+        </div>
+    )
+}
+
 export function ProfileFriendsSkeleton() {
     return (
         <div className={styles.profileFriends}>

@@ -124,10 +124,10 @@ const Menu = () => {
                             disabled={!isActive}
                             onClick={() => setIsActive(false)}
                     />
+                    {isPreloader && <Preloader />}
                 </>,
                 document.body,
             )}
-            {isPreloader && <Preloader />}
         </div>
     )
 }
