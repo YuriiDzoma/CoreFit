@@ -4,6 +4,12 @@
   row-gap: 40px;
   max-width: calc(100vw - 30% - 100px);
   width: calc(100vw - 30% - 100px);
+  // Without this, a flex item's default `min-width: auto` lets its
+  // content's intrinsic (max-content) size win over the explicit width
+  // above -- Safari in particular then grows this column, and the whole
+  // page, to fit the widest history row instead of confining the overflow
+  // to this element's own scrollbar the way `overflow-x: auto` intends.
+  min-width: 0;
   overflow-x: auto;
 }
 

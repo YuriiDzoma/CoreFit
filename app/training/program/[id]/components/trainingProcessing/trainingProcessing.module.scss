@@ -23,6 +23,14 @@
   &__date {
     margin-bottom: 8px;
     height: 30px !important;
+    // `.process input`'s `width: 100%` (higher specificity than this
+    // single class, hence `!important` here too) confined this to the
+    // shared 100px column -- fine for the weight/reps inputs, but a native
+    // date input at 16px needs real room for every digit of "mm/dd/yyyy"
+    // or it renders with the value/placeholder clipped away entirely, as
+    // seen live on iOS Safari (Chrome's own date control is more forgiving
+    // about the same width, which is why this wasn't caught there).
+    width: 140px !important;
   }
 
   ul {
