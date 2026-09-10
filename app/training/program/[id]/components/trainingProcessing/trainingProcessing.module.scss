@@ -6,13 +6,18 @@
   width: 100px;
 
   input {
-    height: 20px;
+    height: 24px;
     background-color: transparent;
     border: 1px solid var(--border-color);
     width: 100%;
     color: var(--text-color);
     padding-left: 4px;
-    font-size: 12px;
+    // iOS Safari auto-zooms the whole page on focus for any input with a
+    // computed font-size under 16px -- these fields (weight/reps, and the
+    // date input above) are tapped constantly while logging a workout, so
+    // that zoom-then-scroll-back dance on every tap was the actual bug
+    // being fixed here, not just a cosmetic size choice.
+    font-size: 16px;
   }
 
   &__date {

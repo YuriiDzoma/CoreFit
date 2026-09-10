@@ -32,11 +32,19 @@
   height: 20px;
   display: flex;
   column-gap: 4px;
+  // A row with more historical entries than fit `.trainingHistory`'s own
+  // fixed width overflows it horizontally (by design -- that's what makes
+  // it scrollable). Left at the container's width, the row's own box --
+  // and therefore its border-bottom -- stopped there too, well short of
+  // the actual values rendered past that point. Sizing to content instead
+  // keeps the underline exactly as wide as the row's real content.
+  width: max-content;
+  min-width: 100%;
 
   p {
-    min-width: 100px;
-    max-width: 100px;
-    width: 100px;
+    min-width: 82px;
+    max-width: 82px;
+    width: 82px;
     white-space: nowrap;
     overflow: hidden;
     position: relative;
