@@ -6,17 +6,20 @@
   // `.detail__content` (the same `min-width: auto` issue `trainingHistory`
   // needed `min-width: 0` for), pushing the *entire* page into horizontal
   // scroll -- confirmed live on iPhone, not just a cosmetic overflow.
-  // 120px is the narrowest tried so far -- 100px confirmed broken (blank
-  // date input on iOS), 150px confirmed working; this value itself hasn't
-  // been re-checked on a real device yet.
-  max-width: 120px;
-  // Not `120px` like the other two -- this is the same flex-item
+  // Narrowing this is a real vs. real tradeoff, not a Chrome-vs-Safari one
+  // -- Chrome's own date control renders fine well below the actual iOS
+  // threshold, so it can't be used to find that threshold. Confirmed live
+  // on iPhone so far: 100px blank, 120px still blank, 140px shows the
+  // placeholder correctly -- 140px is the narrowest value actually known
+  // to work, don't go below it without a fresh iPhone screenshot.
+  max-width: 140px;
+  // Not `140px` like the other two -- this is the same flex-item
   // `min-width: auto` gotcha `trainingHistory` needed `min-width: 0` for,
-  // guarding against any future child here that's wider than 120px (a
+  // guarding against any future child here that's wider than 140px (a
   // longer translated label, say) inflating the whole page again instead
   // of just clipping/wrapping within this column.
   min-width: 0;
-  width: 120px;
+  width: 140px;
 
   input {
     height: 24px;

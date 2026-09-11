@@ -2,6 +2,16 @@
   max-height: calc(100vh - 155px);
   height: calc(100vh - 155px);
   overflow-y: auto;
+  // Explicit, rather than leaving it to default to `visible`: per the CSS
+  // overflow spec, a `visible` x-axis next to a non-`visible` y-axis (the
+  // `overflow-y: auto` above) computes to `auto` for x too, so this
+  // container could *already* scroll horizontally on its own before this
+  // line existed. That turned a bug in any one of its three child columns'
+  // widths into the entire page drifting sideways on iPhone, repeatedly,
+  // across several rounds of fixing the columns themselves -- this is a
+  // hard backstop so the same class of bug can't do that again: any
+  // future overflow here gets clipped, not turned into page-wide scroll.
+  overflow-x: hidden;
   padding-right: 8px;
   position: relative;
 
