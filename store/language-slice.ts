@@ -55,6 +55,7 @@ const initialState = {
             kg: 'kg',
             requests: 'Requests',
             signOut: 'Sign out',
+            privacyPolicy: 'Privacy Policy',
             deleteAccount: 'Delete account',
             deleteAccountConfirmTitle: 'Delete your account?',
             deleteAccountConfirmMessage: 'This permanently deletes your profile, programs, training history, and removes you from friends/trainer connections. This cannot be undone.',

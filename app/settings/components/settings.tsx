@@ -1,5 +1,6 @@
 'use client'
 import React, {useState} from "react";
+import Link from "next/link";
 import styles from './settings.module.scss';
 import {LanguagesBox} from "./languagesBox";
 import ProfileSettings from "./profileSettings";
@@ -54,6 +55,9 @@ const Settings = () => {
             <TrainerSettings />
             <CitySettings />
             <LanguagesBox />
+            <Link href="/privacy" className={styles.privacyLink}>
+                {base.privacyPolicy}
+            </Link>
             <button
                 className={styles.deleteAccount}
                 onClick={() => setConfirmingDelete(true)}

@@ -1,0 +1,39 @@
+.privacy {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+
+  h2 {
+    margin-top: 28px;
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: var(--title-color);
+  }
+
+  p, li {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-color);
+    margin-bottom: 8px;
+  }
+
+  ul {
+    margin: 0 0 12px;
+    padding-left: 20px;
+
+    li {
+      list-style: disc;
+    }
+  }
+
+  &__updated {
+    opacity: 0.7;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  a {
+    color: var(--text-color);
+    text-decoration: underline;
+  }
+}

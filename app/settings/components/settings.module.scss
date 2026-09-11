@@ -6,6 +6,18 @@
   }
 }
 
+// Matches the mobile app's own privacy-policy link (`profile/settings.tsx`) —
+// a plain underlined text link, not a button, same weight as CitySettings'
+// own `.location__detect` link.
+.privacyLink {
+  display: block;
+  width: fit-content;
+  margin: 16px auto 0;
+  color: var(--text-color);
+  text-decoration: underline;
+  font-size: 14px;
+}
+
 // Matches the mobile app's own Delete account button (`profile/settings.tsx`)
 // — deliberately less prominent than the filled .signOut button below it
 // (outlined, not filled): this is the rare, irreversible action, Sign
