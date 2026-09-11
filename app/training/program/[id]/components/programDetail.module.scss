@@ -66,6 +66,12 @@
   h3 {
     margin-bottom: 8px;
     height: 30px;
+    // Matches the date input's own vertically-centered text -- a plain
+    // block element's text otherwise sits at the top of its box, not the
+    // middle, even though the box itself starts at the same height as its
+    // siblings (see `trainingHistory.module.scss`'s `.dateRow` comment).
+    display: flex;
+    align-items: center;
   }
   h3::first-letter {
     text-transform: uppercase;

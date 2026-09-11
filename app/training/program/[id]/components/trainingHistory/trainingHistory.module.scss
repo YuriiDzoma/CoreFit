@@ -19,6 +19,14 @@
   height: 30px;
   margin-bottom: 6px;
   display: flex;
+  // The date `<input>` alongside this row centers its own text vertically
+  // by default (native form-control behavior); a plain `<span>` doesn't --
+  // without this, both rows start at the same top edge (confirmed via
+  // `getBoundingClientRect()`) but the *text* inside reads as noticeably
+  // higher than the input's, since flex's default `align-items: stretch`
+  // just stretches the span to the row's full height with its text still
+  // sitting at the top of that taller box.
+  align-items: center;
   column-gap: 4px;
 
   span {
