@@ -2,10 +2,10 @@
   display: flex;
   flex-direction: column;
   row-gap: 40px;
-  // The 140px here matches `.process`'s own explicit width (the third
+  // The 120px here matches `.process`'s own explicit width (the third
   // column) so the three columns together fit exactly one viewport width.
-  max-width: calc(100vw - 30% - 140px);
-  width: calc(100vw - 30% - 140px);
+  max-width: calc(100vw - 30% - 120px);
+  width: calc(100vw - 30% - 120px);
   // Without this, a flex item's default `min-width: auto` lets its
   // content's intrinsic (max-content) size win over the explicit width
   // above -- Safari in particular then grows this column, and the whole
@@ -30,7 +30,17 @@
   column-gap: 4px;
 
   span {
-    min-width: 100px;
+    // Matches `.exerciseRow p`'s own 82px exactly -- was 100px only (no
+    // max-width), so each date cell sat in a wider box than the value
+    // cell below it despite both rows sharing the same 4px column-gap,
+    // reading as a bigger gap between dates than between weights even
+    // though the actual gap property was identical.
+    min-width: 82px;
+    max-width: 82px;
+    width: 82px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     display: block;
   }
 }

@@ -155,6 +155,7 @@ const initialState = {
             legs: 'Legs',
             abs: 'Abs',
             complete: 'Complete',
+            datePlaceholder: 'mm/dd/yyyy',
             aerobic: 'Aerobic',
             anaerobic: 'Anaerobic',
             crossfit: 'Crossfit',

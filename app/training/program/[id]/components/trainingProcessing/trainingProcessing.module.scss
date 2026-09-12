@@ -1,25 +1,19 @@
 .process {
-  // Was 100px -- widened so the date input below (needed real room for
-  // iOS's native date control to render at all, see its own comment)
-  // actually fits inside this column instead of overflowing it. An
-  // overflowing child inflated this flex item's own effective width in
-  // `.detail__content` (the same `min-width: auto` issue `trainingHistory`
-  // needed `min-width: 0` for), pushing the *entire* page into horizontal
-  // scroll -- confirmed live on iPhone, not just a cosmetic overflow.
-  // Narrowing this is a real vs. real tradeoff, not a Chrome-vs-Safari one
-  // -- Chrome's own date control renders fine well below the actual iOS
-  // threshold, so it can't be used to find that threshold. Confirmed live
-  // on iPhone so far: 100px blank, 120px still blank, 140px shows the
-  // placeholder correctly -- 140px is the narrowest value actually known
-  // to work, don't go below it without a fresh iPhone screenshot.
-  max-width: 140px;
-  // Not `140px` like the other two -- this is the same flex-item
-  // `min-width: auto` gotcha `trainingHistory` needed `min-width: 0` for,
-  // guarding against any future child here that's wider than 140px (a
-  // longer translated label, say) inflating the whole page again instead
-  // of just clipping/wrapping within this column.
+  // Back down to 120px (originally 100px, widened in stages up to 150px
+  // while the date input below was still a plain native <input>, which
+  // needed real room -- iOS Safari doesn't shrink or wrap that control's
+  // own text/icon to fit a narrow box, it just renders blank -- confirmed
+  // live at 100/120px, only 140px+ worked). The date field is now a
+  // borrowed-native-input-plus-custom-label instead (see `.dateField`
+  // below), so the visible width no longer depends on iOS's own internal
+  // minimum, and this can shrink again.
+  max-width: 120px;
+  // This is the same flex-item `min-width: auto` gotcha `trainingHistory`
+  // needed `min-width: 0` for, guarding against any future child here
+  // wider than 120px (a longer translated label, say) inflating the whole
+  // page again instead of just clipping/wrapping within this column.
   min-width: 0;
-  width: 140px;
+  width: 120px;
 
   input {
     height: 24px;
@@ -30,22 +24,25 @@
     padding-left: 4px;
     // iOS Safari auto-zooms the whole page on focus for any input with a
     // computed font-size under 16px -- these fields (weight/reps, and the
-    // date input above) are tapped constantly while logging a workout, so
-    // that zoom-then-scroll-back dance on every tap was the actual bug
-    // being fixed here, not just a cosmetic size choice.
+    // date input) are tapped constantly while logging a workout, so that
+    // zoom-then-scroll-back dance on every tap was the actual bug being
+    // fixed here, not just a cosmetic size choice.
     font-size: 16px;
   }
 
   &__date {
-    margin-bottom: 8px;
-    height: 30px !important;
-    // A native date input at 16px needs real room for every digit of
-    // "mm/dd/yyyy" or it renders with the value/placeholder clipped away
-    // entirely, as seen live on iOS Safari (Chrome's own date control is
-    // more forgiving about a tighter width, which is why this wasn't
-    // caught there). Inherits `.process input`'s `width: 100%` -- now of
-    // the widened 150px column above, rather than overriding its own width
-    // and overflowing that column the way the first attempt at this did.
+    // Fills `.dateField` completely and stays a real, focusable, tappable
+    // input (still opens the native picker, still holds the actual value)
+    // -- just invisible, so its own internal rendering minimums (the
+    // whole reason this needed rework) no longer matter. `!important`
+    // beats `.process input`'s own `height`/`width` for the same reason
+    // the old version needed it.
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0;
+    cursor: pointer;
   }
 
   ul {
@@ -53,6 +50,26 @@
     flex-direction: column;
     row-gap: 8px;
     margin-bottom: 16px;
+  }
+}
+
+.dateField {
+  position: relative;
+  height: 30px;
+  margin-bottom: 8px;
+
+  &__label {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-left: 4px;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
   }
 }
 

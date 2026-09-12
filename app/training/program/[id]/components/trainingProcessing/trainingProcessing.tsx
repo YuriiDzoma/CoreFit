@@ -33,6 +33,18 @@ function sanitizeWeightRepsValue(text: string): string {
         .replace(/[^0-9./]/g, '');
 }
 
+// Matches TrainingHistory's own date formatting (`trainingHistory.tsx`) --
+// always uk-UA numeric, regardless of the active UI language, for the same
+// reason that one is: a consistent short date shape everywhere on this
+// page, not a per-language format.
+function formatDateValue(isoDate: string): string {
+    return new Date(isoDate).toLocaleDateString('uk-UA', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+    });
+}
+
 const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: ProgramDaysListTypes) => {
     const { training } = useAppSelector(getText);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
@@ -88,12 +100,51 @@ const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: Pro
         <div className={styles.process}>
             {program.days.map((day, index) => (
                 <ul key={index}>
-                    <input
-                        type="date"
-                        className={styles.process__date}
-                        value={dates[index] || ''}
-                        onChange={(e) => setDates((prev) => ({ ...prev, [index]: e.target.value }))}
-                    />
+                    {/* iOS Safari's native date control renders blank below
+                        ~140px -- doesn't shrink or wrap its own text/icon
+                        to fit a narrower box, it just stops drawing them.
+                        The input itself stays real and fully interactive
+                        (still holds the actual value/focus) but invisible;
+                        this label renders our own compact text over it
+                        instead, so the visible width is no longer bounded
+                        by whatever iOS needs internally. The label is a
+                        normal (not pointer-events: none) click target
+                        itself, calling showPicker() on the real input via
+                        this wrapper's onClick -- a native date input only
+                        opens its own picker automatically when the click
+                        lands on its small calendar icon specifically
+                        (clicking the text/segment area just focuses a
+                        segment for typing), and since the whole visible
+                        area here is our label rather than the input's real
+                        icon, forcing showPicker() ourselves is what makes a
+                        tap anywhere in the field open it. */}
+                    <div
+                        className={styles.dateField}
+                        onClick={(e) => {
+                            const input = e.currentTarget.querySelector('input[type="date"]');
+                            if (!(input instanceof HTMLInputElement)) return;
+                            try {
+                                input.showPicker();
+                            } catch {
+                                // showPicker() can refuse (e.g. a browser
+                                // that doesn't support it, or one stricter
+                                // about what counts as a user gesture) --
+                                // falling back to focus still beats a
+                                // thrown error breaking the click entirely.
+                                input.focus();
+                            }
+                        }}
+                    >
+                        <input
+                            type="date"
+                            className={styles.process__date}
+                            value={dates[index] || ''}
+                            onChange={(e) => setDates((prev) => ({ ...prev, [index]: e.target.value }))}
+                        />
+                        <span className={styles.dateField__label}>
+                            {dates[index] ? formatDateValue(dates[index]) : training.datePlaceholder}
+                        </span>
+                    </div>
 
                     {day.exercises.map((exercise, idx) => (
                         <li
