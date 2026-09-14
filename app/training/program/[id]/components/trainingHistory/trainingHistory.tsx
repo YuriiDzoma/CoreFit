@@ -46,7 +46,6 @@ const TrainingHistory: React.FC<Props> = ({
         <div
             ref={containerRef}
             className={styles.trainingHistory}
-            style={activeTab === 1 ? {rowGap: '38px'} : undefined}
         >
             {program.days.map((day) => {
                 const records = history[day.id] || [];
@@ -54,10 +53,7 @@ const TrainingHistory: React.FC<Props> = ({
                 return (
                     <div key={day.id} className={styles.historyBlock}>
                         <ul className={styles.exerciseRows}>
-                            <div
-                                className={styles.dateRow}
-                                style={activeTab === 1 ? {height: '32px'} : undefined}
-                            >
+                            <div className={styles.dateRow}>
                                 {records.length > 0 ? (
                                     records.map((record, index) => (
                                         <span

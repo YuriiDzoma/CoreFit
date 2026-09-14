@@ -14,6 +14,26 @@
   overflow-x: hidden;
   position: relative;
 
+  // Same nested-scroll-region bug `training.module.scss`/`home.module.scss`
+  // already document and fix at this exact breakpoint: `.detail`'s own
+  // fixed height + `overflow-y: auto` above makes it a second, independent
+  // scroll region nested inside AppShell's own already-scrolling outer
+  // `.content` -- content could only ever scroll up to *this* box's own
+  // bottom edge, never past it, which reads as a hard clip against the
+  // floating Header/bottom nav instead of scrolling behind them the way
+  // every other page does. Handing scrolling back to that single outer
+  // region at mobile width fixes it. `overflow-x: hidden` above is left
+  // alone (not reset to `visible`) -- its own comment explains why it
+  // needs to stay a hard clip regardless of how vertical scrolling works;
+  // per the CSS overflow spec, pairing it with `overflow-y: visible` here
+  // computes the latter to `auto` rather than truly `visible`, but with no
+  // fixed height left for it to clip against, that's a no-op in practice.
+  @media only screen and (max-width: 768px) {
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
+
   &__content {
     display: flex;
     justify-content: space-between;
@@ -60,7 +80,12 @@
 .programDays {
   display: flex;
   flex-direction: column;
-  row-gap: 38px;
+  // Matches `.trainingHistory`'s own row-gap and `.process ul`'s
+  // margin-bottom exactly (see both of their own comments) -- all three
+  // sibling columns' per-day content is tuned to the same total height,
+  // so their inter-day gap has to move in lockstep too, or the extra
+  // room reopens the exact drift Sprint 108 fixed.
+  row-gap: 54px;
 
   h3 {
     margin-bottom: 8px;

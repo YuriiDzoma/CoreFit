@@ -45,6 +45,20 @@
     display: flex;
     flex-direction: column;
     row-gap: 8px;
+    // Unlike `.programDays`/`.trainingHistory`, this container has no
+    // row-gap of its own between separate days' `<ul>`s -- this `<ul>`'s
+    // own content (date field + every exercise row + the Complete button)
+    // is already as tall as one of those columns' entire day-block *plus*
+    // their own inter-day gap combined, so this margin isn't "the gap
+    // between days" on its own the way it looks; it's the delta on top of
+    // that baseline. Has to move in lockstep with `.programDays`'s and
+    // `.trainingHistory`'s own row-gap (currently 54px) -- this was 0 for
+    // a while (Sprint 108, to kill a growing day-to-day drift) until a
+    // gap was wanted again between the Complete button and the next day's
+    // date field; the drift only stays fixed as long as all three
+    // columns' *change* from their own tuned baseline is identical, which
+    // is why this is 16 now (54 - 38, the same delta added to the other
+    // two), not just "16" picked on its own.
     margin-bottom: 16px;
   }
 }

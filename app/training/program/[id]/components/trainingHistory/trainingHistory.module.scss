@@ -1,7 +1,13 @@
 .trainingHistory {
   display: flex;
   flex-direction: column;
-  row-gap: 40px;
+  // Matches `.programDays`'s own row-gap exactly -- together with
+  // `.dateRow`'s height below, this is what keeps every day's rows
+  // aligned row-for-row with `ProgramDaysList`'s identical `h3`/`li`
+  // structure, confirmed by measuring both columns' `getBoundingClientRect()`
+  // tops live: any mismatch here doesn't average out, it very visibly
+  // compounds by that exact pixel difference on every subsequent day.
+  row-gap: 54px;
   // The 120px here matches `.process`'s own explicit width (the third
   // column) so the three columns together fit exactly one viewport width.
   max-width: calc(100vw - 30% - 120px);
@@ -16,7 +22,11 @@
 }
 
 .dateRow {
-  height: 30px;
+  // Matches `.programDays h3`'s own height(30) + margin-bottom(8) = 38px
+  // total exactly (32 + 6 here) -- previously 30px, which combined with
+  // this same 6px margin fell 2px short of `h3`'s total, offsetting every
+  // row below it in every day by that same 2px.
+  height: 32px;
   margin-bottom: 6px;
   display: flex;
   // The date `<input>` alongside this row centers its own text vertically
