@@ -158,8 +158,6 @@ const initialState = {
             datePlaceholder: 'mm/dd/yyyy',
             programViewIcons: 'Icons view',
             programViewText: 'Text view',
-            rotateScreen: 'Rotate screen',
-            rotateHint: 'Please rotate your phone manually',
             aerobic: 'Aerobic',
             anaerobic: 'Anaerobic',
             crossfit: 'Crossfit',
