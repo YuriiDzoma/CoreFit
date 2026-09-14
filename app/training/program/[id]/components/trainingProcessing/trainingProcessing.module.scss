@@ -8,11 +8,7 @@
   // below), so the visible width no longer depends on iOS's own internal
   // minimum, and this can shrink again.
   max-width: 120px;
-  // This is the same flex-item `min-width: auto` gotcha `trainingHistory`
-  // needed `min-width: 0` for, guarding against any future child here
-  // wider than 120px (a longer translated label, say) inflating the whole
-  // page again instead of just clipping/wrapping within this column.
-  min-width: 0;
+  min-width: 120px;
   width: 120px;
 
   input {

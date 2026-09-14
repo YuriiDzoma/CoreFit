@@ -12,7 +12,6 @@
   // hard backstop so the same class of bug can't do that again: any
   // future overflow here gets clipped, not turned into page-wide scroll.
   overflow-x: hidden;
-  padding-right: 8px;
   position: relative;
 
   &__content {
@@ -51,7 +50,7 @@
 }
 
 .programDays:has(span) {
-  max-width: 38%;
+  max-width: 27%;
 }
 
 .programDays:has(img) {
