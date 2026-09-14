@@ -133,10 +133,21 @@
   }
 }
 
+// Wraps `.tabBox` and the rotate-hint toast below it -- kept as a
+// separate element from `.tabBox` itself so the hint's margin doesn't
+// disturb the tab row's own `margin-bottom` spacing to the days list.
+.tabBoxWrap {
+  margin-bottom: 16px;
+}
+
 .tabBox {
   display: flex;
-  overflow: hidden;
-  margin-bottom: 16px;
+  // Not `overflow: hidden` -- each `.tab` already sets its own corner
+  // radius explicitly (`:first-child`/`:last-child` below), it was never
+  // relied on for that; keeping it visible instead lets the rotate
+  // button's hint bubble (`.rotateHint`, absolutely positioned within its
+  // own `.tab`) actually show below this row instead of being clipped.
+  overflow: visible;
 }
 
 .tab {
@@ -180,6 +191,70 @@
 .tab:has(input:checked) p {
   background-color: var(--border-color);
   color: #fff;
+}
+
+// The rotate button isn't a radio/density option -- there's no persisted
+// "checked" state for it, it just fires once per tap -- so it's a plain
+// `<button>` rather than the `p` + hidden-radio pattern the other two
+// tabs use, matching their exact sizing instead of reusing `p` directly.
+.rotateButton {
+  cursor: pointer;
+  padding: 8px 0;
+  transition: all .2s;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:active {
+    background-color: var(--border-color);
+    color: #fff;
+  }
+}
+
+.rotateHint {
+  // Anchored to `.tab` (already `position: relative`), not inline in the
+  // page flow -- a plain text line easily read as "nothing happened" when
+  // it wasn't tied visually to the button that was actually pressed.
+  //
+  // Anchored from the LEFT, not the right: this is the third/last tab in
+  // a narrow ~150px-wide row that sits right at `.detail`'s own left edge
+  // (see `.detail`'s `overflow-x: hidden` above). A 180px bubble anchored
+  // `right: 0` here spills past `.detail`'s left boundary and gets
+  // silently clipped -- invisible with no console error, which is exactly
+  // what made this bug look like "the button does nothing". Anchoring
+  // left instead grows the bubble rightward into the wide open space
+  // beside the tab row, which actually exists.
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 5;
+  width: max-content;
+  max-width: 180px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background-color: var(--elevated-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--text-color);
+  text-align: center;
+
+  // A small triangle pointing back up at the button, same
+  // border/background pair as the bubble so it reads as one shape.
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 14px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--elevated-bg);
+    border-top: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
+    transform: rotate(45deg) translateY(4px);
+  }
 }
 
 .closer {

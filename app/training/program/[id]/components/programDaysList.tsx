@@ -19,19 +19,6 @@ const ProgramDaysList = ({ program, activeTab }: ProgramDaysListTypes) => {
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
     const [loading, setLoading] = useState<boolean>(true);
 
-    const handleView = (value: number) => {
-        switch (value) {
-            case 1:
-                return styles.firstLevel;
-            case 2:
-                return styles.secondLevel;
-            case 3:
-                return styles.thirdLevel;
-            default:
-                return '';
-        }
-    };
-
     useEffect(() => {
         const load = async () => {
             const ids = [...new Set(program.days.flatMap((d) => d.exercises.map(e => e.id)))];
@@ -56,15 +43,15 @@ const ProgramDaysList = ({ program, activeTab }: ProgramDaysListTypes) => {
                     {day.exercises.map((exercise, idx) => {
                         const ex = exerciseMap[exercise.id];
                         return (
-                            <li key={exercise.programExerciseId} title={ex?.name || exercise.id} className={handleView(activeTab)}>
-                                {activeTab === 1 && (
+                            <li key={exercise.programExerciseId} title={ex?.name || exercise.id}>
+                                {activeTab === 1 ? (
                                     <div>{idx + 1}. <img src={ex?.image} alt={ex?.name} width={50} height={50} /></div>
-                                )}
-                                {activeTab === 2 && (
+                                ) : (
+                                    // Anything other than the icon view (2, or a
+                                    // legacy-persisted 3 from before the density
+                                    // picker was narrowed to two options) renders
+                                    // as text -- there's no third variant anymore.
                                     <span>{idx + 1}. {ex?.name || exercise.id}</span>
-                                )}
-                                {activeTab === 3 && (
-                                    <p>{idx + 1}. {ex?.name || exercise.id}</p>
                                 )}
                             </li>
                         );
