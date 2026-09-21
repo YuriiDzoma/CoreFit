@@ -55,11 +55,24 @@
     // `.trainingHistory`'s own row-gap (currently 54px) -- this was 0 for
     // a while (Sprint 108, to kill a growing day-to-day drift) until a
     // gap was wanted again between the Complete button and the next day's
-    // date field; the drift only stays fixed as long as all three
-    // columns' *change* from their own tuned baseline is identical, which
-    // is why this is 16 now (54 - 38, the same delta added to the other
-    // two), not just "16" picked on its own.
-    margin-bottom: 16px;
+    // date field.
+    //
+    // 16 -> 32: `.valueRow` gained an explicit `height: 20px` (see its own
+    // comment) to fix a *within*-day row drift against `.programDays`/
+    // `.trainingHistory`. That shortened this `<ul>`'s own per-exercise-row
+    // footprint from 24+8=32px to 20+8=28px -- the same 28px the other two
+    // columns' rows already use, so per-exercise-row terms now cancel
+    // exactly regardless of how many exercises a day has. What's left is a
+    // flat, day-length-independent 16px shortfall in this `<ul>`'s total
+    // height relative to a `.programDays`/`.trainingHistory` day-block (do
+    // the arithmetic: 68+N*28+16 here vs 100+N*28 there, for any N) --
+    // recovered by adding exactly that back here, once, rather than
+    // re-deriving a new "N-exercise-day-tuned" constant the way the old
+    // 16px happened to be (it only canceled by coincidence at N=4, this
+    // project's test days at the time; the days-to-day drift for any other
+    // N was already latent, just harder to notice next to the within-day
+    // drift this same round of fixes addressed first).
+    margin-bottom: 32px;
   }
 }
 
@@ -84,6 +97,18 @@
 }
 
 .valueRow {
+  // Matches `.programDays li`'s and `.trainingHistory .exerciseRow`'s own
+  // height(20px) exactly -- without this, the row sized itself to its
+  // tallest child instead (the 24px `.process input` below), 4px taller
+  // than the other two columns' identical-looking rows. Same `row-gap: 8px`
+  // in all three `ul`s meant that 4px difference compounded on every
+  // subsequent exercise row (day 2's 3rd/4th rows visibly drifting below
+  // their `.programDays`/`.trainingHistory` counterparts), the same failure
+  // shape Sprint 108 already fixed once for a different pair of columns.
+  // The input itself is left at 24px (unchanged, centered via `align-items`
+  // below) rather than shrunk to fit -- `.bigField` already establishes the
+  // precedent that the input doesn't need to equal the row's own height.
+  height: 20px;
   display: flex;
   align-items: center;
   column-gap: 8px;
