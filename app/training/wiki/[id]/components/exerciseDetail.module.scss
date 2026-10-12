@@ -3,6 +3,23 @@
   max-height: calc(100vh - 150px);
   overflow-y: auto;
 
+  // Same nested-scroll-region bug training.module.scss/home.module.scss/
+  // programDetail.module.scss already document and fix for their own
+  // wrappers at this exact breakpoint: this element's own fixed height +
+  // overflow-y:auto makes it a *second* independent scroll region nested
+  // inside training/layout.tsx's `.content` (already handed back to
+  // AppShell's own outer scroll at this width) -- the page could only
+  // ever scroll to this element's own bottom edge, never past it into the
+  // space TrainingMenu's floating pill bar needs, reading as a hard clip
+  // instead of scrolling behind it like every other page does. `.content`
+  // already reserves that bottom clearance (`padding-bottom: 56px`), so
+  // no extra padding is needed here once this stops clipping on its own.
+  @media only screen and (max-width: 768px) {
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
+
   &__info {
     display: flex;
     flex-direction: column;
