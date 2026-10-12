@@ -292,6 +292,47 @@ export const fetchAllTrainingHistories = async () => {
     return data;
 };
 
+export const WALL_PAGE_SIZE = 10;
+
+// Same shape as fetchAllTrainingHistories (the cross-user Home feed), scoped
+// to one user's own completed workouts -- backs the profile page's "Wall"
+// section. Paginated via offset/.range(), WALL_PAGE_SIZE at a time --
+// matches getExerciseLeaderboards' (lib/recordsData.ts) own offset-param
+// shape, which the Records page's identical "Show more" button already
+// relies on: the caller pages by re-requesting with offset: <entries
+// fetched so far> and treats a page shorter than WALL_PAGE_SIZE as "no
+// more". program_days/programs aren't selected here, unlike
+// fetchAllTrainingHistories -- the Wall's own rendering (trainingHistories.tsx's
+// card) never reads them either, so there's nothing to keep them for.
+export const fetchTrainingHistoriesForUser = async (userId: string, offset = 0) => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('training_history')
+        .select(`
+            id,
+            date,
+            values,
+            created_at,
+            profiles (
+                id,
+                username,
+                avatar_url
+            )
+        `)
+        .eq('user_id', userId)
+        .order('date', { ascending: false })
+        .order('created_at', { ascending: false })
+        .range(offset, offset + WALL_PAGE_SIZE - 1);
+
+    if (error) {
+        console.error('Error fetching training histories for user:', error.message);
+        return [];
+    }
+
+    return data;
+};
+
 export const fetchDrafts = async (
     userId: string,
     programExerciseIds: string[]

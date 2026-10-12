@@ -190,6 +190,55 @@ export function ProfileFriendsSkeleton() {
     )
 }
 
+// Same `.profileFriends` shape/classes as ProfileFriendsSkeleton -- the
+// real TrainerClients.tsx reuses Friends.tsx's own `.friends`/
+// `.friends__link` classes too (same header+avatar-grid anatomy), just a
+// different label and no "see all" link, so this skips only the
+// `&__link` span. Was previously `fallback={null}` on TrainerClientsServer's
+// Suspense boundary in page.tsx -- the trainer/client block popped in
+// with no placeholder at all, unlike every other section on this page.
+export function ProfileTrainerSkeleton() {
+    return (
+        <div className={styles.profileFriends}>
+            <div className={styles.profileFriends__header}>
+                <span className={styles.profileFriends__title}/>
+            </div>
+            <ul>
+                <li>
+                    <span className={styles.profileFriends__img}/>
+                    <span className={styles.profileFriends__name}/>
+                </li>
+                <li>
+                    <span className={styles.profileFriends__img}/>
+                    <span className={styles.profileFriends__name}/>
+                </li>
+                <li>
+                    <span className={styles.profileFriends__img}/>
+                    <span className={styles.profileFriends__name}/>
+                </li>
+                <li>
+                    <span className={styles.profileFriends__img}/>
+                    <span className={styles.profileFriends__name}/>
+                </li>
+            </ul>
+        </div>
+    )
+}
+
+// UserWall.tsx's own loading state already renders this same
+// title-bar + NewsSkeleton pair once it mounts client-side; this export
+// exists only so the route-level `loading.tsx` -- which renders before
+// UserWall ever mounts -- can preview the same shape instead of leaving a
+// gap where the Wall section will eventually appear.
+export function ProfileWallSkeleton() {
+    return (
+        <div className={styles.profileFriends}>
+            <span className={styles.profileFriends__title}/>
+            <NewsSkeleton/>
+        </div>
+    )
+}
+
 // The real title renders unconditionally in Wiki.tsx now (not skipped
 // during loading), so this only covers what's actually still hidden
 // while loading: the search row, muscle-group tabs, and exercise list.

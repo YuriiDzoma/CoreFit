@@ -12,6 +12,7 @@ const initialState = {
             complexes: 'Complexes',
             programs: 'Programs',
             registered: 'Registered:',
+            wall: 'Wall',
             viewPhoto: 'View photo',
             changePhoto: 'Change photo',
             deletePhoto: 'Delete photo',

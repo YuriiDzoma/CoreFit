@@ -3,7 +3,9 @@ import { Suspense } from "react";
 import styles from "../components/profiles.module.scss";
 import ProfileClient from "../components/Profile.client";
 import FriendsServer from "../components/Friends.server";
+import UserWall from "../components/UserWall";
 import { getProfileById } from "@/lib/data/user";
+import { ProfileFriendsSkeleton } from "@/ui/skeleton/skeleton";
 
 export const dynamic = "force-dynamic";
 
@@ -18,9 +20,10 @@ export default async function OtherProfile({ params }: PageProps) {
     return (
         <div className={styles.container}>
             <ProfileClient profile={profile} />
-            <Suspense fallback={null}>
+            <Suspense fallback={<ProfileFriendsSkeleton />}>
                 <FriendsServer id={profile.id} />
             </Suspense>
+            <UserWall userId={profile.id} />
         </div>
     );
 }
