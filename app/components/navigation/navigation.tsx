@@ -9,6 +9,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { useAppSelector } from "../../hooks/redux";
 import { getUserId, getText } from "@/store/selectors";
 import { useFriendRequestStore } from "@/store/useFriendRequestStore";
+import { useMessagesStore, selectUnreadCount } from "@/store/useMessagesStore";
 import { fetchUserProfileById } from "../../../lib/userData";
 
 const MOBILE_BREAKPOINT = 768;
@@ -61,6 +62,8 @@ const Navigation = () => {
 const FloatingNavigation = ({ pathname }: { pathname: string }) => {
     const userId = useAppSelector(getUserId);
     const { requests } = useFriendRequestStore();
+    const { conversations, readMarkers } = useMessagesStore();
+    const unreadMessages = userId ? selectUnreadCount(conversations, readMarkers, userId) : 0;
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
     useEffect(() => {
@@ -124,14 +127,18 @@ const FloatingNavigation = ({ pathname }: { pathname: string }) => {
 
                 <Link href="/messages" className={styles.floatingItem}>
                     <span className={isMessagesActive ? styles.floatingPillActive : styles.floatingPill} />
-                    {/* Not yet built — stays at the same weight every
-                        *inactive* icon already has (plain `.icon`, never
-                        `.iconActive`), rather than a separate, extra-muted
-                        tone that read as a thinner icon family.
-                        MessageSquareText (internal text lines) matches the
-                        others' optical density; MessageCircle's bare
-                        outline didn't. */}
-                    <MessageSquareText size={ICON_SIZE} strokeWidth={2} className={styles.icon} />
+                    <span className={styles.badgeAnchor}>
+                        <MessageSquareText
+                            size={ICON_SIZE}
+                            strokeWidth={2}
+                            className={isMessagesActive ? styles.iconActive : styles.icon}
+                        />
+                        {unreadMessages > 0 && (
+                            <span className={styles.badge}>
+                                {unreadMessages > 99 ? '99+' : unreadMessages}
+                            </span>
+                        )}
+                    </span>
                 </Link>
 
                 <Link href="/profile" className={styles.floatingItem}>

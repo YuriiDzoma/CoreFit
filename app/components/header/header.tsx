@@ -10,6 +10,8 @@ import Menu from './menu';
 import HeaderNavigation from './headerNavigation';
 
 import {useFriendRequestStore} from '@/store/useFriendRequestStore';
+import {useMessagesStore} from '@/store/useMessagesStore';
+import {registerWebPush} from '@/lib/pushSubscription';
 import React, {useEffect} from 'react';
 import {useRouter} from "next/navigation";
 
@@ -25,6 +27,7 @@ const Header = ({session}: { session: Session | null }) => {
     // realtime source; `useFriendRequestStore`'s `requests` state is now
     // read from `Navigation`/`FloatingNavigation` instead of here.
     const {subscribeToRealtime} = useFriendRequestStore();
+    const subscribeToMessages = useMessagesStore((state) => state.subscribeToRealtime);
 
     const onBack = () => {
         router.back()
@@ -33,6 +36,18 @@ const Header = ({session}: { session: Session | null }) => {
     useEffect(() => {
         if (userId) {
             subscribeToRealtime(userId);
+        }
+    }, [userId]);
+
+    // Same app-wide "open on sign-in" lifecycle as the friend-requests
+    // channel above -- the Messages badge and conversation-list preview
+    // need to stay live everywhere, not just while a messages page happens
+    // to be mounted. Web Push registration rides along here too (once per
+    // sign-in is enough; it's a no-op if already subscribed).
+    useEffect(() => {
+        if (userId) {
+            subscribeToMessages(userId);
+            registerWebPush(userId);
         }
     }, [userId]);
 

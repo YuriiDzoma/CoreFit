@@ -1,0 +1,63 @@
+.row {
+  display: flex;
+  padding: 0 4px;
+}
+
+.rowOwn {
+  justify-content: flex-end;
+}
+
+.rowOther {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 78%;
+  border-radius: 16px;
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 2px;
+}
+
+// A flattened corner on the side nearest the screen edge -- the one small
+// "tail" cue that reads as a bubble rather than a plain rounded
+// rectangle, matching the mobile bubble's identical treatment.
+.bubbleOwn {
+  background-color: var(--border-color);
+  border-bottom-right-radius: 2px;
+
+  .body {
+    color: #fff;
+  }
+
+  .time {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.bubbleOther {
+  background-color: var(--elevated-bg);
+  border-bottom-left-radius: 2px;
+
+  .body {
+    color: var(--text-color);
+  }
+
+  .time {
+    color: var(--title-color);
+    opacity: 0.7;
+  }
+}
+
+.body {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 15px;
+}
+
+.time {
+  align-self: flex-end;
+  font-size: 11px;
+}

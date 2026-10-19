@@ -1,0 +1,155 @@
+.thread {
+  display: flex;
+  flex-direction: column;
+  // Desktop: an ordinary block sized by `.content`'s own flow (that
+  // wrapper isn't a scroll container at this width -- see app.module.scss
+  // -- so the whole page scrolls as one unit there, same as every other
+  // page; `.messagesList`'s own `overflow-y: auto` below still caps it to
+  // a sane height rather than stretching the page indefinitely).
+  height: calc(100vh - 150px);
+}
+
+// Mobile: `.content` (app.module.scss, same breakpoint) becomes its own
+// `height: 100vh; overflow: auto` scroll container, floating Header/Nav
+// clearance coming entirely from its padding -- `.thread` nested inside
+// that at a merely-approximate height created exactly the nested-scroll-
+// region bug this codebase has hit (and fixed) several times before
+// (training.module.scss, programDetail's `.detail`, exerciseDetail's own
+// `.exerciseDetail`): `.content` itself was the thing actually scrolling,
+// carrying the contact row and input bar along with it instead of only
+// `.messagesList` moving. Those earlier fixes all handed scrolling back
+// to `.content` (correct when a page has no reason to pin anything) --
+// this page is the opposite case, it specifically needs the contact row
+// and input bar pinned while only the messages between them scroll, so
+// the fix here is to take `.thread` out of `.content`'s flow/scroll
+// entirely: `position: fixed`, sized by the exact same top/bottom insets
+// `.content`'s own padding already reserves for Header/Navigation (not a
+// guessed `150px`), the same technique Header/Navigation themselves use
+// for their own floating position.
+@media only screen and (max-width: 769px) {
+  .thread {
+    position: fixed;
+    top: calc(80px + env(safe-area-inset-top));
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    left: 0;
+    right: 0;
+    height: auto;
+    padding: 0 8px;
+  }
+}
+
+.contactRow {
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.name {
+  margin: 0;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.online {
+  margin: 0;
+  font-size: 13px;
+  color: var(--success);
+}
+
+.lastSeen {
+  margin: 0;
+  font-size: 13px;
+  color: var(--title-color);
+  opacity: 0.7;
+}
+
+.messagesList {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  // Pins messages to the bottom when a short conversation doesn't fill
+  // this area (the default `flex-start` otherwise left them stacked at
+  // the *top*, with a growing gap of empty space above the input bar --
+  // wrong for every chat app's own convention, where the newest message
+  // always sits just above the input regardless of how few messages
+  // exist). Once there's enough content to actually overflow, `flex-end`
+  // keeps rendering top-to-bottom in order and clips/scrolls from the top
+  // as normal -- it only changes how leftover space is distributed, not
+  // message order, so this is a no-op once the thread is long enough to
+  // scroll on its own.
+  justify-content: flex-end;
+  row-gap: 8px;
+  padding: 16px 0;
+}
+
+.empty {
+  margin: auto;
+  color: var(--title-color);
+  opacity: 0.7;
+}
+
+.divider {
+  text-align: center;
+  color: var(--title-color);
+  opacity: 0.7;
+  font-size: 13px;
+  margin: 8px 0;
+}
+
+.notFound {
+  color: var(--title-color);
+  text-align: center;
+  padding: 32px 0;
+}
+
+.inputRow {
+  display: flex;
+  align-items: flex-end;
+  column-gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  max-height: 120px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background-color: var(--button-bg);
+  color: var(--text-color);
+  font-size: 15px;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+}
+
+.sendButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}

@@ -2,6 +2,11 @@
 const withPWA = require('next-pwa')({
     dest: 'public',
     disable: process.env.NODE_ENV === 'development',
+    // Pulls public/push-handlers.js's `push`/`notificationclick` listeners
+    // into the generated service worker alongside its existing (unedited)
+    // caching routes -- see that file's own comment for why this is an
+    // `importScripts` addition rather than a custom InjectManifest source.
+    importScripts: ['/push-handlers.js'],
 });
 
 // Derived from the same env var every Supabase client call already uses,
