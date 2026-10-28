@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styles from './create.module.scss';
 import { useAppSelector } from '@/app/hooks/redux';
 import { getLanguage, getText } from '@/store/selectors';
-import { fetchExercisesByGroup, fetchExercisesByIds } from '@/lib/trainingData';
+import { exerciseMatchesQuery, fetchExercisesByGroup, fetchExercisesByIds } from '@/lib/trainingData';
 import { exerciseTypes } from '@/types/training';
 import WikiNav from "../../wiki/components/wikiNav";
 import ExercisesList from "./exercisesList";
@@ -88,13 +88,10 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
         return idx >= 0 ? idx + 1 : 0;
     };
 
-    const trimmedQuery = searchQuery.trim().toLowerCase();
+    const trimmedQuery = searchQuery.trim();
     const filteredExercises = useMemo(
-        () =>
-            trimmedQuery
-                ? exercises.filter((exercise) => exercise.name.toLowerCase().includes(trimmedQuery))
-                : exercises,
-        [exercises, trimmedQuery],
+        () => exercises.filter((exercise) => exerciseMatchesQuery(exercise, searchQuery)),
+        [exercises, searchQuery],
     );
 
     return (

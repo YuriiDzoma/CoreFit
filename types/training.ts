@@ -2,6 +2,8 @@ export type exerciseTypes = {
     id: string;
     name: string;
     image: string;
+    // Names in every language, for search only (see exerciseMatchesQuery).
+    searchNames?: string[];
 };
 
 

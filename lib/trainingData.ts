@@ -1,3 +1,4 @@
+import {exerciseTypes} from '@/types/training';
 import {createClient} from '@/utils/supabase/client';
 
 export const getMuscleGroupIdByName = async (group: string): Promise<string | null> => {
@@ -34,9 +35,11 @@ export const fetchExercisesByGroup = async (
     const nameField = fieldMap[lang] ?? fieldMap[fallbackLang];
 
 
+    // Every name column, not just the displayed one -- search matches across
+    // all languages (see exerciseMatchesQuery below).
     let query = supabase
         .from('exercises')
-        .select(`id, ${nameField}, image_url`);
+        .select('id, name_en, name_uk, name_ru, image_url');
 
     if (group !== 'All') {
         const groupId = await getMuscleGroupIdByName(group);
@@ -54,9 +57,26 @@ export const fetchExercisesByGroup = async (
 
     return data.map((exercise: Record<string, any>) => ({
         id: exercise.id,
-        name: exercise[nameField],
+        name: exercise[nameField] ?? exercise.name_en,
         image: exercise.image_url,
+        searchNames: [exercise.name_en, exercise.name_uk, exercise.name_ru].filter(Boolean),
     }));
+};
+
+// Case-insensitive, and folds the spelling variants a user is likely to type
+// differently from how the DB stores them: `ё`->`е`, and the typographic
+// apostrophe the Ukrainian names use (`м’язи`) vs. a plain keyboard `'`.
+const normalizeSearchText = (value: string): string =>
+    value.toLowerCase().replace(/ё/g, 'е').replace(/[’ʼ`]/g, "'");
+
+// Matches against the exercise's name in every language, not just the
+// displayed one -- "Жим Арнольда" is found whether typed in English,
+// Ukrainian or Russian. Mirrors mobile's `exerciseMatchesQuery`.
+export const exerciseMatchesQuery = (exercise: exerciseTypes, query: string): boolean => {
+    const normalizedQuery = normalizeSearchText(query.trim());
+    if (!normalizedQuery) return true;
+    const names = exercise.searchNames?.length ? exercise.searchNames : [exercise.name];
+    return names.some((name) => normalizeSearchText(name).includes(normalizedQuery));
 };
 
 export const fetchExerciseById = async (

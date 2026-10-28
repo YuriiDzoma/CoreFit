@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import WikiNav from "./wikiNav";
 import {useAppSelector} from "../../../hooks/redux";
 import {getLanguage, getText} from "../../../../store/selectors";
-import {fetchExercisesByGroup} from "../../../../lib/trainingData";
+import {exerciseMatchesQuery, fetchExercisesByGroup} from "../../../../lib/trainingData";
 import Preloader from "../../../../ui/preloader/Preloader";
 import Exercise from "./Exercise";
 import {exerciseTypes} from "../../../../types/training";
@@ -49,9 +49,7 @@ export default function Wiki() {
     }
 
     const filteredExercises = useMemo(() => {
-        const trimmedQuery = searchQuery.trim().toLowerCase();
-        if (!trimmedQuery) return exercises;
-        return exercises.filter((item) => item.name.toLowerCase().includes(trimmedQuery));
+        return exercises.filter((item) => exerciseMatchesQuery(item, searchQuery));
     }, [exercises, searchQuery]);
 
     return (
