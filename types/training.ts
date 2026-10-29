@@ -16,12 +16,17 @@ export type ProgramType = {
     created_at: string;
 };
 
+// Who can see a program (and the workouts logged into it) -- enforced by
+// RLS (`programs.visibility`, Sprint 127).
+export type ProgramVisibility = 'public' | 'friends' | 'trainer' | 'private';
+
 export interface ProgramFull {
     id: string;
     title: string;
     type: string;
     level: string;
     user_id: string;
+    visibility?: ProgramVisibility;
     days: {
         id: string;
         day_number: number;

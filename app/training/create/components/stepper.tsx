@@ -16,7 +16,7 @@ interface Props {
 const StepperComponent: React.FC<Props> = ({ activeStep, onStepChange }) => {
     const { training } = useAppSelector(getText);
 
-    const steps = [training.name, training.type, training.difficulty, training.days, training.exercises];
+    const steps = [training.basics, training.type, training.difficulty, training.days, training.exercises];
 
     return (
         <div className={styles.stepper}>

@@ -1,4 +1,4 @@
-import {exerciseTypes} from '@/types/training';
+import {exerciseTypes, ProgramVisibility} from '@/types/training';
 import {createClient} from '@/utils/supabase/client';
 
 export const getMuscleGroupIdByName = async (group: string): Promise<string | null> => {
@@ -196,7 +196,8 @@ export const createTrainingProgram = async (
     title: string,
     type: string,
     level: string,
-    days: { dayNumber: number; exercises: { exerciseId: string; sets: number }[] }[]
+    days: { dayNumber: number; exercises: { exerciseId: string; sets: number }[] }[],
+    visibility: ProgramVisibility = 'public'
 ): Promise<string | null> => {
     const supabase = createClient();
 
@@ -208,7 +209,8 @@ export const createTrainingProgram = async (
             title,
             type,
             level,
-            days_count: days.length
+            days_count: days.length,
+            visibility,
         }])
         .select()
         .single();
@@ -554,7 +556,8 @@ export const updateTrainingProgram = async (
     title: string,
     type: string,
     level: string,
-    days: { dayNumber: number; exercises: { exerciseId: string; sets: number }[] }[]
+    days: { dayNumber: number; exercises: { exerciseId: string; sets: number }[] }[],
+    visibility: ProgramVisibility = 'public'
 ): Promise<boolean> => {
     const supabase = createClient();
 
@@ -579,6 +582,7 @@ export const updateTrainingProgram = async (
             level,
             days_count: days.length,
             author_id: existingProgram.author_id, // ✅ зберігаємо автора
+            visibility,
         })
         .eq('id', programId);
 

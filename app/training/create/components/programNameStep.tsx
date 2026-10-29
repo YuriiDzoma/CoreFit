@@ -7,6 +7,7 @@ import {nameOptions} from "../../../../lib/validations";
 import InputBox from "../../../components/inputBox/inputBox";
 import {useAppSelector} from "../../../hooks/redux";
 import {getText} from "../../../../store/selectors";
+import {ProgramVisibility} from "@/types/training";
 
 type formTypes = {
     name: string;
@@ -24,9 +25,14 @@ interface Props {
      * explicitly. */
     onSave?: (titleOverride?: string) => void;
     canSave?: boolean;
+    /** Who can see the program -- omitted for global (Complexes) programs. */
+    visibility?: ProgramVisibility;
+    onVisibilityChange?: (value: ProgramVisibility) => void;
 }
 
-const ProgramNameStep: React.FC<Props> = ({ value, onChange, onNext, onSave, canSave }) => {
+const VISIBILITY_OPTIONS: ProgramVisibility[] = ['public', 'friends', 'trainer', 'private'];
+
+const ProgramNameStep: React.FC<Props> = ({ value, onChange, onNext, onSave, canSave, visibility, onVisibilityChange }) => {
     const { training, base } = useAppSelector(getText);
 
     const {
@@ -65,6 +71,32 @@ const ProgramNameStep: React.FC<Props> = ({ value, onChange, onNext, onSave, can
                 label={''}
                 options={register("name", nameOptions)}
             />
+            {visibility && onVisibilityChange && (
+                <fieldset className={styles.visibility}>
+                    <legend className={styles.create__title}>{training.visibilityTitle}</legend>
+                    {VISIBILITY_OPTIONS.map((option) => {
+                        const key = option[0].toUpperCase() + option.slice(1) as 'Public' | 'Friends' | 'Trainer' | 'Private';
+                        return (
+                            <label
+                                key={option}
+                                className={`${styles.visibility__option} ${visibility === option ? styles.visibility__optionActive : ''}`}
+                            >
+                                <input
+                                    type="radio"
+                                    name="visibility"
+                                    value={option}
+                                    checked={visibility === option}
+                                    onChange={() => onVisibilityChange(option)}
+                                />
+                                <span className={styles.visibility__text}>
+                                    <span className={styles.visibility__label}>{training[`visibility${key}`]}</span>
+                                    <span className={styles.visibility__desc}>{training[`visibility${key}Desc`]}</span>
+                                </span>
+                            </label>
+                        );
+                    })}
+                </fieldset>
+            )}
             <button type='submit' className={'submit'}>
                 <span>{training.next}</span>
             </button>

@@ -306,3 +306,58 @@
 .exerciseItem.active .exerciseText {
   opacity: .4;
 }
+// Program visibility picker on the first ("Basics") step -- radio rows with
+// a label + one-line description, the selected row outlined.
+.visibility {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  legend {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+    min-height: 56px;
+    padding: 8px 12px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background-color: var(--button-bg);
+    cursor: pointer;
+
+    input {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--border-color);
+    }
+  }
+
+  &__optionActive {
+    border-color: var(--border-color);
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2px;
+  }
+
+  &__label {
+    font-weight: 600;
+  }
+
+  &__desc {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+}

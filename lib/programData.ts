@@ -29,6 +29,7 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
             type,
             level,
             user_id,
+            visibility,
             author_id (
                 id,
                 username,
@@ -71,6 +72,7 @@ export const fetchProgramDetail = async (id: string): Promise<ProgramFull | null
         type: data.type,
         level: data.level,
         user_id: data.user_id,
+        visibility: data.visibility,
         author: Array.isArray(data.author_id) ? data.author_id[0] : data.author_id || undefined,
         days: normalizedDays,
     };

@@ -12,7 +12,7 @@ import Preloader from '../../../../ui/preloader/Preloader';
 import {useRouter, useSearchParams} from 'next/navigation';
 import { useAppSelector } from '@/app/hooks/redux';
 import { getUserId, getLanguage, getText } from '@/store/selectors';
-import { ProgramFull } from '@/types/training';
+import { ProgramFull, ProgramVisibility } from '@/types/training';
 import {
     createTrainingProgram,
     updateTrainingProgram,
@@ -48,6 +48,8 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
     const isEdit = Boolean(initialProgram);
 
     const [programName, setProgramName] = useState<string>(initialProgram?.title || '');
+    // New programs are public; editing keeps the program's own setting.
+    const [visibility, setVisibility] = useState<ProgramVisibility>(initialProgram?.visibility ?? 'public');
 
     // A new program starts as anaerobic (strength) -- the common case;
     // editing keeps the program's own type.
@@ -204,7 +206,8 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                 title,
                 programType,
                 level,
-                programDays
+                programDays,
+                visibility
             );
         } else {
             // ✅ створення особистої програми
@@ -213,7 +216,8 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                 title,
                 programType,
                 level,
-                programDays
+                programDays,
+                visibility
             );
         }
 
@@ -245,6 +249,9 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
                 <ProgramNameStep
                     value={programName}
                     onChange={setProgramName}
+                    // Global (Complexes) programs are always public -- no choice there.
+                    visibility={isGlobal ? undefined : visibility}
+                    onVisibilityChange={setVisibility}
                     onNext={handleNext}
                     onSave={isEdit ? handleSave : undefined}
                     canSave={canSaveEarly}
