@@ -151,6 +151,30 @@ export const getAllTrainerLinksOfUser = async (userId: string): Promise<TrainerC
     return data ?? [];
 };
 
+// Whether `trainerId` is `clientId`'s accepted trainer -- gates logging a
+// workout into the client's program (program detail page). Same query as
+// the mobile app's `isAcceptedTrainerOfClient`.
+export const isAcceptedTrainerOfClient = async (
+    trainerId: string,
+    clientId: string,
+): Promise<boolean> => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('trainer_clients')
+        .select('id')
+        .eq('trainer_id', trainerId)
+        .eq('client_id', clientId)
+        .eq('status', 'accepted')
+        .maybeSingle();
+
+    if (error) {
+        console.error('Error checking trainer relationship:', error);
+        return false;
+    }
+
+    return data !== null;
+};
+
 // Backed by a SECURITY DEFINER RPC, not a plain select -- the SELECT RLS
 // policy on trainer_clients only lets a user read relationships they're
 // personally part of, so a profile that isn't the viewer's own would

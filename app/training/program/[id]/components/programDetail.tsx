@@ -23,6 +23,7 @@ import {setProgramViewDensity} from '@/store/account-slice';
 
 import Preloader from '../../../../../ui/preloader/Preloader';
 import GlobalPopup from '../../../../components/globalPopup/globalPopup';
+import {isAcceptedTrainerOfClient} from '../../../../../lib/trainerClientData';
 
 type HistoryRecord = {
     id?: string;
@@ -96,6 +97,26 @@ const ProgramDetail = () => {
     };
 
     const isMyProgram = program?.user_id === currentUserId;
+
+    // Logging a workout (date + weights) is for the program's owner and
+    // their accepted trainer only; the trainer's entries are saved as the
+    // owner's own (see TrainingProcessing's `ownerId`). Everyone else sees
+    // the program and its history read-only.
+    const [isTrainerOfOwner, setIsTrainerOfOwner] = useState<boolean>(false);
+    useEffect(() => {
+        if (!program || !currentUserId || isMyProgram) {
+            setIsTrainerOfOwner(false);
+            return;
+        }
+        let isMounted = true;
+        isAcceptedTrainerOfClient(currentUserId, program.user_id).then((value) => {
+            if (isMounted) setIsTrainerOfOwner(value);
+        });
+        return () => {
+            isMounted = false;
+        };
+    }, [program, currentUserId, isMyProgram]);
+    const canLogWorkout = isMyProgram || isTrainerOfOwner;
 
     const getLevelText = useLevelText();
     const getTypeText = useTypeText();
@@ -265,12 +286,14 @@ const ProgramDetail = () => {
                     history={history}
                 />
 
-                <TrainingProcessing
-                    program={program}
-                    activeTab={activeTab}
-                    isMyProgram={isMyProgram}
-                    onComplete={loadAllHistory}
-                />
+                {canLogWorkout && (
+                    <TrainingProcessing
+                        program={program}
+                        activeTab={activeTab}
+                        ownerId={program.user_id}
+                        onComplete={loadAllHistory}
+                    />
+                )}
             </div>
 
             {isPreloader && <Preloader/>}

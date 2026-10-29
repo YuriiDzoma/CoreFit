@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import styles from './trainingProcessing.module.scss';
 import { ProgramFull } from '../../../../../../types/training';
 import { useForm } from 'react-hook-form';
-import {getText, getUserId} from "../../../../../../store/selectors";
+import {getText} from "../../../../../../store/selectors";
 import {useAppSelector} from "../../../../../hooks/redux";
 import {completeDay, fetchDrafts, saveDraft} from "../../../../../../lib/trainingData";
 import Preloader from "../../../../../../ui/preloader/Preloader";
@@ -13,7 +13,11 @@ interface ProgramDaysListTypes {
     program: ProgramFull;
     activeTab: number;
     onComplete: () => void;
-    isMyProgram: boolean,
+    // The program owner's id. Only rendered for the owner or their accepted
+    // trainer (programDetail.tsx); drafts and the completed workout are
+    // always stored under the owner, so a trainer's entries land in the
+    // client's own history/records/wall and both see the same draft.
+    ownerId: string,
 }
 
 type FormValues = {
@@ -45,10 +49,10 @@ function formatDateValue(isoDate: string): string {
     });
 }
 
-const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: ProgramDaysListTypes) => {
+const TrainingProcessing = ({ program, activeTab, onComplete, ownerId }: ProgramDaysListTypes) => {
     const { training } = useAppSelector(getText);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
-    const userId = useAppSelector(getUserId);
+    const userId = ownerId;
     const { register, handleSubmit, setValue, watch } = useForm<FormValues>();
     const [dates, setDates] = useState<Record<number, string>>({});
     const [submittedDays, setSubmittedDays] = useState<Record<number, boolean>>({});
@@ -170,16 +174,14 @@ const TrainingProcessing = ({ program, activeTab, onComplete, isMyProgram }: Pro
                     ))}
 
                     <div className={styles.processActions}>
-                        {isMyProgram && (
-                            <button
-                                type="button"
-                                className={'button'}
-                                onClick={() => onSubmitDay(index, day.id)}
-                                disabled={submittedDays[index] || !dates[index] || !hasAnyValueForDay(index)}
-                            >
-                                <span>{training.complete}</span>
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            className={'button'}
+                            onClick={() => onSubmitDay(index, day.id)}
+                            disabled={submittedDays[index] || !dates[index] || !hasAnyValueForDay(index)}
+                        >
+                            <span>{training.complete}</span>
+                        </button>
                     </div>
                 </ul>
             ))}
