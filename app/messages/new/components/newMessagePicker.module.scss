@@ -3,6 +3,16 @@
   flex-direction: column;
   row-gap: 16px;
 
+  // Same title placement as every other section: those sit under a
+  // sub-nav whose wrapper adds 8px above the title (social/training/home
+  // `.menu` margin), and the title's own 16px margin is the only gap
+  // below it -- here the column's row-gap already provides that 16px.
+  padding-top: 8px;
+
+  > :global(.pageTitle) {
+    margin-bottom: 0;
+  }
+
   .searchRow {
     display: flex;
     align-items: center;

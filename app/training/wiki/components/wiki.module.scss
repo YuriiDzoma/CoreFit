@@ -5,16 +5,6 @@
   justify-content: space-between;
 }
 
-// The global `.pageTitle` class (`ui/base.scss`, shared by every screen's
-// heading) inherits `font-weight: 400` from base.scss's own heading
-// reset -- the mobile app's title here is medium (500, `ThemedText`'s
-// own default weight, not overridden by its `pageTitle` style). Scoped to
-// this one screen rather than changing the shared global class, which
-// every other screen's heading also uses.
-.title {
-  font-weight: 500;
-}
-
 // Matches the mobile app's own `ExerciseSearchBar` exactly (2px border,
 // 8px radius) rather than `InputBox`'s thinner 1px/4px convention -- this
 // is a direct visual port of that component, not a new web-native field.

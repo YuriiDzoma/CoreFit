@@ -54,7 +54,7 @@ export default function Wiki() {
 
     return (
         <div>
-            <h2 className={`pageTitle ${styles.title}`}>{base.Wiki}</h2>
+            <h2 className="pageTitle">{base.Wiki}</h2>
 
             {!exercises.length ? (
                 <ExerciseListSkeleton />
