@@ -79,6 +79,12 @@
   column-gap: 8px;
   row-gap: 8px;
   align-items: center;
+
+  // Finger-sized: the global `.button` is 28.5px tall here, under the
+  // 44px minimum touch target Apple's HIG recommends.
+  :global(.button) {
+    min-height: 44px;
+  }
 }
 
 // Same `MessageSquareText` glyph as the Messages tab in the bottom nav;
@@ -86,6 +92,7 @@
 .profile__messageBtn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   column-gap: 6px;
 
   svg {

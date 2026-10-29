@@ -127,7 +127,7 @@ export function FriendsListSkeleton() {
 
 // `withActions`: someone else's profile, where a signed-in viewer also gets
 // the `.profile__actions` row ("Write message" + a friend action) under
-// the header -- without it the block grows by that row (36.5px) on load.
+// the header -- without it the block grows by that row (52px) on load.
 export function ProfileSkeleton({ withActions = false }: { withActions?: boolean }) {
     const header = (
         <div className={styles.profile}>
