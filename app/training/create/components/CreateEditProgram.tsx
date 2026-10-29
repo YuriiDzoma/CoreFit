@@ -49,10 +49,12 @@ const CreateEditProgram = ({ initialProgram }: Props) => {
 
     const [programName, setProgramName] = useState<string>(initialProgram?.title || '');
 
+    // A new program starts as anaerobic (strength) -- the common case;
+    // editing keeps the program's own type.
     const initialType: AllowedType | '' =
         initialProgram && allowedTypes.includes(initialProgram.type as AllowedType)
             ? (initialProgram.type as AllowedType)
-            : '';
+            : initialProgram ? '' : 'anaerobic';
 
     const [programType, setProgramType] = useState<AllowedType | ''>(initialType);
 

@@ -69,6 +69,29 @@
   top: 0;
 }
 
+// Read-only view (no TrainingProcessing column: someone else's program,
+// viewer isn't their trainer): the history column's width is otherwise a
+// fixed `100vw - 30% - 120px`, reserving room for the absent input column,
+// so space-between parked it far right with a wide empty gap. Here the
+// exercise names take all the free space and history shrinks to its own
+// date columns (still scrolling sideways past 65%). History is the last
+// child in this mode.
+.detail__content_readOnly {
+  .programDays,
+  .programDays:has(span),
+  .programDays:has(img) {
+    flex: 1 1 auto;
+    max-width: none;
+    min-width: 0;
+  }
+
+  > :last-child {
+    flex: 0 1 auto;
+    width: auto;
+    max-width: 65%;
+  }
+}
+
 .programDays:has(span) {
   max-width: 27%;
 }

@@ -277,7 +277,7 @@ const ProgramDetail = () => {
 
             <ProgramTabs activeTab={activeTab} setActiveTab={setActiveTab}/>
 
-            <div className={styles.detail__content}>
+            <div className={`${styles.detail__content} ${canLogWorkout ? '' : styles.detail__content_readOnly}`}>
                 <ProgramDaysList program={program} activeTab={activeTab}/>
 
                 <TrainingHistory

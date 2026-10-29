@@ -14,11 +14,7 @@ interface ProgramTypeStepProps {
     canSave?: boolean;
 }
 
-const options: { label: string; value: 'aerobic' | 'anaerobic' | 'crossfit' }[] = [
-    { label: 'Aerobic', value: 'aerobic' },
-    { label: 'Anaerobic', value: 'anaerobic' },
-    { label: 'Crossfit', value: 'crossfit' },
-];
+const options: ('aerobic' | 'anaerobic' | 'crossfit')[] = ['aerobic', 'anaerobic', 'crossfit'];
 
 
 const ProgramTypeStep: React.FC<ProgramTypeStepProps> = ({ value, onChange, onNext, onBack, onSave, canSave }) => {
@@ -36,21 +32,21 @@ const ProgramTypeStep: React.FC<ProgramTypeStepProps> = ({ value, onChange, onNe
             <div className={styles.type__changer}>
                 {options.map((opt) => (
                     <button
-                        key={opt.value}
-                        style={value === opt.value && !isDark ? {color: '#fff'} : undefined}
-                        className={value === opt.value ? `${styles.active} button` : 'button'}
-                        onClick={() => onChange(opt.value)}
+                        key={opt}
+                        style={value === opt && !isDark ? {color: '#fff'} : undefined}
+                        className={value === opt ? `${styles.active} button` : 'button'}
+                        onClick={() => onChange(opt)}
                     >
-                        {opt.label}
+                        {training[opt]}
                     </button>
                 ))}
             </div>
             <div className={styles.actions}>
                 <button onClick={onBack} className={'submit'}>
-                    Back
+                    {training.back}
                 </button>
                 <button onClick={onNext} disabled={!value} className={'submit'}>
-                    Next
+                    {training.next}
                 </button>
             </div>
             {onSave && (
