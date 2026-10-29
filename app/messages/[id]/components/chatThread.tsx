@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Send } from 'lucide-react';
@@ -8,8 +9,10 @@ import { useAppSelector } from '@/app/hooks/redux';
 import { getText, getUserId } from '@/store/selectors';
 import { useMessagesStore } from '@/store/useMessagesStore';
 import {
+    deleteMessageForEveryone,
     getConversationById,
     getMessages,
+    hideMessageForMe,
     markConversationRead,
     MESSAGES_PAGE_SIZE,
     otherParticipantId,
@@ -22,6 +25,7 @@ import { avatarFallbackUrl } from '@/lib/avatarFallback';
 import { createClient } from '@/utils/supabase/client';
 import { Conversation, Message } from '@/types/messages';
 import { ProfileType } from '@/types/user';
+import ActionMenu, { ActionMenuItem } from '@/app/components/actionMenu/actionMenu';
 import MessageBubble from './messageBubble';
 import styles from './chatThread.module.scss';
 
@@ -44,6 +48,8 @@ export default function ChatThread() {
     const [inputText, setInputText] = useState('');
     const [sending, setSending] = useState(false);
     const listRef = useRef<HTMLDivElement>(null);
+    const [actionMessage, setActionMessage] = useState<Message | null>(null);
+    const [actionError, setActionError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!conversationId || !userId) return;
@@ -96,6 +102,19 @@ export default function ChatThread() {
                     }
                 }
             )
+            // The other participant's "delete for everyone". DELETE events
+            // can't be filtered server-side and carry only the id, so
+            // they're matched against what's loaded here.
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
+                const deletedId = (payload.old as { id?: string }).id;
+                if (deletedId) setMessages((prev) => prev.filter((m) => m.id !== deletedId));
+            })
+            // The other participant deleted the whole chat for both.
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'conversations' }, (payload) => {
+                if ((payload.old as { id?: string }).id !== conversationId) return;
+                useMessagesStore.getState().removeConversation(conversationId);
+                setLoadState({ state: 'not-found' });
+            })
             .subscribe();
 
         return () => {
@@ -142,9 +161,54 @@ export default function ChatThread() {
         setSending(false);
     };
 
+    const closeActions = () => {
+        setActionMessage(null);
+        setActionError(null);
+    };
+
+    // Removed locally on success; for "for everyone" the realtime DELETE
+    // echo is then a no-op filter.
+    const runMessageAction = async (action: (message: Message) => Promise<boolean>) => {
+        const target = actionMessage;
+        if (!target) return;
+        setActionError(null);
+        if (await action(target)) {
+            setMessages((prev) => prev.filter((m) => m.id !== target.id));
+            closeActions();
+        } else {
+            setActionError(`❌ ${base.messageDeleteFailed}`);
+        }
+    };
+
+    const actionItems: ActionMenuItem[] = [];
+    if (actionMessage && userId) {
+        if (actionMessage.sender_id === userId) {
+            actionItems.push({
+                key: 'everyone',
+                label: base.deleteForEveryone,
+                destructive: true,
+                onClick: () => runMessageAction((m) => deleteMessageForEveryone(m.id)),
+            });
+        }
+        actionItems.push(
+            {
+                key: 'me',
+                label: base.deleteForMe,
+                destructive: true,
+                onClick: () => runMessageAction((m) => hideMessageForMe(m.id, userId)),
+            },
+            { key: 'cancel', label: base.cancelAction, onClick: closeActions }
+        );
+    }
+
     if (loadState.state === 'loading') return null;
     if (loadState.state === 'not-found') {
-        return <p className={styles.notFound}>{base.conversationNotFound}</p>;
+        return (
+            <div className={styles.notFound}>
+                <p>{base.conversationNotFound}</p>
+                <Link href="/messages">{base.backToMessages}</Link>
+            </div>
+        );
     }
 
     const { otherProfile } = loadState;
@@ -185,7 +249,11 @@ export default function ChatThread() {
                                 {showDivider && (
                                     <p className={styles.divider}>{formatDateDivider(message.created_at)}</p>
                                 )}
-                                <MessageBubble message={message} isOwn={message.sender_id === userId} />
+                                <MessageBubble
+                                    message={message}
+                                    isOwn={message.sender_id === userId}
+                                    onLongPress={() => setActionMessage(message)}
+                                />
                             </React.Fragment>
                         );
                     })
@@ -214,6 +282,8 @@ export default function ChatThread() {
                     <Send size={18} color="#fff" />
                 </button>
             </div>
+
+            {actionMessage && <ActionMenu items={actionItems} error={actionError} onClose={closeActions} />}
         </div>
     );
 }

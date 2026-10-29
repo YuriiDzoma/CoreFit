@@ -38,6 +38,10 @@
   column-gap: 12px;
   text-decoration: none;
   color: var(--text-color);
+  // Long press opens the delete-chat dialog -- keep iOS Safari's own link
+  // preview/callout and text selection out of its way.
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 .avatar {
@@ -101,5 +105,26 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 8px 32px;
+  }
+}
+
+.error {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.deleteOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 15px;
+  cursor: pointer;
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--border-color);
   }
 }

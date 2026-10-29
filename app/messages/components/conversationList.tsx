@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAppSelector } from '@/app/hooks/redux';
 import { getText, getUserId } from '@/store/selectors';
 import { useMessagesStore, isUnreadEntry, ConversationWithProfile } from '@/store/useMessagesStore';
+import { clearConversationForMe, deleteConversationForEveryone } from '@/lib/messagesData';
+import { useLongPress } from '@/app/hooks/useLongPress';
+import GlobalPopup from '@/app/components/globalPopup/globalPopup';
 import { formatConversationTime } from '@/lib/formatMessageTime';
 import { avatarFallbackUrl } from '@/lib/avatarFallback';
 import { UsersSkeleton } from '@/ui/skeleton/skeleton';
@@ -16,11 +19,14 @@ function ConversationRow({
     entry,
     userId,
     unread,
+    onLongPress,
 }: {
     entry: ConversationWithProfile;
     userId: string;
     unread: boolean;
+    onLongPress: () => void;
 }) {
+    const longPress = useLongPress(onLongPress);
     const { base } = useAppSelector(getText);
     const { conversation, otherProfile } = entry;
     const name = otherProfile?.username ?? base.unknownUser;
@@ -33,7 +39,7 @@ function ConversationRow({
 
     return (
         <li className={elevatedStyles.elevated}>
-            <Link href={`/messages/${conversation.id}`} className={styles.row}>
+            <Link href={`/messages/${conversation.id}`} className={styles.row} {...longPress}>
                 <Image
                     src={otherProfile?.avatar_url || avatarFallbackUrl(name)}
                     width={48}
@@ -59,7 +65,30 @@ function ConversationRow({
 export default function ConversationList() {
     const userId = useAppSelector(getUserId);
     const { base } = useAppSelector(getText);
-    const { conversations, readMarkers, loading, subscribeToRealtime } = useMessagesStore();
+    const { conversations, readMarkers, loading, subscribeToRealtime, removeConversation } = useMessagesStore();
+
+    const [pendingDelete, setPendingDelete] = useState<ConversationWithProfile | null>(null);
+    const [alsoForOther, setAlsoForOther] = useState(false);
+    const [deleteError, setDeleteError] = useState(false);
+
+    const openDeleteDialog = (entry: ConversationWithProfile) => {
+        setPendingDelete(entry);
+        setAlsoForOther(false);
+        setDeleteError(false);
+    };
+
+    // Telegram's choice: unchecked clears the chat for me only (it comes
+    // back with the next message); checked deletes it for both.
+    const handleConfirmDelete = async () => {
+        if (!pendingDelete || !userId) return;
+        const conversationId = pendingDelete.conversation.id;
+        const ok = alsoForOther
+            ? await deleteConversationForEveryone(conversationId)
+            : await clearConversationForMe(conversationId, userId);
+        if (ok) removeConversation(conversationId);
+        setDeleteError(!ok);
+        setPendingDelete(null);
+    };
 
     // The realtime subscription is also opened app-wide from header.tsx (so
     // the nav badge stays live on every page) -- this call is idempotent
@@ -92,9 +121,35 @@ export default function ConversationList() {
                                 entry={entry}
                                 userId={userId}
                                 unread={isUnreadEntry(entry, userId, readMarkers)}
+                                onLongPress={() => openDeleteDialog(entry)}
                             />
                         ))}
                 </ul>
+            )}
+
+            {deleteError && <p className={styles.error}>❌ {base.chatDeleteFailed}</p>}
+
+            {pendingDelete && (
+                <GlobalPopup
+                    title={base.deleteChatTitle}
+                    message={alsoForOther ? base.deleteChatBodyBoth : base.deleteChatBodyMe}
+                    onConfirm={handleConfirmDelete}
+                    onCancel={() => setPendingDelete(null)}
+                >
+                    <label className={styles.deleteOption}>
+                        <input
+                            type="checkbox"
+                            checked={alsoForOther}
+                            onChange={() => setAlsoForOther((value) => !value)}
+                        />
+                        <span>
+                            {base.deleteChatAlsoFor.replace(
+                                '{value}',
+                                pendingDelete.otherProfile?.username ?? base.unknownUser
+                            )}
+                        </span>
+                    </label>
+                </GlobalPopup>
             )}
         </div>
     );

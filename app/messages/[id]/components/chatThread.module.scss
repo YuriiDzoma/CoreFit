@@ -111,6 +111,13 @@
   color: var(--title-color);
   text-align: center;
   padding: 32px 0;
+
+  a {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--border-color);
+    text-decoration: underline;
+  }
 }
 
 .inputRow {

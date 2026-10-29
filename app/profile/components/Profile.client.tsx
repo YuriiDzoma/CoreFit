@@ -7,6 +7,8 @@ import {getIsDarkTheme, getText, getUserId} from "@/store/selectors";
 import {useAppSelector} from "../../hooks/redux";
 import {ProfileType} from "@/types/user";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
+import {getOrCreateConversation} from "@/lib/messagesData";
 import React, {useEffect, useState} from "react";
 import {
     getAllFriendLinksOfUser,
@@ -39,6 +41,7 @@ const Profile = ({profile}: {profile: ProfileType}) => {
     const currentId = useAppSelector(getUserId);
     const isDark = useAppSelector(getIsDarkTheme);
 
+    const router = useRouter();
     const isOwnProfile = currentId === profile.id;
     const lastActive = formatLastActive(profile.last_active_at);
 
@@ -115,6 +118,21 @@ const Profile = ({profile}: {profile: ProfileType}) => {
         await sendFriendRequest(profile.id);
         refreshRelationships();
         setIsPreloader(false);
+    };
+
+    // Same entry point as the "+ New message" picker (newMessagePicker.tsx):
+    // opens the existing 1-on-1 conversation or creates it. `push`, not
+    // `replace` like the picker -- back from the chat lands on this profile.
+    const [isStartingChat, setIsStartingChat] = useState(false);
+    const handleWriteMessage = async () => {
+        if (!currentId || isStartingChat) return;
+        setIsStartingChat(true);
+        const conversation = await getOrCreateConversation(currentId, profile.id);
+        if (conversation) {
+            router.push(`/messages/${conversation.id}`);
+        } else {
+            setIsStartingChat(false);
+        }
     };
 
     const handleCancelFriendRequest = async () => {
@@ -228,6 +246,11 @@ const Profile = ({profile}: {profile: ProfileType}) => {
 
             {!isOwnProfile && currentId && (
                 <div className={styles.profile__actions}>
+                    {/* Any user can message any other (no friends-only
+                        gate), so this isn't tied to friendState. */}
+                    <button className="button" onClick={handleWriteMessage} disabled={isStartingChat}>
+                        <span>{base.writeMessage}</span>
+                    </button>
                     {friendState.status === 'none' && (
                         <button className="button" onClick={handleAddFriend} disabled={isPreloader}>
                             <span>{base.addFriends}</span>

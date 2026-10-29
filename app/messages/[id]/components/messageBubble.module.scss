@@ -12,6 +12,10 @@
 }
 
 .bubble {
+  // iOS Safari otherwise answers a long press with its own text-selection/
+  // callout menu before ours can open.
+  -webkit-touch-callout: none;
+  user-select: none;
   max-width: 78%;
   border-radius: 16px;
   padding: 8px 16px;
