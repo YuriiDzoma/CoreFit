@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './actionMenu.module.scss';
 
 export interface ActionMenuItem {
@@ -20,6 +20,11 @@ export default function ActionMenu({
     error?: string | null;
     onClose: () => void;
 }) {
+    // Drop any selection the long press that opened this already made.
+    useEffect(() => {
+        window.getSelection()?.removeAllRanges();
+    }, []);
+
     return (
         <div className={styles.backdrop} onClick={onClose}>
             <div className={styles.menu} onClick={(e) => e.stopPropagation()}>
