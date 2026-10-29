@@ -27,6 +27,18 @@ input, button, textarea {
   font-family: inherit;
 }
 
+// iOS Safari zooms the whole page in on focus of any field whose font-size
+// is under 16px (the chat input is 15px, search inputs similar), and doesn't
+// zoom back out. Touch devices only, so desktop keeps each field's own size;
+// !important because the per-component module classes outrank an element
+// selector. Preferred over `maximum-scale=1` in the viewport, which would
+// also kill pinch-zoom on Android.
+@media (hover: none) and (pointer: coarse) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
 input::-ms-clear {
   display: none;
 }
