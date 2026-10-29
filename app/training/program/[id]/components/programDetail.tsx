@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 import {fetchProgramDetail, deleteProgramWithRelations} from '@/lib/programData';
 import {updateUserProfile} from '@/lib/userData';
-import {ProgramFull} from '@/types/training';
+import {ProgramFull, ProgramVisibility} from '@/types/training';
 
 import ProgramDaysList from './programDaysList';
 import ProgramTabs from './programTabs';
@@ -120,6 +120,12 @@ const ProgramDetail = () => {
 
     const getLevelText = useLevelText();
     const getTypeText = useTypeText();
+    const visibilityText = (value: ProgramVisibility): string => ({
+        public: training.visibilityPublic,
+        friends: training.visibilityFriends,
+        trainer: training.visibilityTrainer,
+        private: training.visibilityPrivate,
+    })[value];
 
     const loadAllHistory = useCallback(async () => {
         if (!program) return;
@@ -245,6 +251,11 @@ const ProgramDetail = () => {
                 <p>
                     <span>{training.difficulty}: </span>
                     {getLevelText(program.level)}
+                </p>
+
+                <p>
+                    <span>{training.access}: </span>
+                    {visibilityText(program.visibility ?? 'public')}
                 </p>
 
                 {program.author && (

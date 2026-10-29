@@ -132,6 +132,7 @@ const initialState = {
             programName: 'Name of program',
             plHolProgramName: 'Enter the program name',
             basics: 'Basics',
+            access: 'Access',
             visibilityTitle: 'Who can see this program',
             visibilityPublic: 'Public',
             visibilityPublicDesc: 'Everyone',
