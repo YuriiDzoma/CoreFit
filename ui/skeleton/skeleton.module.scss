@@ -362,7 +362,8 @@
 }
 
 // Profile.client.tsx's `.profile` column (8px row-gap) with its
-// `.profile__actions` row: two `.button`s, measured at 197/133 x 28.5px.
+// `.profile__actions` row (space-between): two `.button`s, measured at
+// 197/133 x 28.5px, the first +22px for its message icon and gap.
 .profileWithActions {
   display: flex;
   flex-direction: column;
@@ -371,6 +372,7 @@
   &__actions {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     gap: 8px;
   }
 
@@ -383,7 +385,7 @@
   }
 
   &__btnWide {
-    width: 197px;
+    width: 219px;
   }
 
   &__btnNarrow {

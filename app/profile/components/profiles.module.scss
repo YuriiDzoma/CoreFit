@@ -75,9 +75,23 @@
 .profile__actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   column-gap: 8px;
   row-gap: 8px;
   align-items: center;
+}
+
+// Same `MessageSquareText` glyph as the Messages tab in the bottom nav;
+// colored like the label text next to it.
+.profile__messageBtn {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 6px;
+
+  svg {
+    flex-shrink: 0;
+    color: var(--text-color);
+  }
 }
 
 .profile__pending {

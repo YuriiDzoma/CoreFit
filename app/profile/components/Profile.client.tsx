@@ -34,6 +34,7 @@ import GlobalPopup from "@/app/components/globalPopup/globalPopup";
 import TrainerBadge from "./TrainerBadge";
 import AvatarMenu from "./AvatarMenu";
 import FullscreenImage from "@/app/components/fullscreenImage/FullscreenImage";
+import { MessageSquareText } from 'lucide-react';
 
 const Profile = ({profile}: {profile: ProfileType}) => {
     const { width } = useWindowSize();
@@ -248,7 +249,12 @@ const Profile = ({profile}: {profile: ProfileType}) => {
                 <div className={styles.profile__actions}>
                     {/* Any user can message any other (no friends-only
                         gate), so this isn't tied to friendState. */}
-                    <button className="button" onClick={handleWriteMessage} disabled={isStartingChat}>
+                    <button
+                        className={`button ${styles.profile__messageBtn}`}
+                        onClick={handleWriteMessage}
+                        disabled={isStartingChat}
+                    >
+                        <MessageSquareText size={16} strokeWidth={2} aria-hidden />
                         <span>{base.writeMessage}</span>
                     </button>
                     {friendState.status === 'none' && (
