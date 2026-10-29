@@ -32,6 +32,27 @@ export function UsersSkeleton() {
     )
 }
 
+// The Messages conversation list (conversationList.tsx): elevated rows
+// with 8px padding, a 48px round avatar, a two-line text column (name +
+// preview) and a trailing time -- not UsersSkeleton, whose search bar the
+// list doesn't have.
+export function MessagesListSkeleton() {
+    return (
+        <ul className={styles.messagesList}>
+            {Array.from({ length: 4 }).map((_, index) => (
+                <li key={index} className={styles.messagesList__row}>
+                    <span className={styles.messagesList__avatar}/>
+                    <div className={styles.messagesList__text}>
+                        <span className={styles.messagesList__name}/>
+                        <span className={styles.messagesList__preview}/>
+                    </div>
+                    <span className={styles.messagesList__time}/>
+                </li>
+            ))}
+        </ul>
+    )
+}
+
 // Title and WikiNav's tabs render for real above this now (chrome, not
 // data-dependent) -- only the leaderboard-card list itself is a
 // placeholder, matching ProgramsListSkeleton/ExerciseListSkeleton's own
@@ -61,17 +82,19 @@ function RecordsSkeletonCard() {
                 <span className={styles.recordsPage__cardImage}/>
                 <span className={styles.recordsPage__cardName}/>
             </div>
-            <div className={styles.recordsPage__entryRow}>
-                <span className={styles.recordsPage__entryRank}/>
-                <span className={styles.recordsPage__entryAvatar}/>
-                <span className={styles.recordsPage__entryName}/>
-                <span className={styles.recordsPage__entryWeight}/>
-            </div>
-            <div className={styles.recordsPage__entryRow}>
-                <span className={styles.recordsPage__entryRank}/>
-                <span className={styles.recordsPage__entryAvatar}/>
-                <span className={styles.recordsPage__entryName}/>
-                <span className={styles.recordsPage__entryWeight}/>
+            <div className={styles.recordsPage__entries}>
+                <div className={styles.recordsPage__entryRow}>
+                    <span className={styles.recordsPage__entryRank}/>
+                    <span className={styles.recordsPage__entryAvatar}/>
+                    <span className={styles.recordsPage__entryName}/>
+                    <span className={styles.recordsPage__entryWeight}/>
+                </div>
+                <div className={styles.recordsPage__entryRow}>
+                    <span className={styles.recordsPage__entryRank}/>
+                    <span className={styles.recordsPage__entryAvatar}/>
+                    <span className={styles.recordsPage__entryName}/>
+                    <span className={styles.recordsPage__entryWeight}/>
+                </div>
             </div>
         </div>
     )
@@ -102,14 +125,27 @@ export function FriendsListSkeleton() {
     )
 }
 
-export function ProfileSkeleton() {
-    return (
+// `withActions`: someone else's profile, where a signed-in viewer also gets
+// the `.profile__actions` row ("Write message" + a friend action) under
+// the header -- without it the block grows by that row (36.5px) on load.
+export function ProfileSkeleton({ withActions = false }: { withActions?: boolean }) {
+    const header = (
         <div className={styles.profile}>
             <span className={styles.profile__img}/>
             <div className={styles.profile__name}>
                 <span className={styles.profile__txt}/>
                 <span className={styles.profile__txtSecond}/>
                 <span className={styles.profile__txtProfgrams}/>
+            </div>
+        </div>
+    );
+    if (!withActions) return header;
+    return (
+        <div className={styles.profileWithActions}>
+            {header}
+            <div className={styles.profileWithActions__actions}>
+                <span className={styles.profileWithActions__btnWide}/>
+                <span className={styles.profileWithActions__btnNarrow}/>
             </div>
         </div>
     )
@@ -337,18 +373,16 @@ export function ProgramCreateSkeleton() {
 
 // Complexes' own title and (trainer-only) "create global program" link
 // already render unconditionally outside its loading check
-// (complexes.tsx), so this only needs the list itself -- reuses
-// `.programList__list`/`__item` verbatim (same flat, unbordered
-// rectangle as Programs' own skeleton), not a re-measured version of
-// Complexes' own `Accordion`-based card. "Analogous", per request, not a
-// pixel match of the MUI accordion's border/chevron.
+// (complexes.tsx), so this only needs the list itself -- the same flat,
+// unbordered rectangles as Programs' own skeleton, but at the collapsed
+// accordion card's measured height (`__complexItem`, 68px).
 export function ComplexesListSkeleton() {
     return (
         <ul className={styles.programList__list}>
-            <li className={styles.programList__item}/>
-            <li className={styles.programList__item}/>
-            <li className={styles.programList__item}/>
-            <li className={styles.programList__item}/>
+            <li className={styles.programList__complexItem}/>
+            <li className={styles.programList__complexItem}/>
+            <li className={styles.programList__complexItem}/>
+            <li className={styles.programList__complexItem}/>
         </ul>
     )
 }

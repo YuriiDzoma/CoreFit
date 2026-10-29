@@ -11,7 +11,7 @@ import { useLongPress } from '@/app/hooks/useLongPress';
 import GlobalPopup from '@/app/components/globalPopup/globalPopup';
 import { formatConversationTime } from '@/lib/formatMessageTime';
 import { avatarFallbackUrl } from '@/lib/avatarFallback';
-import { UsersSkeleton } from '@/ui/skeleton/skeleton';
+import { MessagesListSkeleton } from '@/ui/skeleton/skeleton';
 import elevatedStyles from '@/ui/elevatedCard/elevatedCard.module.scss';
 import styles from './conversationList.module.scss';
 
@@ -109,7 +109,7 @@ export default function ConversationList() {
             </Link>
 
             {loading ? (
-                <UsersSkeleton />
+                <MessagesListSkeleton />
             ) : conversations.length === 0 ? (
                 <p className={styles.empty}>{base.noConversationsYet}</p>
             ) : (

@@ -17,6 +17,70 @@
   background-color: var(--skeleton-bg);
 }
 
+// Mirrors conversationList.module.scss: 8px list gap (2 columns from
+// 768px), 8px row padding, 12px column gap, 48px avatar -> 64px rows.
+.messagesList {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+
+  @media only screen and (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 8px 32px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--skeleton-wrapper-bg);
+  }
+
+  &__avatar {
+    display: block;
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+  }
+
+  &__name,
+  &__preview,
+  &__time {
+    display: block;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__name {
+    width: 40%;
+    height: 14px;
+  }
+
+  &__preview {
+    width: 70%;
+    height: 12px;
+  }
+
+  &__time {
+    width: 32px;
+    height: 10px;
+    flex-shrink: 0;
+  }
+}
+
 .usersPage {
   display: flex;
   flex-direction: column;
@@ -117,10 +181,12 @@
     background-color: var(--skeleton-bg);
   }
 
+  // Spacing below mirrors records.module.scss (`.list` 8px, `.card ul`
+  // 4px, `.row` 4px vertical padding) so cards don't change height on load.
   &__list {
     display: flex;
     flex-direction: column;
-    row-gap: 16px;
+    row-gap: 8px;
     margin-top: 16px;
   }
 
@@ -161,10 +227,17 @@
 
   // Mirrors `records.tsx`'s own `EntryRow` (rank/avatar/name/weight),
   // not a generic single bar -- keeps the leaderboard shape recognizable.
+  &__entries {
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+  }
+
   &__entryRow {
     display: flex;
     align-items: center;
     column-gap: 8px;
+    padding: 4px 0;
   }
 
   &__entryRank {
@@ -285,6 +358,36 @@
     display: block;
     border-radius: 4px;
     background-color: var(--skeleton-bg);
+  }
+}
+
+// Profile.client.tsx's `.profile` column (8px row-gap) with its
+// `.profile__actions` row: two `.button`s, measured at 197/133 x 28.5px.
+.profileWithActions {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__btnWide,
+  &__btnNarrow {
+    display: block;
+    height: 28.5px;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
+
+  &__btnWide {
+    width: 197px;
+  }
+
+  &__btnNarrow {
+    width: 133px;
   }
 }
 
@@ -464,12 +567,12 @@
   }
 }
 
-// Matches wiki.module.scss's `.searchRow` height (its 40px input, not
-// the row's own unset height) -- was missing entirely before this, same
-// gap `.usersPage__search` fixed on the Users skeleton.
+// Matches wiki.module.scss's `.searchRow` as rendered (measured live:
+// 44px -- the 40px input plus the row's own 2px around it), so the tabs
+// and list below don't shift up 4px while loading.
 .wikiSearch {
   display: block;
-  height: 40px;
+  height: 44px;
   width: 100%;
   border-radius: 8px;
   background-color: var(--skeleton-bg);
@@ -576,17 +679,21 @@
     }
   }
 
+  // A typical description measures ~132px (8 lines) at 390px width; 80px
+  // made the video jump down ~50px on load.
   &__text {
     margin: 16px 0;
-    height: 80px;
+    height: 132px;
     width: 100%;
     border-radius: 4px;
     background-color: var(--skeleton-bg);
     display: block;
   }
 
+  // 24px: the real description -> video spacing (measured), collapsing
+  // with `__text`'s 16px bottom margin.
   &__video {
-    margin-top: 16px;
+    margin-top: 24px;
     border-radius: 4px;
     background-color: var(--skeleton-bg);
     display: block;
@@ -643,12 +750,24 @@
     border-radius: 4px;
     background-color: var(--skeleton-bg);
   }
+
+  // Complexes' collapsed MUI Accordion card measures 68px live (title +
+  // type/level line inside the accordion summary's own padding), not
+  // ProgramItem's 50px.
+  &__complexItem {
+    height: 68px;
+    width: 100%;
+    border-radius: 4px;
+    background-color: var(--skeleton-bg);
+  }
 }
 
 .news {
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  // Same 8px as the real list it stands in for (trainingHistories'
+  // `.histories`, also reused by UserWall).
+  row-gap: 8px;
 
   &__item {
     border-radius: 4px;

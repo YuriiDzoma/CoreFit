@@ -10,7 +10,7 @@ export default function Loading() {
     return (
         <div className={styles.container}>
             <div style={{ marginBottom: 24 }}>
-                <ProfileSkeleton />
+                <ProfileSkeleton withActions />
             </div>
             <ProfileFriendsSkeleton />
             <ProfileWallSkeleton />
