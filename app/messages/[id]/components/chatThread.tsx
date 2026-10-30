@@ -4,12 +4,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { Send } from 'lucide-react';
+import { Check, Pencil, Send, X } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks/redux';
 import { getText, getUserId } from '@/store/selectors';
 import { useMessagesStore } from '@/store/useMessagesStore';
 import {
     deleteMessageForEveryone,
+    editMessage,
     getConversationById,
     getMessages,
     hideMessageForMe,
@@ -50,6 +51,9 @@ export default function ChatThread() {
     const listRef = useRef<HTMLDivElement>(null);
     const [actionMessage, setActionMessage] = useState<Message | null>(null);
     const [actionError, setActionError] = useState<string | null>(null);
+    // Telegram-style edit mode: the input holds the message's text and Send
+    // saves it in place instead of posting a new one.
+    const [editingMessage, setEditingMessage] = useState<Message | null>(null);
 
     useEffect(() => {
         if (!conversationId || !userId) return;
@@ -102,6 +106,21 @@ export default function ChatThread() {
                     }
                 }
             )
+            // An edit (either side): swap the row in place. UPDATE payloads
+            // carry the full new row and are filterable like INSERT.
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'messages',
+                    filter: `conversation_id=eq.${conversationId}`,
+                },
+                (payload) => {
+                    const row = payload.new as Message;
+                    setMessages((prev) => prev.map((m) => (m.id === row.id ? row : m)));
+                }
+            )
             // The other participant's "delete for everyone". DELETE events
             // can't be filtered server-side and carry only the id, so
             // they're matched against what's loaded here.
@@ -149,9 +168,28 @@ export default function ChatThread() {
         });
     };
 
+    const exitEdit = () => {
+        setEditingMessage(null);
+        setInputText('');
+    };
+
     const handleSend = async () => {
         const body = inputText.trim();
         if (!body || !conversationId || !userId || sending) return;
+        if (editingMessage) {
+            if (body === editingMessage.body) {
+                exitEdit();
+                return;
+            }
+            setSending(true);
+            const updated = await editMessage(editingMessage.id, body);
+            if (updated) {
+                setMessages((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
+                exitEdit();
+            }
+            setSending(false);
+            return;
+        }
         setSending(true);
         const message = await sendMessage(conversationId, userId, body);
         if (message) {
@@ -174,6 +212,7 @@ export default function ChatThread() {
         setActionError(null);
         if (await action(target)) {
             setMessages((prev) => prev.filter((m) => m.id !== target.id));
+            if (editingMessage?.id === target.id) exitEdit();
             closeActions();
         } else {
             setActionError(`❌ ${base.messageDeleteFailed}`);
@@ -183,6 +222,16 @@ export default function ChatThread() {
     const actionItems: ActionMenuItem[] = [];
     if (actionMessage && userId) {
         if (actionMessage.sender_id === userId) {
+            const target = actionMessage;
+            actionItems.push({
+                key: 'edit',
+                label: base.editMessage,
+                onClick: () => {
+                    setEditingMessage(target);
+                    setInputText(target.body);
+                    closeActions();
+                },
+            });
             actionItems.push({
                 key: 'everyone',
                 label: base.deleteForEveryone,
@@ -263,6 +312,19 @@ export default function ChatThread() {
                 )}
             </div>
 
+            {editingMessage && (
+                <div className={styles.editBanner}>
+                    <Pencil size={18} aria-hidden />
+                    <div className={styles.editBanner__text}>
+                        <p className={styles.editBanner__title}>{base.editingMessage}</p>
+                        <p className={styles.editBanner__body}>{editingMessage.body}</p>
+                    </div>
+                    <button className={styles.editBanner__close} onClick={exitEdit} aria-label={base.cancelEditMessage}>
+                        <X size={18} />
+                    </button>
+                </div>
+            )}
+
             <div className={styles.inputRow}>
                 <textarea
                     className={styles.input}
@@ -282,7 +344,7 @@ export default function ChatThread() {
                     onClick={handleSend}
                     disabled={sending || inputText.trim().length === 0}
                 >
-                    <Send size={18} color="#fff" />
+                    {editingMessage ? <Check size={18} color="#fff" /> : <Send size={18} color="#fff" />}
                 </button>
             </div>
 

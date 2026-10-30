@@ -3,6 +3,8 @@ import { formatBubbleTime } from '@/lib/formatMessageTime';
 import { Message } from '@/types/messages';
 import { useLongPress } from '@/app/hooks/useLongPress';
 import styles from './messageBubble.module.scss';
+import { useAppSelector } from '@/app/hooks/redux';
+import { getText } from '@/store/selectors';
 
 // "Our colors", not a new brand accent: the own-message fill is
 // `--border-color` (#204879), the same navy used everywhere else in this
@@ -23,12 +25,16 @@ export default function MessageBubble({
     isOwn: boolean;
     onLongPress?: () => void;
 }) {
+    const { base } = useAppSelector(getText);
     const longPress = useLongPress(onLongPress);
     return (
         <div className={`${styles.row} ${isOwn ? styles.rowOwn : styles.rowOther}`}>
             <div className={`${styles.bubble} ${isOwn ? styles.bubbleOwn : styles.bubbleOther}`} {...longPress}>
                 <p className={styles.body}>{message.body}</p>
-                <span className={styles.time}>{formatBubbleTime(message.created_at)}</span>
+                <span className={styles.time}>
+                    {message.edited_at ? `${base.messageEdited} · ` : ''}
+                    {formatBubbleTime(message.created_at)}
+                </span>
             </div>
         </div>
     );

@@ -20,7 +20,7 @@ import { Conversation, Message } from '@/types/messages';
 
 const CONVERSATION_COLUMNS =
     'id, user_a, user_b, last_message_at, last_message_body, last_message_sender_id, created_at';
-const MESSAGE_COLUMNS = 'id, conversation_id, sender_id, body, created_at';
+const MESSAGE_COLUMNS = 'id, conversation_id, sender_id, body, created_at, edited_at';
 
 export function otherParticipantId(conversation: Conversation, userId: string): string {
     return conversation.user_a === userId ? conversation.user_b : conversation.user_a;
@@ -181,6 +181,25 @@ export async function deleteMessageForEveryone(messageId: string): Promise<boole
     const { error } = await supabase.from('messages').delete().eq('id', messageId);
     if (error) console.error('Error deleting message:', error);
     return !error;
+}
+
+// Edits the text of one of this user's own messages -- RLS + column grants
+// allow only `body`, only for the sender; the DB stamps `edited_at` and
+// refreshes the conversation preview. The other side gets the realtime
+// UPDATE. Same call as mobile's messages.ts `editMessage`.
+export async function editMessage(messageId: string, body: string): Promise<Message | null> {
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('messages')
+        .update({ body })
+        .eq('id', messageId)
+        .select(MESSAGE_COLUMNS)
+        .single();
+    if (error) {
+        console.error('Error editing message:', error);
+        return null;
+    }
+    return data as Message;
 }
 
 // "Delete for me" -- the messages SELECT policy then stops returning it to

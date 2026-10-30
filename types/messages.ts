@@ -14,4 +14,6 @@ export type Message = {
     sender_id: string;
     body: string;
     created_at: string;
+    // Set by the DB when the sender edits the text (Sprint 131).
+    edited_at?: string | null;
 };

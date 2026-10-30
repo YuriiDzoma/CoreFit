@@ -138,6 +138,53 @@
   }
 }
 
+// Edit mode bar above the input (Telegram-style): what's being edited +
+// a close button. Sits where the input row's top border would be.
+.editBanner {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  padding: 8px 4px 0;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+  color: var(--text-color);
+
+  & + .inputRow {
+    border-top: none;
+    padding-top: 8px;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  &__body {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: var(--text-color);
+    opacity: 0.7;
+  }
+}
+
 .inputRow {
   display: flex;
   align-items: flex-end;
