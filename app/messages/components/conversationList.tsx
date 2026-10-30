@@ -14,6 +14,7 @@ import { avatarFallbackUrl } from '@/lib/avatarFallback';
 import { MessagesListSkeleton } from '@/ui/skeleton/skeleton';
 import elevatedStyles from '@/ui/elevatedCard/elevatedCard.module.scss';
 import styles from './conversationList.module.scss';
+import { formatLastActive } from '@/lib/lastActive';
 
 function ConversationRow({
     entry,
@@ -30,6 +31,7 @@ function ConversationRow({
     const { base } = useAppSelector(getText);
     const { conversation, otherProfile } = entry;
     const name = otherProfile?.username ?? base.unknownUser;
+    const isOnline = formatLastActive(otherProfile?.last_active_at)?.isOnline ?? false;
 
     const preview = conversation.last_message_body
         ? conversation.last_message_sender_id === userId
@@ -40,13 +42,16 @@ function ConversationRow({
     return (
         <li className={elevatedStyles.elevated}>
             <Link href={`/messages/${conversation.id}`} className={styles.row} {...longPress}>
-                <Image
-                    src={otherProfile?.avatar_url || avatarFallbackUrl(name)}
-                    width={48}
-                    height={48}
-                    alt={name}
-                    className={styles.avatar}
-                />
+                <span className={styles.avatarWrap}>
+                    <Image
+                        src={otherProfile?.avatar_url || avatarFallbackUrl(name)}
+                        width={48}
+                        height={48}
+                        alt={name}
+                        className={styles.avatar}
+                    />
+                    {isOnline && <span className={styles.onlineDot} />}
+                </span>
                 <div className={styles.textCol}>
                     <p className={styles.name}>{name}</p>
                     <p className={styles.preview}>{preview}</p>

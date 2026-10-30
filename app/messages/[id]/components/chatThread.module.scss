@@ -47,6 +47,24 @@
   flex-shrink: 0;
 }
 
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+// Same dot as the conversation list, ring in the page background here.
+.onlineDot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 2px solid var(--bg-color);
+}
+
 .avatar {
   width: 36px;
   height: 36px;

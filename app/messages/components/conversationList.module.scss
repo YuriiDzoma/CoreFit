@@ -54,6 +54,25 @@
   user-select: none;
 }
 
+// Online indicator -- same 10px green dot with a card-colored cutout ring
+// as the Friends/Users lists (allFriends.module.scss `.onlineDot`).
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.onlineDot {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 2px solid var(--elevated-bg);
+}
+
 .avatar {
   width: 48px;
   height: 48px;

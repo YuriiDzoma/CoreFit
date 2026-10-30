@@ -218,13 +218,16 @@ export default function ChatThread() {
     return (
         <div className={styles.thread}>
             <div className={styles.contactRow}>
-                <Image
-                    src={otherProfile?.avatar_url || avatarFallbackUrl(name)}
-                    width={36}
-                    height={36}
-                    alt={name}
-                    className={styles.avatar}
-                />
+                <span className={styles.avatarWrap}>
+                    <Image
+                        src={otherProfile?.avatar_url || avatarFallbackUrl(name)}
+                        width={36}
+                        height={36}
+                        alt={name}
+                        className={styles.avatar}
+                    />
+                    {lastActive?.isOnline && <span className={styles.onlineDot} />}
+                </span>
                 <div>
                     <p className={styles.name}>{name}</p>
                     {lastActive && (

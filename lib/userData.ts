@@ -22,7 +22,7 @@ export const fetchUserProfileById = async (id: string): Promise<ProfileType | nu
 
     const { data, error } = await supabase
         .from('profiles')
-        .select('id, username, avatar_url, created_at')
+        .select('id, username, avatar_url, created_at, last_active_at')
         .eq('id', id)
         .single();
 
