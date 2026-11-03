@@ -79,3 +79,9 @@
   background-color: var(--skeleton-bg);
   border-radius: 4px;
 }
+
+// "Показати ще": the global `.button` is ~29px tall, too small to tap
+// comfortably on a phone -- 44px, the same as the mobile app's button.
+.showMore {
+  min-height: 44px;
+}

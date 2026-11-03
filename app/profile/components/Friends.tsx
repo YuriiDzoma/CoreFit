@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { avatarFallbackUrl } from '@/lib/avatarFallback';
 import styles from './profiles.module.scss';
 import { useAppSelector } from '@/app/hooks/redux';
 import { getText } from '@/store/selectors';
@@ -35,7 +36,11 @@ export default function Friends({ id, initial }: FriendsProps) {
                     <li key={friend.id}>
                         <Link href={`/profile/${friend.id}`} className={styles.friends__link}>
                             <Image
-                                src={friend.avatar_url || '/avatar-placeholder.png'}
+                                src={friend.avatar_url || avatarFallbackUrl(friend.username)}
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = avatarFallbackUrl(friend.username);
+                                }}
                                 alt={friend.username || 'user'}
                                 width={40}
                                 height={40}

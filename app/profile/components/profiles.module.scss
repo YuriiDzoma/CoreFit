@@ -79,6 +79,9 @@
   column-gap: 8px;
   row-gap: 8px;
   align-items: center;
+  // `.profile` is a column with `align-items: flex-start`, which shrank
+  // this row to its buttons' width and left space-between nothing to do.
+  align-self: stretch;
 
   // Finger-sized: the global `.button` is 28.5px tall here, under the
   // 44px minimum touch target Apple's HIG recommends.

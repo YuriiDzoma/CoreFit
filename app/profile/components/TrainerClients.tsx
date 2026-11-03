@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { avatarFallbackUrl } from '@/lib/avatarFallback';
 import Link from 'next/link';
 import styles from './profiles.module.scss';
 import { useAppSelector } from '@/app/hooks/redux';
@@ -32,7 +33,11 @@ export default function TrainerClients({ isTrainer, people }: TrainerClientsProp
                     <li key={person.id}>
                         <Link href={`/profile/${person.id}`} className={styles.friends__link}>
                             <Image
-                                src={person.avatar_url || '/avatar-placeholder.png'}
+                                src={person.avatar_url || avatarFallbackUrl(person.username)}
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = avatarFallbackUrl(person.username);
+                                }}
                                 alt={person.username || 'user'}
                                 width={40}
                                 height={40}

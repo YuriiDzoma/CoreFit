@@ -77,3 +77,9 @@
   font-size: 14px;
   font-weight: 700;
 }
+
+// "Показати ще": the global `.button` is ~29px tall, too small to tap
+// comfortably on a phone -- 44px, the same as the mobile app's button.
+.showMore {
+  min-height: 44px;
+}

@@ -30,6 +30,15 @@ const isAppLanguage = (value?: string | null): value is AppLanguage => {
     return value === 'eng' || value === 'rus' || value === 'ukr' || value === 'pl';
 };
 
+// Older mobile builds wrote their own i18next codes ('uk', 'en', 'ru') to
+// `profiles.language`; read those as the matching web language.
+const MOBILE_LANGUAGE_CODES: Record<string, AppLanguage> = {uk: 'ukr', en: 'eng', ru: 'rus'};
+
+const normalizeProfileLanguage = (value?: string | null): AppLanguage | null => {
+    if (isAppLanguage(value)) return value;
+    return (value && MOBILE_LANGUAGE_CODES[value]) || null;
+};
+
 const getStoredLanguage = (): AppLanguage | null => {
     if (typeof window === 'undefined') return null;
 
@@ -70,9 +79,10 @@ const AppShell = ({children}: { children: React.ReactNode }) => {
 
                     const settings = await fetchUserSettings(userId);
 
-                    if (isAppLanguage(settings?.language)) {
-                        lang = settings.language;
-                        localStorage.setItem(LANGUAGE_STORAGE_KEY, settings.language);
+                    const profileLanguage = normalizeProfileLanguage(settings?.language);
+                    if (profileLanguage) {
+                        lang = profileLanguage;
+                        localStorage.setItem(LANGUAGE_STORAGE_KEY, profileLanguage);
                     }
 
                     isDarkTheme = Boolean(settings?.dark);

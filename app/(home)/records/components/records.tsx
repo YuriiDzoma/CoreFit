@@ -113,7 +113,7 @@ const Records = () => {
                     ))}
 
                     {hasMore && (
-                        <button className="button" onClick={handleShowMore} disabled={loadingMore}>
+                        <button className={`button ${styles.showMore}`} onClick={handleShowMore} disabled={loadingMore}>
                             {loadingMore ? '…' : base.showMore}
                         </button>
                     )}
