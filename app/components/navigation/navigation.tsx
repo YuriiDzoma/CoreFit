@@ -79,9 +79,13 @@ const FloatingNavigation = ({ pathname }: { pathname: string }) => {
 
     const isProfileActive = pathname === '/profile' || pathname === '/settings';
     const isTrainingActive = pathname.startsWith('/training');
-    const isFriendsActive = pathname.startsWith('/friends');
+    // Requests and Users are the Friends tab's own sub-tabs (friendsMenu),
+    // so all three light up the Friends icon.
+    const isFriendsActive =
+        pathname.startsWith('/friends') || pathname === '/requests' || pathname === '/users';
     const isMessagesActive = pathname === '/messages';
-    const isHomeActive = pathname === '/';
+    // Records and News are Home's own sub-tabs (homeMenu), next to Trainings.
+    const isHomeActive = pathname === '/' || pathname === '/records' || pathname === '/news';
     // `/friends` (bare, no id) isn't a route anything else in this app
     // links to — `AllFriends` reads its subject from the `[id]` param, so
     // the only shape that actually renders own-friends content is

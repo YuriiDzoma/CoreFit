@@ -6,7 +6,10 @@ export const fetchUsers = async (): Promise<ProfileType[]> => {
     const supabase = createClient();
     const { data, error } = await supabase
         .from('profiles')
-        .select('id, username, avatar_url, created_at, last_active_at');
+        .select('id, username, avatar_url, created_at, last_active_at')
+        // Alphabetical, like the mobile app -- unordered, Postgres returned
+        // rows in whatever order they happened to be stored.
+        .order('username', { ascending: true, nullsFirst: false });
 
     if (error) {
         console.error('Error fetching users:', error);
