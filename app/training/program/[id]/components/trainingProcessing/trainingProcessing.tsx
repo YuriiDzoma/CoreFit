@@ -8,6 +8,7 @@ import {getText} from "../../../../../../store/selectors";
 import {useAppSelector} from "../../../../../hooks/redux";
 import {completeDay, fetchDrafts, saveDraft} from "../../../../../../lib/trainingData";
 import Preloader from "../../../../../../ui/preloader/Preloader";
+import ReplayIcon from "@mui/icons-material/Replay";
 
 interface ProgramDaysListTypes {
     program: ProgramFull;
@@ -18,6 +19,8 @@ interface ProgramDaysListTypes {
     // always stored under the owner, so a trainer's entries land in the
     // client's own history/records/wall and both see the same draft.
     ownerId: string,
+    // Each day's completed workouts, oldest-first (programDetail.tsx).
+    history: Record<string, { values: Record<string, string> }[]>,
 }
 
 type FormValues = {
@@ -49,7 +52,7 @@ function formatDateValue(isoDate: string): string {
     });
 }
 
-const TrainingProcessing = ({ program, activeTab, onComplete, ownerId }: ProgramDaysListTypes) => {
+const TrainingProcessing = ({ program, activeTab, onComplete, ownerId, history }: ProgramDaysListTypes) => {
     const { training } = useAppSelector(getText);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const userId = ownerId;
@@ -82,6 +85,22 @@ const TrainingProcessing = ({ program, activeTab, onComplete, ownerId }: Program
         loadDrafts();
     }, [userId, program, setValue]);
 
+
+    // Fills this day's inputs from its latest workout, minus the `x{sets}`
+    // suffix added at save time. An exercise skipped that time keeps
+    // whatever its field already holds. Saved as drafts right away, same
+    // as a typed value on blur.
+    const repeatLastWorkout = (dayIndex: number, dayId: string) => {
+        const dayHistory = history[dayId] ?? [];
+        const last = dayHistory[dayHistory.length - 1];
+        if (!last || !userId) return;
+        program.days[dayIndex].exercises.forEach((exercise) => {
+            const value = last.values[exercise.programExerciseId]?.replace(/x\d+$/, '');
+            if (!value) return;
+            setValue(exercise.programExerciseId, value);
+            saveDraft(userId, exercise.programExerciseId, dayId, value);
+        });
+    };
 
     const onSubmitDay = async (dayIndex: number, dayId: string) => {
         const date = dates[dayIndex];
@@ -174,6 +193,15 @@ const TrainingProcessing = ({ program, activeTab, onComplete, ownerId }: Program
                     ))}
 
                     <div className={styles.processActions}>
+                        <button
+                            type="button"
+                            className={`button ${styles.repeatButton}`}
+                            onClick={() => repeatLastWorkout(index, day.id)}
+                            disabled={submittedDays[index] || !(history[day.id]?.length)}
+                        >
+                            <ReplayIcon className={styles.repeatIcon} />
+                            <span>{training.repeatLast}</span>
+                        </button>
                         <button
                             type="button"
                             className={'button'}

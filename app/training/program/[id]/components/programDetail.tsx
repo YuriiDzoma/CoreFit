@@ -302,6 +302,7 @@ const ProgramDetail = () => {
                         program={program}
                         activeTab={activeTab}
                         ownerId={program.user_id}
+                        history={history}
                         onComplete={loadAllHistory}
                     />
                 )}

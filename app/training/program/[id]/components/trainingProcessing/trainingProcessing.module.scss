@@ -147,6 +147,8 @@
 .processActions {
   display: flex;
   height: 30px;
+  // Anchors `.repeatButton`, which sits outside this 120px column.
+  position: relative;
 
   button {
     width: 100%;
@@ -156,4 +158,21 @@
       font-size: 14px;
     }
   }
+}
+// Left of Complete, 8px apart, over the history column -- this column is
+// only Complete's width, so it hangs out of it to the left.
+.processActions .repeatButton {
+  position: absolute;
+  top: 0;
+  right: calc(100% + 8px);
+  width: auto;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+  white-space: nowrap;
+}
+
+.repeatIcon {
+  font-size: 16px !important;
 }

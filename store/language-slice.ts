@@ -191,6 +191,7 @@ const initialState = {
             legs: 'Legs',
             abs: 'Abs',
             complete: 'Complete',
+            repeatLast: 'Repeat last',
             datePlaceholder: 'mm/dd/yyyy',
             programViewIcons: 'Icons view',
             programViewText: 'Text view',
