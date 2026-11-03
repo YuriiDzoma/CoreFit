@@ -20,9 +20,12 @@
 
   // Floating Header/Navigation glass edge — a light hairline highlight, not
   // `--border-color`'s saturated navy, which read as a hard outline.
-  // Deliberately no background-fill token alongside it: blur alone
-  // separates the surface from content behind it, not a color overlay.
   --glass-border: rgba(255, 255, 255, 0.15);
+  // Translucent fill under the floating bars' blur, in the page's own tone
+  // -- blur alone let dark photos behind the bar swallow its navy icons and
+  // text. 78%, same as the mobile app's GlassBar scrim: still reads as
+  // glass, but text clears WCAG AA over even near-black content.
+  --glass-bg: rgba(15, 23, 42, 0.78);
 
   // Matches the mobile app's own `theme.danger` (`constants/theme.ts`)
   // exactly — the same value in both light and dark there too, not a
@@ -80,6 +83,8 @@
   // See dark theme above — light needs a soft dark hairline instead of a
   // light one.
   --glass-border: rgba(0, 0, 0, 0.08);
+  // See dark theme above.
+  --glass-bg: rgba(236, 237, 242, 0.78);
 
   // Same value as dark — see dark theme above.
   --danger: #e5484d;

@@ -26,8 +26,7 @@
   border-radius: 20px;
   // Same soft hairline highlight as Header/Navigation's own glass edge —
   // see `navigation.module.scss`'s `.floatingBar` for why (not
-  // `--border-color`, and deliberately no background-fill token
-  // alongside it).
+  // `--border-color`), with the same translucent `--glass-bg` fill.
   border: 1px solid var(--glass-border);
   // No manual `-webkit-backdrop-filter` here — Turbopack's CSS transform
   // silently drops the unprefixed `backdrop-filter` declaration entirely
@@ -35,6 +34,7 @@
   // same rule (see `header.module.scss`'s identical comment for the full
   // story). Letting the build tool prefix on its own avoids the bug.
   backdrop-filter: blur(32px) saturate(180%);
+  background-color: var(--glass-bg);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 

@@ -111,10 +111,10 @@
   // saturated navy — that read as a hard, deliberate outline rather than
   // just defining the glass's edge.
   border: 1px solid var(--glass-border);
-  // Deliberately no background-color here — blur alone is what separates
-  // this surface from content behind it, not a color overlay. `saturate`
-  // is the other half of the native-iOS-glass look: it's what stops the
-  // blur from reading as flat frosted plastic.
+  // Blur plus a translucent `--glass-bg` fill (see variables.scss) -- blur
+  // alone let dark content behind swallow the icons. `saturate` is the
+  // other half of the native-iOS-glass look: it's what stops the blur from
+  // reading as flat frosted plastic.
   // No manual `-webkit-backdrop-filter` alongside this — Turbopack's own
   // CSS transform (lightningcss) silently drops the *unprefixed*
   // `backdrop-filter` declaration entirely when a hand-written
@@ -124,6 +124,7 @@
   // autoprefix on its own, same as every other property in this file,
   // avoids the bug rather than working around it.
   backdrop-filter: blur(32px) saturate(180%);
+  background-color: var(--glass-bg);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 

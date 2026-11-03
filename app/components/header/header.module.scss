@@ -191,12 +191,13 @@
     height: 56px;
     padding: 0 16px;
     border-radius: 24px;
-    // Same soft hairline border, no background fill, and blur balance as
+    // Same soft hairline border, translucent fill, and blur balance as
     // `.floatingBar` — see that rule's comment for why. No manual
     // `-webkit-backdrop-filter` here either — see `.floatingBar`'s own
     // comment on the Turbopack bug that caused.
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(32px) saturate(180%);
+    background-color: var(--glass-bg);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   }
 
