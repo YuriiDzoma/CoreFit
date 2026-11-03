@@ -10,6 +10,7 @@ import {updateUserProfile} from "../../../lib/userData";
 import {signOut} from "@/lib/authClient";
 import { setIsDarkTheme } from '@/store/account-slice';
 import Preloader from "../../../ui/preloader/Preloader";
+import GlobalPopup from "@/app/components/globalPopup/globalPopup";
 
 
 const Menu = () => {
@@ -20,6 +21,7 @@ const Menu = () => {
     const router = useRouter();
     const [isActive, setIsActive] = useState<boolean>(false);
     const [isPreloader, setIsPreloader] = useState<boolean>(false);
+    const [confirmingSignOut, setConfirmingSignOut] = useState<boolean>(false);
     // Where the portaled dropdown should render -- measured from the real
     // button position (same technique the mobile app's own Header uses,
     // `measureInWindow`), since once portaled to `document.body` it can no
@@ -65,8 +67,9 @@ const Menu = () => {
         setIsPreloader(false);
     };
 
+    // Asks first (GlobalPopup), same as the Settings page's own button.
     const handleSignOut = async () => {
-        setIsActive(false);
+        setConfirmingSignOut(false);
         await signOut();
         router.push('/');
     };
@@ -115,7 +118,13 @@ const Menu = () => {
                                         alt="settings"
                                     />}
                             </button>
-                            <button className={styles.menu__signOut} onClick={handleSignOut}>
+                            <button
+                                className={styles.menu__signOut}
+                                onClick={() => {
+                                    setIsActive(false);
+                                    setConfirmingSignOut(true);
+                                }}
+                            >
                                 <span>{base.signOut}</span>
                             </button>
                         </div>
@@ -125,6 +134,14 @@ const Menu = () => {
                             onClick={() => setIsActive(false)}
                     />
                     {isPreloader && <Preloader />}
+                    {confirmingSignOut && (
+                        <GlobalPopup
+                            title={base.signOutConfirmTitle}
+                            message={base.signOutConfirmMessage}
+                            onConfirm={handleSignOut}
+                            onCancel={() => setConfirmingSignOut(false)}
+                        />
+                    )}
                 </>,
                 document.body,
             )}

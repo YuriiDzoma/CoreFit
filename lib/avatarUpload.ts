@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/client';
 
-const AVATARS_BUCKET = 'avatars';
+export const AVATARS_BUCKET = 'avatars';
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
 
 export class AvatarTooLargeError extends Error {}

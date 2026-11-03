@@ -19,13 +19,14 @@ const Settings = () => {
     const [confirmingDelete, setConfirmingDelete] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState<string | null>(null);
+    const [confirmingSignOut, setConfirmingSignOut] = useState(false);
 
-    // Same no-confirmation, instant sign-out as the mobile app's own
-    // Settings/Profile screens -- `useSupabaseSession`'s own
-    // `onAuthStateChange` subscription reacts everywhere on its own, this
-    // just also sends the user somewhere that doesn't require a session
-    // rather than leaving them stranded on Settings.
+    // Runs once the GlobalPopup below is confirmed (same as the mobile app).
+    // `useSupabaseSession`'s own `onAuthStateChange` subscription reacts
+    // everywhere on its own; this also sends the user somewhere that
+    // doesn't require a session rather than leaving them on Settings.
     const handleSignOut = async () => {
+        setConfirmingSignOut(false);
         await signOut();
         router.push('/');
     };
@@ -66,7 +67,7 @@ const Settings = () => {
                 {base.deleteAccount}
             </button>
             {deleteError && <span className={styles.deleteAccountError}>{deleteError}</span>}
-            <button className={styles.signOut} onClick={handleSignOut}>
+            <button className={styles.signOut} onClick={() => setConfirmingSignOut(true)}>
                 {base.signOut}
             </button>
 
@@ -76,6 +77,15 @@ const Settings = () => {
                     message={base.deleteAccountConfirmMessage}
                     onConfirm={handleDeleteAccount}
                     onCancel={() => setConfirmingDelete(false)}
+                />
+            )}
+
+            {confirmingSignOut && (
+                <GlobalPopup
+                    title={base.signOutConfirmTitle}
+                    message={base.signOutConfirmMessage}
+                    onConfirm={handleSignOut}
+                    onCancel={() => setConfirmingSignOut(false)}
                 />
             )}
         </div>
