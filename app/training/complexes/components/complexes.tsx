@@ -180,7 +180,7 @@ const Complexes = () => {
                                 <div className={styles.summaryContent}>
                                     <div>
                                         <Typography variant="h6">{program.title}</Typography>
-                                        <Typography variant="body2" color="text.secondary">
+                                        <Typography variant="body2" sx={{ color: "var(--text-secondary)" }}>
                                             <span>{training.type}: {typeText(program.type)} | {training.difficulty}: {levelText(program.level)}</span>
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
