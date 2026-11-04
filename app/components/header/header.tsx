@@ -82,7 +82,7 @@ const Header = ({session}: { session: Session | null }) => {
 
             {session && (
                 <div className={styles.header__rightSection}>
-                    {width < 768 ? <Menu/> : <HeaderNavigation/>}
+                    {width <= 768 ? <Menu/> : <HeaderNavigation/>}
                 </div>
             )}
         </div>

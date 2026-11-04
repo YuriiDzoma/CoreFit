@@ -101,7 +101,7 @@
   row-gap: 16px;
   align-items: start;
   padding: 0 16px;
-  max-height: calc(100vh - 288px);
+  max-height: calc(var(--app-vh) - 288px);
   overflow-y: auto;
 }
 
@@ -160,8 +160,8 @@
   top: 0;
   z-index: 10;
   background-color: #0000004d;
-  height: 100vh;
-  width: 100vw;
+  height: var(--app-vh);
+  width: var(--app-vw);
 }
 
 .popupCloser {
@@ -169,8 +169,8 @@
   left: 0;
   top: 0;
   z-index: 11;
-  height: 100vh;
-  width: 100vw;
+  height: var(--app-vh);
+  width: var(--app-vw);
 }
 
 .popup {
@@ -185,8 +185,8 @@
   // breakpoint).
   top: calc(80px + env(safe-area-inset-top));
   z-index: 12;
-  height: calc(100vh - 80px - env(safe-area-inset-top) - 8px);
-  width: calc(100vw - 16px);
+  height: calc(var(--app-vh) - 80px - env(safe-area-inset-top) - 8px);
+  width: calc(var(--app-vw) - 16px);
   background-color: var(--bg-color);
   padding: 8px;
 
@@ -208,7 +208,7 @@
     left: 16px;
     display: flex;
     column-gap: 8px;
-    width: calc(100vw - 32px);
+    width: calc(var(--app-vw) - 32px);
 
     button {
       width: 100%;
@@ -267,7 +267,7 @@
   // the earlier 156px/136px estimate both derived from the app-wide
   // `136px` figure (`training.module.scss`'s own `.content`), which
   // undershot what this `position: fixed` popup actually needed.
-  max-height: calc(100vh - 150px - env(safe-area-inset-top));
+  max-height: calc(var(--app-vh) - 150px - env(safe-area-inset-top));
   padding-bottom: calc(164px + env(safe-area-inset-bottom));
   overflow-y: auto;
 }

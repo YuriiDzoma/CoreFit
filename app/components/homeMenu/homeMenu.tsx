@@ -1,5 +1,6 @@
 'use client';
 import Link from "next/link";
+import SubTabs from "../subTabs/subTabs";
 import styles from "./homeMenu.module.scss";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "../../hooks/redux";
@@ -24,16 +25,26 @@ const ITEM_DEFS = [
     },
 ];
 
-// Records/Trainings -- Home's own floating glass pill bar, same structure
-// and same narrow-only gating as friendsMenu.tsx/trainingMenu.tsx: at
-// desktop width, Navigation is an in-flow top tab row, so a fixed-position
-// pill here would float disconnected from the rest of desktop chrome.
+// Records/Trainings/News -- Home's own floating glass pill bar at mobile
+// width; above 768px the same items render as in-flow SubTabs instead,
+// same split as friendsMenu.tsx/trainingMenu.tsx.
 const HomeMenu = () => {
     const { width } = useWindowSize();
     const pathname = usePathname();
     const { base } = useAppSelector(getText);
 
-    if (width >= 768) return null;
+    if (width > 768) {
+        return (
+            <SubTabs
+                items={ITEM_DEFS.map((item) => ({
+                    key: item.key,
+                    href: item.href,
+                    label: base[item.key],
+                    active: item.isActive(pathname),
+                }))}
+            />
+        );
+    }
 
     return (
         <div className={styles.floatingWrap}>

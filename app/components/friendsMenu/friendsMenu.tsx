@@ -1,5 +1,6 @@
 'use client';
 import Link from "next/link";
+import SubTabs from "../subTabs/subTabs";
 import styles from "./friendsMenu.module.scss";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "../../hooks/redux";
@@ -25,20 +26,27 @@ const ITEM_DEFS = [
     },
 ];
 
-// Friends/Requests/Users' own floating glass pill bar — same structure and
-// same narrow-only gating as `trainingMenu.tsx` (Complexes/Programs/Wiki):
-// at desktop width, Navigation is an in-flow top tab row rather than a
-// floating bottom bar, so a fixed-position pill here would float
-// disconnected from the rest of the desktop chrome. Desktop keeps its
-// existing entry points (allFriends.tsx's own banners, Navigation's
-// top-level Users tab) instead of duplicating them here.
+// Friends/Requests/Users' own floating glass pill bar at mobile width;
+// above 768px the same items render as in-flow SubTabs instead, same split
+// as `trainingMenu.tsx` (Complexes/Programs/Wiki).
 const FriendsMenu = () => {
     const { width } = useWindowSize();
     const pathname = usePathname();
     const { base } = useAppSelector(getText);
     const { requests } = useFriendRequestStore();
 
-    if (width >= 768) return null;
+    if (width > 768) {
+        return (
+            <SubTabs
+                items={ITEM_DEFS.map((item) => ({
+                    key: item.key,
+                    href: item.href,
+                    label: base[item.key],
+                    active: item.isActive(pathname), badge: item.key === 'requests' ? requests.length : 0,
+                }))}
+            />
+        );
+    }
 
     return (
         <div className={styles.floatingWrap}>

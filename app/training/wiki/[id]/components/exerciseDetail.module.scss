@@ -1,6 +1,6 @@
 .exerciseDetail {
   height: 100%;
-  max-height: calc(100vh - 150px);
+  max-height: calc(var(--app-vh) - 150px);
   overflow-y: auto;
 
   // Same nested-scroll-region bug training.module.scss/home.module.scss/

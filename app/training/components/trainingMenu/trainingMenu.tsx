@@ -1,5 +1,6 @@
 'use client';
 import Link from "next/link";
+import SubTabs from "../../../components/subTabs/subTabs";
 import styles from "./trainingMenu.module.scss";
 import { usePathname } from "next/navigation";
 import useWindowSize from "../../../hooks/useWindowSize";
@@ -30,13 +31,24 @@ const ITEM_DEFS = [
 // Floating glass pill bar, matching the mobile app's own `TrainingSubNav`
 // -- see that component's comment for why this is a deliberate floating
 // bar rather than in-flow chrome now that Header/Navigation are both
-// floating too.
+// floating too. Above 768px the same items render as in-flow SubTabs.
 const TrainingMenu = () => {
     const { width } = useWindowSize();
     const pathname = usePathname();
     const { base } = useAppSelector(getText);
 
-    if (width >= 768) return null;
+    if (width > 768) {
+        return (
+            <SubTabs
+                items={ITEM_DEFS.map((item) => ({
+                    key: item.key,
+                    href: item.href,
+                    label: base[item.key],
+                    active: item.isActive(pathname),
+                }))}
+            />
+        );
+    }
 
     return (
         <div className={styles.floatingWrap}>

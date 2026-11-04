@@ -6,27 +6,15 @@ export function UsersSkeleton() {
         <>
             <span className={styles.searchSkeleton}/>
             <ul className={styles.users}>
-                <li className={styles.user}>
-                    <div className={styles.user__info}>
-                        <span className={styles.user__img}/>
-                        <span className={styles.user__name}/>
-                    </div>
-                    <span className={styles.user__btn}/>
-                </li>
-                <li className={styles.user}>
-                    <div className={styles.user__info}>
-                        <span className={styles.user__img}/>
-                        <span className={styles.user__name}/>
-                    </div>
-                    <span className={styles.user__btn}/>
-                </li>
-                <li className={styles.user}>
-                    <div className={styles.user__info}>
-                        <span className={styles.user__img}/>
-                        <span className={styles.user__name}/>
-                    </div>
-                    <span className={styles.user__btn}/>
-                </li>
+                {Array.from({ length: 4 }).map((_, index) => (
+                    <li key={index} className={styles.user}>
+                        <div className={styles.user__info}>
+                            <span className={styles.user__img}/>
+                            <span className={styles.user__name}/>
+                        </div>
+                        <span className={styles.user__btn}/>
+                    </li>
+                ))}
             </ul>
         </>
     )
@@ -60,6 +48,7 @@ export function MessagesListSkeleton() {
 export function RecordsSkeleton() {
     return (
         <div className={styles.recordsPage__list}>
+            <RecordsSkeletonCard/>
             <RecordsSkeletonCard/>
             <RecordsSkeletonCard/>
             <RecordsSkeletonCard/>
@@ -105,21 +94,13 @@ export function FriendsListSkeleton() {
         <>
             <span className={styles.searchSkeleton}/>
             <div className={styles.friendsListPage}>
-                <div className={styles.friendsListPage__row}>
-                    <span className={styles.friendsListPage__img}/>
-                    <span className={styles.friendsListPage__name}/>
-                    <span className={styles.friendsListPage__btn}/>
-                </div>
-                <div className={styles.friendsListPage__row}>
-                    <span className={styles.friendsListPage__img}/>
-                    <span className={styles.friendsListPage__name}/>
-                    <span className={styles.friendsListPage__btn}/>
-                </div>
-                <div className={styles.friendsListPage__row}>
-                    <span className={styles.friendsListPage__img}/>
-                    <span className={styles.friendsListPage__name}/>
-                    <span className={styles.friendsListPage__btn}/>
-                </div>
+                {Array.from({ length: 4 }).map((_, index) => (
+                    <div key={index} className={styles.friendsListPage__row}>
+                        <span className={styles.friendsListPage__img}/>
+                        <span className={styles.friendsListPage__name}/>
+                        <span className={styles.friendsListPage__btn}/>
+                    </div>
+                ))}
             </div>
         </>
     )
@@ -284,42 +265,12 @@ export function ExerciseListSkeleton() {
             <span className={styles.wikiSearch}/>
             <div className={styles.wiki}>
                 <div className={styles.exercisesList}>
-                    <div className={styles.exercisesList__row}>
-                        <span className={styles.exercisesList__img}/>
-                        <span className={styles.exercisesList__name}/>
-                    </div>
-                    <div className={styles.exercisesList__row}>
-                        <span className={styles.exercisesList__img}/>
-                        <span className={styles.exercisesList__name}/>
-                    </div>
-                    <div className={styles.exercisesList__row}>
-                        <span className={styles.exercisesList__img}/>
-                        <span className={styles.exercisesList__name}/>
-                    </div>
-                    <div className={styles.exercisesList__row}>
-                        <span className={styles.exercisesList__img}/>
-                        <span className={styles.exercisesList__name}/>
-                    </div>
-                    <div className={styles.exercisesList__row}>
-                        <span className={styles.exercisesList__img}/>
-                        <span className={styles.exercisesList__name}/>
-                    </div>
-                    <div className={styles.exercisesList__row}>
-                        <span className={styles.exercisesList__img}/>
-                        <span className={styles.exercisesList__name}/>
-                    </div>
-                    <div className={styles.exercisesList__row}>
-                        <span className={styles.exercisesList__img}/>
-                        <span className={styles.exercisesList__name}/>
-                    </div>
-                    <div className={styles.exercisesList__row}>
-                        <span className={styles.exercisesList__img}/>
-                        <span className={styles.exercisesList__name}/>
-                    </div>
-                    <div className={styles.exercisesList__row}>
-                        <span className={styles.exercisesList__img}/>
-                        <span className={styles.exercisesList__name}/>
-                    </div>
+                    {Array.from({ length: 10 }).map((_, index) => (
+                        <div key={index} className={styles.exercisesList__row}>
+                            <span className={styles.exercisesList__img}/>
+                            <span className={styles.exercisesList__name}/>
+                        </div>
+                    ))}
                 </div>
                 <ul className={styles.wiki__groups}>
                     <li className={styles.wiki__group}/>
@@ -387,54 +338,22 @@ export function ComplexesListSkeleton() {
     )
 }
 
+// Four cards: two full rows of the two-column feed above 768px.
 export function NewsSkeleton() {
     return (
         <div className={styles.news}>
-           <div className={styles.news__item}>
-               <p className={styles.news__header}>
-                   <span className={styles.news__avatar}/>
-                   <span className={styles.news__name}/>
-               </p>
-               <span className={styles.news__finished}/>
-               <ul className={styles.news__list}>
-                   <li className={styles.news__item}/>
-                   <li className={styles.news__item}/>
-                   <li className={styles.news__item}/>
-                   <li className={styles.news__item}/>
-                   <li className={styles.news__item}/>
-                   <li className={styles.news__item}/>
-               </ul>
-           </div>
-            <div className={styles.news__item}>
-                <p className={styles.news__header}>
-                    <span className={styles.news__avatar}/>
-                    <span className={styles.news__name}/>
-                </p>
-                <span className={styles.news__finished}/>
-                <ul className={styles.news__list}>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                </ul>
-            </div>
-            <div className={styles.news__item}>
-                <p className={styles.news__header}>
-                    <span className={styles.news__avatar}/>
-                    <span className={styles.news__name}/>
-                </p>
-                <span className={styles.news__finished}/>
-                <ul className={styles.news__list}>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                    <li className={styles.news__item}/>
-                </ul>
-            </div>
+            {Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className={styles.news__item}>
+                    <p className={styles.news__header}>
+                        <span className={styles.news__avatar}/>
+                        <span className={styles.news__name}/>
+                    </p>
+                    <span className={styles.news__finished}/>
+                    <ul>
+                        {Array.from({ length: 6 }).map((_, line) => <li key={line}/>)}
+                    </ul>
+                </div>
+            ))}
         </div>
     )
 }

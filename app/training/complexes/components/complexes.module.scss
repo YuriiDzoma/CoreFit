@@ -11,6 +11,19 @@
   row-gap: 8px;
 }
 
+// Above 768px: two complexes per row -- the same grid as the Programs tab
+// next to it (`programs.module.scss` `.programList`), so switching tabs
+// doesn't reflow. `align-items: start` so expanding one accordion only
+// grows that card, not its row neighbour.
+@media only screen and (min-width: 769px) {
+  .programList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-gap: 16px 32px;
+    align-items: start;
+  }
+}
+
 .programCard {
   // Matches ProgramItem's/AllFriends' own padding and radius exactly —
   // fill/shadow themselves are set inline in complexes.tsx's `sx` prop

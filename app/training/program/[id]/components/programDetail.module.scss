@@ -1,6 +1,6 @@
 .detail {
-  max-height: calc(100vh - 155px);
-  height: calc(100vh - 155px);
+  max-height: calc(var(--app-vh) - 155px);
+  height: calc(var(--app-vh) - 155px);
   overflow-y: auto;
   // Explicit, rather than leaving it to default to `visible`: per the CSS
   // overflow spec, a `visible` x-axis next to a non-`visible` y-axis (the
@@ -98,6 +98,15 @@
 
 .programDays:has(img) {
   max-width: 20%;
+}
+
+// Desktop (1200+): room enough for full exercise names, so the names
+// column grows to fit them (up to 40%) instead of truncating at 27%.
+@media only screen and (min-width: 1200px) {
+  .programDays:has(span) {
+    flex: 0 1 auto;
+    max-width: 40%;
+  }
 }
 
 .programDays {
@@ -235,8 +244,8 @@
   z-index: 2;
   left: 0;
   top: 0;
-  width: 100vw;
-  height: 100vh;
+  width: var(--app-vw);
+  height: var(--app-vh);
   background-color: #0000004d;
   transition: all .15s;
 }

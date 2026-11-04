@@ -60,7 +60,7 @@
   flex-direction: column;
   align-items: center;
   row-gap: 16px;
-  height: calc(100vh - 190px);
+  height: calc(var(--app-vh) - 190px);
   overflow-y: auto;
   padding-right: 8px;
 
@@ -83,7 +83,7 @@
   // list's own scroll. 150px/164px, live-tuned in DevTools against the
   // actual floating-chrome stack on this page (TrainingMenu + Navigation)
   // and confirmed correct there.
-  height: calc(100vh - 150px - env(safe-area-inset-top));
+  height: calc(var(--app-vh) - 150px - env(safe-area-inset-top));
   overflow-y: auto;
   padding-bottom: calc(164px + env(safe-area-inset-bottom));
   padding-right: 0;
@@ -129,7 +129,7 @@
   display: flex;
   flex-direction: column;
   row-gap: 8px;
-  height: calc(100vh - 190px);
+  height: calc(var(--app-vh) - 190px);
   overflow-y: auto;
 }
 

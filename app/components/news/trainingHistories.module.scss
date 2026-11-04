@@ -85,3 +85,22 @@
 .showMore {
   min-height: 44px;
 }
+
+// Above 768px (sidebar layout): two cards per row instead of one card
+// stretched across the whole content column -- each card's exercise rows
+// stay a readable length. Cards keep their own content-driven height
+// (`align-items: start`), so a short entry doesn't stretch to match a
+// long neighbour.
+@media only screen and (min-width: 769px) {
+  .histories {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+
+  .historyCard {
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+}

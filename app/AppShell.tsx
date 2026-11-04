@@ -169,8 +169,13 @@ const AppShell = ({children}: { children: React.ReactNode }) => {
         <>
             <PwaInstallPrompt/>
 
-            <div className={styles.container}>
-                <Header session={session}/>
+            {/* Signed in, above 768px, Header gives way to Navigation's
+                own sidebar (app.module.scss `.withSidebar`) -- still
+                mounted, since it owns the realtime subscriptions. */}
+            <div className={session ? `${styles.container} ${styles.withSidebar}` : styles.container}>
+                <div className={styles.headerSlot}>
+                    <Header session={session}/>
+                </div>
 
                 {session && <Navigation/>}
 

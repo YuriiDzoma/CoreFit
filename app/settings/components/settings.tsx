@@ -52,24 +52,34 @@ const Settings = () => {
     return (
         <div className={styles.settings}>
             <h2>{base.settings}</h2>
-            <ProfileSettings />
-            <TrainerSettings />
-            <CitySettings />
-            <LanguagesBox />
+            {/* Two stacks side by side from 1200px (settings.module.scss
+                `.sections`); one column, in this same order, below that. */}
+            <div className={styles.sections}>
+                <div>
+                    <ProfileSettings />
+                    <TrainerSettings />
+                </div>
+                <div>
+                    <CitySettings />
+                    <LanguagesBox />
+                </div>
+            </div>
             <Link href="/privacy" className={styles.privacyLink}>
                 {base.privacyPolicy}
             </Link>
-            <button
-                className={styles.deleteAccount}
-                onClick={() => setConfirmingDelete(true)}
-                disabled={isDeleting}
-            >
-                {base.deleteAccount}
-            </button>
-            {deleteError && <span className={styles.deleteAccountError}>{deleteError}</span>}
-            <button className={styles.signOut} onClick={() => setConfirmingSignOut(true)}>
-                {base.signOut}
-            </button>
+            <div className={styles.actions}>
+                <button
+                    className={styles.deleteAccount}
+                    onClick={() => setConfirmingDelete(true)}
+                    disabled={isDeleting}
+                >
+                    {base.deleteAccount}
+                </button>
+                {deleteError && <span className={styles.deleteAccountError}>{deleteError}</span>}
+                <button className={styles.signOut} onClick={() => setConfirmingSignOut(true)}>
+                    {base.signOut}
+                </button>
+            </div>
 
             {confirmingDelete && (
                 <GlobalPopup

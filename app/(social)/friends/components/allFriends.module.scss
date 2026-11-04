@@ -143,3 +143,12 @@
     }
   }
 }
+// Above 768px: two rows per line, same grid as Users (`userList.module.scss`)
+// -- the two lists share one row design, so they share the layout too.
+@media only screen and (min-width: 769px) {
+  .friendList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-gap: 16px 32px;
+  }
+}

@@ -83,3 +83,25 @@
 .showMore {
   min-height: 44px;
 }
+
+// Above 768px (sidebar layout): two leaderboards per row, same grid as the
+// Trainings feed and News. "Show more" stays a centred row of its own
+// beneath both columns.
+@media only screen and (min-width: 769px) {
+  .list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+
+    > button {
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+  }
+
+  .card {
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+}

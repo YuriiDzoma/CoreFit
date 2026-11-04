@@ -11,7 +11,7 @@
   border-radius: 4px;
   border: 2px solid var(--border-color);
   margin-top: -2px;
-  min-height: calc(100vh - 124px);
+  min-height: calc(var(--app-vh) - 124px);
 }
 
 @media only screen and (max-width: 769px) {
@@ -50,7 +50,7 @@
     // (very tall, meant to scroll) content instead of this element's
     // actual 749px box, only fixed by switching this to a literal
     // `height`).
-    height: 100vh;
+    height: var(--app-vh);
     overflow: auto;
     // Desktop's boxed-panel look (border + rounded corners + the
     // border-compensating negative margin above) doesn't fit the
@@ -58,6 +58,57 @@
     // such border around its scrolling content either.
     border: none;
     border-radius: 0;
+    margin-top: 0;
+  }
+}
+// Signed in, above 768px: sidebar (navigation.tsx `Sidebar`) + one
+// scrolling content column, edge to edge -- replaces the old centred
+// 1200px box with folder tabs and a bordered panel. `.content` is a
+// literal `height: 100vh` for the same definite-height reason the mobile
+// rule above documents; it's the page's only scroll region here.
+@media only screen and (min-width: 769px) {
+  .withSidebar {
+    display: flex;
+    max-width: none;
+    height: var(--app-vh);
+    padding: 0;
+
+    .headerSlot {
+      display: none;
+    }
+
+    .content {
+      flex: 1;
+      min-width: 0;
+      height: var(--app-vh);
+      min-height: 0;
+      overflow: auto;
+      padding: 24px 28px;
+      margin-top: 0;
+      border: none;
+      border-radius: 0;
+    }
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .withSidebar .content {
+    padding: 28px 40px;
+  }
+}
+
+// 2K and up: stop growing sideways -- one centred 2240px frame, sidebar
+// included, rather than lines stretched across the whole monitor.
+@media only screen and (min-width: 1920px) {
+  .withSidebar {
+    max-width: 2240px;
+  }
+}
+
+// Logged out (no sidebar), above 768px: same flat page, no bordered box.
+@media only screen and (min-width: 769px) {
+  .container:not(.withSidebar) .content {
+    border: none;
     margin-top: 0;
   }
 }

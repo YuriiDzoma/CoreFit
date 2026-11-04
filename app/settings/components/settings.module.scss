@@ -218,3 +218,47 @@
     }
   }
 }
+// Desktop (1200+): the four sections as two stacks (Profile + Trainer,
+// Location + Language) instead of one column of full-width boxes, and the
+// two account buttons side by side under them -- each box keeps a
+// readable width. Below 1200 nothing changes.
+@media only screen and (min-width: 1200px) {
+  .sections {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+    align-items: start;
+  }
+
+  .languages, .profile, .trainer, .location {
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+    margin-top: 16px;
+
+    .deleteAccount,
+    .signOut {
+      grid-row: 1;
+      margin-top: 0;
+      min-height: 48px;
+    }
+
+    .deleteAccount {
+      grid-column: 1;
+    }
+
+    .signOut {
+      grid-column: 2;
+    }
+
+    .deleteAccountError {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+}

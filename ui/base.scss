@@ -14,6 +14,35 @@ nav, footer, header, aside {
   display: block;
 }
 
+// Viewport size for every `100vh`/`100vw`-based rule in this app's own
+// styles. CSS `zoom` (below) scales viewport units along with everything
+// else -- under `zoom: 1.2`, `100vh` lays out 20% taller than the actual
+// window -- so each step divides its own factor back out here, at the use
+// site. Percentages and `position: fixed; inset: 0` aren't affected.
+:root {
+  --app-zoom: 1;
+  --app-vh: calc(100vh / var(--app-zoom));
+  --app-vw: calc(100vw / var(--app-zoom));
+}
+
+// 2K/4K at 100% OS scaling: the layout already stops widening at 2240px
+// (app.module.scss), so above that everything scales up proportionally
+// instead -- type, spacing, icons, popups alike -- rather than a second
+// set of hand-tuned sizes. Applied to the root, not the app shell, so
+// portaled popups/menus scale with the page.
+@media only screen and (min-width: 2560px) {
+  :root {
+    --app-zoom: 1.2;
+    zoom: var(--app-zoom);
+  }
+}
+
+@media only screen and (min-width: 3400px) {
+  :root {
+    --app-zoom: 1.5;
+  }
+}
+
 html, body {
   height: 100%;
   width: 100%;
@@ -232,12 +261,7 @@ body:has(.popup), body:has(.menuActive) {
   margin-bottom: 16px;
 }
 
-.container {
-  max-height: calc(100vh - 124px);
-  height: calc(100vh - 124px);
-  overflow-y: auto;
-}
-
+// `.container` used to be `height: calc(100vh - 124px); overflow-y: auto`.
 // Web Mobile (<768px): Header/Navigation are `position: fixed` floating
 // glass bars now (see `app.module.scss`'s own `.content` override), not
 // docked in-flow chrome — the `124px` this class subtracts is stale, a
@@ -251,10 +275,12 @@ body:has(.popup), body:has(.menuActive) {
 // width, exactly the same "clearance goes on whichever element is
 // actually scrolling, never a competing ancestor/nested frame" fix
 // already applied on the mobile app for the identical bug shape.
-@media only screen and (max-width: 768px) {
-  .container {
-    max-height: none;
-    height: auto;
-    overflow-y: visible;
-  }
+//
+// The desktop sidebar layout (>768px, app.module.scss `.withSidebar`) has
+// no Header/tab row above `.content` anymore either, so the 124px is just
+// as stale there -- neutralized at every width now, not only mobile.
+.container {
+  max-height: none;
+  height: auto;
+  overflow-y: visible;
 }

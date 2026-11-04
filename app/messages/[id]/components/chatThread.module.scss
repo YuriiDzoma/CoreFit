@@ -6,7 +6,7 @@
   // -- so the whole page scrolls as one unit there, same as every other
   // page; `.messagesList`'s own `overflow-y: auto` below still caps it to
   // a sane height rather than stretching the page indefinitely).
-  height: calc(100vh - 150px);
+  height: calc(var(--app-vh) - 150px);
 }
 
 // Mobile: `.content` (app.module.scss, same breakpoint) becomes its own

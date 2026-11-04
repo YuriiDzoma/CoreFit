@@ -73,6 +73,8 @@ const initialState = {
             accept: 'Accept',
             decline: 'Decline',
             messages: 'Messages',
+            home: 'Home',
+            startTraining: 'Start workout',
             newMessage: '+ New message',
             writeMessage: 'Write a message',
             editMessage: 'Edit',

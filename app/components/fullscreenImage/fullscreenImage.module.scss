@@ -11,8 +11,8 @@
 }
 
 .image {
-  max-width: 92vw;
-  max-height: 92vh;
+  max-width: calc(var(--app-vw) * 0.92);
+  max-height: calc(var(--app-vh) * 0.92);
   object-fit: contain;
   border-radius: 4px;
   cursor: default;

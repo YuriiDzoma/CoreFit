@@ -933,3 +933,75 @@
     margin-bottom: 8px;
   }
 }
+// Sidebar layout (>768px): the list skeletons take the same grids as the
+// pages they stand in for -- Trainings feed/profile wall
+// (`trainingHistories.module.scss`), Records (`records.module.scss`),
+// Users (`userList.module.scss`), Friends (`allFriends.module.scss`) --
+// so nothing reflows from one column to two the moment data arrives.
+@media only screen and (min-width: 769px) {
+  .news,
+  .recordsPage__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+
+  .news__item,
+  .recordsPage__card {
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+
+  // The collapsed accordion card measures 71px here, 3px taller than at
+  // mobile width (68px, `programList__complexItem` above).
+  .programList__complexItem {
+    height: 71px;
+  }
+
+  .users,
+  .friendsListPage {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-gap: 16px 32px;
+  }
+}
+
+// Wiki's exercise list (wiki.module.scss, same 768px breakpoint): two
+// columns 30px apart, 112px images (Exercise.tsx), 16px image-name gap.
+// Profile header avatar: 150px from 768px (Profile.client.tsx).
+@media only screen and (min-width: 768px) {
+  .exercisesList {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 8px 30px;
+
+    &__row {
+      column-gap: 16px;
+      padding-right: 0;
+    }
+
+    &__img {
+      width: 112px;
+      min-width: 112px;
+      height: 112px;
+      min-height: 112px;
+    }
+  }
+
+  .profile__img {
+    width: 150px;
+    min-width: 150px;
+    height: 150px;
+  }
+}
+
+// Settings sections (settings.module.scss, 1200+): same radius/padding as
+// the real boxes there, so a loading section doesn't change size.
+@media only screen and (min-width: 1200px) {
+  .profileSettings,
+  .settingsSection {
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+}
