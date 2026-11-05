@@ -235,3 +235,72 @@
     cursor: default;
   }
 }
+
+// Loading placeholder (chatThread.tsx) -- reuses .thread/.contactRow/
+// .messagesList/.inputRow so it has the loaded thread's exact layout.
+.skeleton {
+  display: block;
+  background-color: var(--skeleton-bg);
+}
+
+.skeletonAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeletonText {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+}
+
+.skeletonName {
+  width: 120px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skeletonStatus {
+  width: 70px;
+  height: 12px;
+  border-radius: 4px;
+}
+
+.skeletonRow,
+.skeletonRowOwn {
+  display: flex;
+  padding: 0 4px;
+}
+
+.skeletonRowOwn {
+  justify-content: flex-end;
+}
+
+// Same radii and flattened corner as messageBubble.module.scss.
+.skeletonBubble,
+.skeletonBubbleOwn {
+  border-radius: 16px;
+}
+
+.skeletonBubble {
+  border-bottom-left-radius: 2px;
+}
+
+.skeletonBubbleOwn {
+  border-bottom-right-radius: 2px;
+}
+
+.skeletonInput {
+  flex: 1;
+  height: 40px;
+  border-radius: 20px;
+}
+
+.skeletonSend {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
