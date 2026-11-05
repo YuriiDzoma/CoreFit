@@ -43,3 +43,37 @@
   flex-shrink: 0;
   margin-bottom: 8px;
 }
+
+// 1200+: Trainings feed | Records/News rail, each column scrolling on its
+// own so the rail stays in view while the feed is scrolled (homeLayout.tsx).
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  column-gap: 24px;
+  height: 100%;
+  min-height: 0;
+}
+
+.feed,
+.railBody {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  // Room for the scrollbar so it doesn't sit on top of the cards' edge.
+  padding-right: 8px;
+}
+
+.feed {
+  container-type: inline-size;
+}
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.railTabs {
+  flex-shrink: 0;
+  margin-bottom: 8px;
+}

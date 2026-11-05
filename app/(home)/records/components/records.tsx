@@ -17,7 +17,10 @@ import { type AppLanguage } from "@/lib/defaultLanguage";
 
 const RANK_MEDALS: Record<number, string> = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
-const Records = () => {
+// `inRail`: Home's 1200+ right column (homeLayout.tsx) -- the rail's own
+// Records/News switch stands in for the page title, and the leaderboards
+// stack one per row.
+const Records = ({ inRail = false }: { inRail?: boolean }) => {
     const language = useAppSelector(getLanguage);
     const { base } = useAppSelector(getText);
 
@@ -72,16 +75,18 @@ const Records = () => {
 
     return (
         <div className={styles.records}>
-            <h2 className={'pageTitle'}>{base.records}</h2>
+            {!inRail && <h2 className={'pageTitle'}>{base.records}</h2>}
 
-            <WikiNav activeTab={activeTab} handleChangeTab={handleChangeTab} />
+            <div className={inRail ? styles.railGroups : undefined}>
+                <WikiNav activeTab={activeTab} handleChangeTab={handleChangeTab} />
+            </div>
 
             {loading ? (
-                <RecordsSkeleton/>
+                <RecordsSkeleton oneColumn={inRail}/>
             ) : leaderboards.length === 0 ? (
                 <p>{base.noRecordsYet}</p>
             ) : (
-                <div className={styles.list}>
+                <div className={`${styles.list} ${inRail ? styles.oneColumn : ''}`}>
                     {leaderboards.map((leaderboard) => (
                         <div className={`${styles.card} ${elevatedStyles.elevated}`} key={leaderboard.exerciseId}>
                             <div className={styles.exerciseHeader}>

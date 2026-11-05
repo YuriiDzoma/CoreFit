@@ -45,9 +45,10 @@ export function MessagesListSkeleton() {
 // data-dependent) -- only the leaderboard-card list itself is a
 // placeholder, matching ProgramsListSkeleton/ExerciseListSkeleton's own
 // title-less shape.
-export function RecordsSkeleton() {
+// `oneColumn`: Records in Home's 1200+ right column -- one card per row.
+export function RecordsSkeleton({ oneColumn = false }: { oneColumn?: boolean }) {
     return (
-        <div className={styles.recordsPage__list}>
+        <div className={`${styles.recordsPage__list} ${oneColumn ? styles.recordsOneColumn : ''}`}>
             <RecordsSkeletonCard/>
             <RecordsSkeletonCard/>
             <RecordsSkeletonCard/>
@@ -339,10 +340,12 @@ export function ComplexesListSkeleton() {
 }
 
 // Four cards: two full rows of the two-column feed above 768px.
-export function NewsSkeleton() {
+// `oneColumn`: Home's 1200+ Trainings column -- one card per row, with the
+// exercise lines in two columns like the real cards there.
+export function NewsSkeleton({ oneColumn = false }: { oneColumn?: boolean }) {
     return (
-        <div className={styles.news}>
-            {Array.from({ length: 4 }).map((_, index) => (
+        <div className={`${styles.news} ${oneColumn ? styles.newsOneColumn : ''}`}>
+            {Array.from({ length: oneColumn ? 3 : 4 }).map((_, index) => (
                 <div key={index} className={styles.news__item}>
                     <p className={styles.news__header}>
                         <span className={styles.news__avatar}/>

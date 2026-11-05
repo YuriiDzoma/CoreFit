@@ -92,4 +92,9 @@
     border-radius: 12px;
     padding: 16px 20px;
   }
+
+  .inRail {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 0;
+  }
 }

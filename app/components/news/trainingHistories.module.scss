@@ -103,4 +103,25 @@
     border-radius: 12px;
     padding: 16px 20px;
   }
+
+  .oneColumn {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Exercises in two columns once Home's feed column (`.feed`, an
+// inline-size container in home.module.scss) is wide enough for long
+// names like "Hammer Strength Machine Incline Bench Press: 40/8x3" to stay
+// on one line; at 1200-1400px it isn't, and the list stays single.
+@container (min-width: 720px) {
+  .oneColumn .exerciseList {
+    display: block;
+    columns: 2;
+    column-gap: 32px;
+
+    li {
+      break-inside: avoid;
+      padding-bottom: 4px;
+    }
+  }
 }

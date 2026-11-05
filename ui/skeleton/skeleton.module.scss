@@ -953,6 +953,14 @@
     padding: 16px 20px;
   }
 
+  // Home's 1200+ columns (homeLayout.tsx): one card per row, and the
+  // Trainings lines split in two like the real cards' exercise list.
+  .newsOneColumn,
+  .recordsOneColumn {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+
   // The collapsed accordion card measures 71px here, 3px taller than at
   // mobile width (68px, `programList__complexItem` above).
   .programList__complexItem {
@@ -1003,5 +1011,15 @@
   .settingsSection {
     border-radius: 12px;
     padding: 16px 20px;
+  }
+}
+
+// Same width threshold as the real cards' two-column exercise list
+// (trainingHistories.module.scss).
+@container (min-width: 720px) {
+  .newsOneColumn ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 32px;
   }
 }

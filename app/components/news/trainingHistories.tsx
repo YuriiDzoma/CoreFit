@@ -15,7 +15,10 @@ import {avatarFallbackUrl} from "@/lib/avatarFallback";
 import Link from "next/link";
 import Image from "next/image";
 
-const TrainingHistories = () => {
+// `oneColumn`: Home's 1200+ left column (homeLayout.tsx) -- one card per
+// row instead of the 2-up grid, each card's exercises split into two
+// columns to use the width.
+const TrainingHistories = ({ oneColumn = false }: { oneColumn?: boolean }) => {
     const [histories, setHistories] = useState<any[]>([]);
     const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
     const language = useAppSelector(getLanguage);
@@ -75,14 +78,14 @@ const TrainingHistories = () => {
     if (isMap) return (
         <div>
             <h2 className="pageTitle">{base.trainings}</h2>
-            <NewsSkeleton/>
+            <NewsSkeleton oneColumn={oneColumn}/>
         </div>
     );
 
     return (
         <div>
             <h2 className="pageTitle">{base.trainings}</h2>
-            <div className={`${styles.histories} container`}>
+            <div className={`${styles.histories} ${oneColumn ? styles.oneColumn : ''} container`}>
             {histories.map((entry) => (
                 <div key={entry.id} className={`${styles.historyCard} ${elevatedStyles.elevated}`}>
                     <div className={styles.historyCard__header}>

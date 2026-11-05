@@ -21,7 +21,9 @@ function NewsCardSkeleton() {
     );
 }
 
-const News = () => {
+// `inRail`: Home's 1200+ right column (homeLayout.tsx) -- no page title
+// (the rail's Records/News switch is the heading) and one post per row.
+const News = ({ inRail = false }: { inRail?: boolean }) => {
     const { base } = useAppSelector(getText);
     const [news, setNews] = useState<NewsItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -34,19 +36,21 @@ const News = () => {
         });
     }, []);
 
+    const listClass = `${styles.list} ${inRail ? styles.inRail : ''}`;
+
     return (
         <div className={styles.news}>
-            <h2 className="pageTitle">{base.news}</h2>
+            {!inRail && <h2 className="pageTitle">{base.news}</h2>}
 
             {loading ? (
-                <div className={styles.list}>
+                <div className={listClass}>
                     <NewsCardSkeleton />
                     <NewsCardSkeleton />
                 </div>
             ) : news.length === 0 ? (
                 <p>{base.newsEmpty}</p>
             ) : (
-                <div className={styles.list}>
+                <div className={listClass}>
                     {news.map((item) => (
                         <div className={`${styles.card} ${elevatedStyles.elevated}`} key={item.id}>
                             {item.image_url && (

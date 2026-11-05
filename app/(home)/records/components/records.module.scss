@@ -104,4 +104,31 @@
     border-radius: 12px;
     padding: 16px 20px;
   }
+
+  .oneColumn {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // WikiNav's eight 90px muscle-group tabs are a single row ~830px wide,
+  // wider than the rail -- smaller tabs that wrap (4 + 4 on a narrow rail,
+  // one row on a wide one).
+  .railGroups {
+    > div {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      width: 64px;
+      min-width: 64px;
+      height: 64px;
+      min-height: 64px;
+      row-gap: 4px;
+    }
+
+    img {
+      width: 28px;
+      height: 28px;
+    }
+  }
 }
