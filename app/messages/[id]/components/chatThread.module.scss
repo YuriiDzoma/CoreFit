@@ -45,6 +45,16 @@
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover .name {
+    text-decoration: underline;
+  }
+
+  &[aria-disabled='true'] {
+    cursor: default;
+  }
 }
 
 .avatarWrap {

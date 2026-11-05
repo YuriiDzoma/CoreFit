@@ -21,12 +21,27 @@ self.addEventListener('push', (event) => {
   const body = payload.body || '';
   const conversationId = payload.conversationId || null;
 
+  // Skipped when a focused, visible tab already has this conversation open:
+  // its messages arrive there live. Only for a focused tab -- Chrome shows
+  // its own generic notification for a push that shows nothing while no
+  // CoreFit tab is in front.
   event.waitUntil(
-    self.registration.showNotification(title, {
-      body,
-      icon: '/icons/icon-192x192.png',
-      badge: '/icons/icon-192x192.png',
-      data: { conversationId },
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      const chatInFront =
+        conversationId &&
+        clientList.some(
+          (client) =>
+            client.focused &&
+            client.visibilityState === 'visible' &&
+            new URL(client.url).pathname === `/messages/${conversationId}`,
+        );
+      if (chatInFront) return;
+      return self.registration.showNotification(title, {
+        body,
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/icon-192x192.png',
+        data: { conversationId },
+      });
     }),
   );
 });

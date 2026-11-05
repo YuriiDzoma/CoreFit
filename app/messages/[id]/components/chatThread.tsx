@@ -266,7 +266,12 @@ export default function ChatThread() {
 
     return (
         <div className={styles.thread}>
-            <div className={styles.contactRow}>
+            <Link
+                href={otherProfile ? `/profile/${otherProfile.id}` : '#'}
+                className={styles.contactRow}
+                aria-disabled={!otherProfile}
+                onClick={(e) => { if (!otherProfile) e.preventDefault(); }}
+            >
                 <span className={styles.avatarWrap}>
                     <Image
                         src={otherProfile?.avatar_url || avatarFallbackUrl(name)}
@@ -283,7 +288,7 @@ export default function ChatThread() {
                         <p className={lastActive.isOnline ? styles.online : styles.lastSeen}>{lastActive.text}</p>
                     )}
                 </div>
-            </div>
+            </Link>
 
             <div className={styles.messagesList} ref={listRef} onScroll={(e) => {
                 if (e.currentTarget.scrollTop < 40) handleLoadMore();
