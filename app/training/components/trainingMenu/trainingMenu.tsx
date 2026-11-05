@@ -28,6 +28,11 @@ const ITEM_DEFS = [
     },
 ];
 
+// The program wizard (create, and edit which reuses it) is a focused flow
+// with its own Back/Next -- no section tabs there.
+const isProgramWizard = (pathname: string) =>
+    pathname.startsWith('/training/create') || /^\/training\/program\/[^/]+\/edit/.test(pathname);
+
 // Floating glass pill bar, matching the mobile app's own `TrainingSubNav`
 // -- see that component's comment for why this is a deliberate floating
 // bar rather than in-flow chrome now that Header/Navigation are both
@@ -36,6 +41,8 @@ const TrainingMenu = () => {
     const { width } = useWindowSize();
     const pathname = usePathname();
     const { base } = useAppSelector(getText);
+
+    if (isProgramWizard(pathname)) return null;
 
     if (width > 768) {
         return (

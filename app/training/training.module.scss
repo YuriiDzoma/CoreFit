@@ -45,4 +45,16 @@
 .menu {
   flex-shrink: 0;
   margin-bottom: 8px;
+
+  // TrainingMenu renders nothing in the program wizard -- drop the gap.
+  &:empty {
+    display: none;
+  }
+}
+
+// ...and the room the floating mobile bar would have needed.
+@media only screen and (max-width: 768px) {
+  .menu:empty + .content {
+    padding-bottom: 0;
+  }
 }
