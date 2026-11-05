@@ -3,7 +3,8 @@ import { createClient } from '@/utils/supabase/client';
 import {
     getConversationById,
     getConversationsForUser,
-    getReadMarkers,
+    getPeerReadMarkers,
+    getUnreadCounts,
     otherParticipantId,
 } from '@/lib/messagesData';
 import { fetchProfilesByIds } from '@/lib/userData';
@@ -18,7 +19,11 @@ export interface ConversationWithProfile {
 
 interface MessagesState {
     conversations: ConversationWithProfile[];
-    readMarkers: Record<string, string>;
+    // Unread messages per conversation (Sprint 150); absent = 0.
+    unreadCounts: Record<string, number>;
+    // The other participant's read marker per conversation -- ticks on my
+    // last message in the list.
+    peerReadMarkers: Record<string, string>;
     loading: boolean;
     refresh: (userId: string) => Promise<void>;
     markRead: (conversationId: string) => void;
@@ -26,27 +31,20 @@ interface MessagesState {
     subscribeToRealtime: (userId: string) => void;
 }
 
-// Unread means: the conversation's last message wasn't sent by me, and
-// either I've never opened it or I opened it before that last message
-// arrived. Purely a local badge-count heuristic -- not a shared read
-// receipt, see `conversation_reads`' own comment in the migration.
-export function isUnreadEntry(
-    { conversation }: ConversationWithProfile,
-    userId: string,
-    readMarkers: Record<string, string>
-): boolean {
-    if (!conversation.last_message_at || !conversation.last_message_sender_id) return false;
-    if (conversation.last_message_sender_id === userId) return false;
-    const readAt = readMarkers[conversation.id];
-    return !readAt || new Date(readAt) < new Date(conversation.last_message_at);
+// Unread messages across all conversations -- the Messages badge.
+export function selectUnreadCount(unreadCounts: Record<string, number>): number {
+    return Object.values(unreadCounts).reduce((sum, count) => sum + count, 0);
 }
 
-export function selectUnreadCount(
-    conversations: ConversationWithProfile[],
-    readMarkers: Record<string, string>,
-    userId: string
-): number {
-    return conversations.filter((entry) => isUnreadEntry(entry, userId, readMarkers)).length;
+// Conversations, unread counts and peer read markers in one go -- what
+// both the first load and the quiet background refresh need.
+async function fetchListState(userId: string) {
+    const [conversations, unreadCounts, peerReadMarkers] = await Promise.all([
+        fetchConversationsWithProfiles(userId),
+        getUnreadCounts(),
+        getPeerReadMarkers(userId),
+    ]);
+    return { conversations, unreadCounts, peerReadMarkers };
 }
 
 async function fetchConversationsWithProfiles(userId: string): Promise<ConversationWithProfile[]> {
@@ -61,25 +59,22 @@ async function fetchConversationsWithProfiles(userId: string): Promise<Conversat
 
 export const useMessagesStore = create<MessagesState>((set, get) => ({
     conversations: [],
-    readMarkers: {},
+    unreadCounts: {},
+    peerReadMarkers: {},
     loading: true,
 
     refresh: async (userId) => {
         set({ loading: true });
-        const [conversations, readMarkers] = await Promise.all([
-            fetchConversationsWithProfiles(userId),
-            getReadMarkers(userId),
-        ]);
-        set({ conversations, readMarkers, loading: false });
+        set({ ...(await fetchListState(userId)), loading: false });
     },
 
     // Local only -- the chat thread already awaited the real
     // `markConversationRead` write before calling this; re-deriving the
     // badge from a full refetch here would just add a flash of stale state.
     markRead: (conversationId) => {
-        set({
-            readMarkers: { ...get().readMarkers, [conversationId]: new Date().toISOString() },
-        });
+        const { [conversationId]: _cleared, ...rest } = get().unreadCounts;
+        void _cleared;
+        set({ unreadCounts: rest });
     },
 
     // Local removal right after this user deleted/cleared a chat -- the
@@ -121,6 +116,22 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
                 { event: 'UPDATE', schema: 'public', table: 'conversations' },
                 () => scheduleQuietRefresh(userId)
             )
+            // Read markers (Sprint 150): the other participant's turns my
+            // ticks double; my own (another tab/device) re-derives counts.
+            // RLS limits these to my conversations' participants.
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'conversation_reads' },
+                (payload: RealtimePostgresChangesPayload<Record<string, unknown>>) => {
+                    const row = payload.new as { conversation_id?: string; user_id?: string; last_read_at?: string };
+                    if (!row.conversation_id || !row.last_read_at) return;
+                    if (row.user_id === userId) {
+                        scheduleQuietRefresh(userId);
+                        return;
+                    }
+                    set({ peerReadMarkers: { ...get().peerReadMarkers, [row.conversation_id]: row.last_read_at } });
+                }
+            )
             .on(
                 'postgres_changes',
                 { event: 'DELETE', schema: 'public', table: 'conversations' },
@@ -146,11 +157,7 @@ function scheduleQuietRefresh(userId: string): void {
     if (quietRefreshTimer) clearTimeout(quietRefreshTimer);
     quietRefreshTimer = setTimeout(async () => {
         quietRefreshTimer = null;
-        const [conversations, readMarkers] = await Promise.all([
-            fetchConversationsWithProfiles(userId),
-            getReadMarkers(userId),
-        ]);
-        useMessagesStore.setState({ conversations, readMarkers, loading: false });
+        useMessagesStore.setState({ ...(await fetchListState(userId)), loading: false });
     }, 400);
 }
 
@@ -175,6 +182,15 @@ async function applyIncomingMessage(
         typeof createdAt !== 'string'
     ) {
         return;
+    }
+
+    // Someone else's message: one more unread. The open thread (if it's
+    // this one) marks it read right after, which zeroes it again.
+    if (senderId !== currentUserId) {
+        const { unreadCounts } = useMessagesStore.getState();
+        useMessagesStore.setState({
+            unreadCounts: { ...unreadCounts, [conversationId]: (unreadCounts[conversationId] ?? 0) + 1 },
+        });
     }
 
     const { conversations } = useMessagesStore.getState();

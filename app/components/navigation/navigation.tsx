@@ -37,8 +37,8 @@ const Navigation = () => {
 const useNavState = (pathname: string) => {
     const userId = useAppSelector(getUserId);
     const { requests } = useFriendRequestStore();
-    const { conversations, readMarkers } = useMessagesStore();
-    const unreadMessages = userId ? selectUnreadCount(conversations, readMarkers, userId) : 0;
+    const { unreadCounts } = useMessagesStore();
+    const unreadMessages = userId ? selectUnreadCount(unreadCounts) : 0;
     const [profile, setProfile] = useState<ProfileType | null>(null);
 
     useEffect(() => {

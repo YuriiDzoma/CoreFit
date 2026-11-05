@@ -8,10 +8,10 @@ import { Conversation, Message } from '@/types/messages';
  * `getOrCreateConversation` canonical-pair-ordering logic -- this MUST
  * match mobile's sort behavior, or the two platforms could create two
  * separate conversation rows for the same pair of users). Beta scope:
- * 1-on-1 only, any user can message any other user, text only, no read
- * receipts visible to the other participant (see `conversation_reads`'
- * own RLS in the migration -- a personal unread-badge marker, not a
- * shared "seen" feature).
+ * 1-on-1 only, any user can message any other user, text only. Read
+ * receipts since Sprint 150: each participant can see the other's
+ * `conversation_reads` marker (ticks), and unread counts come from the
+ * `unread_message_counts` RPC.
  *
  * Follows this repo's own established lib convention (friendData.ts,
  * userData.ts): swallow the Supabase error, console.error it, and return
@@ -142,24 +142,42 @@ export async function sendMessage(
     return data ?? null;
 }
 
-// Personal "read up to here" marker for the unread badge -- never exposed
-// to the other participant. Upserted when the chat thread is opened, not
-// per incoming message while it's open.
-export async function markConversationRead(conversationId: string, userId: string): Promise<void> {
+// This user's "read up to here" marker, stamped by the server
+// (`mark_conversation_read`) so it shares a clock with message
+// `created_at`. The other participant sees it as ticks on their own
+// messages. Same as mobile's messages.ts.
+export async function markConversationRead(conversationId: string): Promise<void> {
     const supabase = createClient();
-    const { error } = await supabase.from('conversation_reads').upsert(
-        { conversation_id: conversationId, user_id: userId, last_read_at: new Date().toISOString() },
-        { onConflict: 'conversation_id,user_id' }
-    );
+    const { error } = await supabase.rpc('mark_conversation_read', { p_conversation_id: conversationId });
     if (error) console.error('Error marking conversation read:', error);
 }
 
-export async function getReadMarkers(userId: string): Promise<Record<string, string>> {
+// Unread messages per conversation for the signed-in user; conversations
+// with none are absent. Hidden-for-me and cleared messages don't count
+// (the RPC runs under `messages`' RLS).
+export async function getUnreadCounts(): Promise<Record<string, number>> {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc('unread_message_counts');
+    if (error) {
+        console.error('Error fetching unread counts:', error);
+        return {};
+    }
+
+    const counts: Record<string, number> = {};
+    for (const row of (data ?? []) as { conversation_id: string; unread_count: number }[]) {
+        counts[row.conversation_id] = row.unread_count;
+    }
+    return counts;
+}
+
+// The other participants' read markers, keyed by conversation -- a
+// message of mine is read once that marker reaches its `created_at`.
+export async function getPeerReadMarkers(userId: string): Promise<Record<string, string>> {
     const supabase = createClient();
     const { data, error } = await supabase
         .from('conversation_reads')
         .select('conversation_id, last_read_at')
-        .eq('user_id', userId);
+        .neq('user_id', userId);
 
     if (error) {
         console.error('Error fetching read markers:', error);
@@ -171,6 +189,28 @@ export async function getReadMarkers(userId: string): Promise<Record<string, str
         markers[row.conversation_id as string] = row.last_read_at as string;
     }
     return markers;
+}
+
+// One conversation's read marker for the other participant, or null if
+// they haven't opened it yet.
+export async function getPeerReadAt(conversationId: string, peerId: string): Promise<string | null> {
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('conversation_reads')
+        .select('last_read_at')
+        .eq('conversation_id', conversationId)
+        .eq('user_id', peerId)
+        .maybeSingle();
+
+    if (error) {
+        console.error('Error fetching read marker:', error);
+        return null;
+    }
+    return (data?.last_read_at as string | undefined) ?? null;
+}
+
+export function isReadByPeer(createdAt: string, peerReadAt: string | null | undefined): boolean {
+    return !!peerReadAt && new Date(peerReadAt) >= new Date(createdAt);
 }
 
 // "Delete for everyone" -- a real DELETE, sender-only (RLS). The other

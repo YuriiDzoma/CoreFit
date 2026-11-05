@@ -13,7 +13,9 @@ import {
     editMessage,
     getConversationById,
     getMessages,
+    getPeerReadAt,
     hideMessageForMe,
+    isReadByPeer,
     markConversationRead,
     MESSAGES_PAGE_SIZE,
     otherParticipantId,
@@ -54,10 +56,25 @@ export default function ChatThread() {
     // Telegram-style edit mode: the input holds the message's text and Send
     // saves it in place instead of posting a new one.
     const [editingMessage, setEditingMessage] = useState<Message | null>(null);
+    // The other participant's read marker -- double ticks on my messages up
+    // to it (Sprint 150).
+    const [peerReadAt, setPeerReadAt] = useState<string | null>(null);
 
     useEffect(() => {
         if (!conversationId || !userId) return;
         let cancelled = false;
+
+        // Only while the tab is visible: a message arriving in a background
+        // tab isn't read yet, and the sender would see double ticks for it.
+        // Coming back to the tab marks it then.
+        const markRead = () => {
+            if (document.visibilityState !== 'visible') return;
+            markConversationRead(conversationId).then(() => markReadInStore(conversationId));
+        };
+        const handleVisibility = () => {
+            if (document.visibilityState === 'visible') markRead();
+        };
+        document.addEventListener('visibilitychange', handleVisibility);
 
         (async () => {
             const conversation = await getConversationById(conversationId);
@@ -84,7 +101,9 @@ export default function ChatThread() {
             // the thread instead of the bottom.
             setMessages(page.slice().reverse());
             setHasMore(page.length === MESSAGES_PAGE_SIZE);
-            markConversationRead(conversationId, userId).then(() => markReadInStore(conversationId));
+            markRead();
+            const readAt = await getPeerReadAt(conversationId, otherId);
+            if (!cancelled) setPeerReadAt(readAt);
         })();
 
         const supabase = createClient();
@@ -101,9 +120,7 @@ export default function ChatThread() {
                 (payload) => {
                     const row = payload.new as Message;
                     setMessages((prev) => (prev.some((m) => m.id === row.id) ? prev : [...prev, row]));
-                    if (row.sender_id !== userId) {
-                        markConversationRead(conversationId, userId).then(() => markReadInStore(conversationId));
-                    }
+                    if (row.sender_id !== userId) markRead();
                 }
             )
             // An edit (either side): swap the row in place. UPDATE payloads
@@ -128,6 +145,22 @@ export default function ChatThread() {
                 const deletedId = (payload.old as { id?: string }).id;
                 if (deletedId) setMessages((prev) => prev.filter((m) => m.id !== deletedId));
             })
+            // The other participant opening the chat: my ticks turn double.
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'conversation_reads',
+                    filter: `conversation_id=eq.${conversationId}`,
+                },
+                (payload) => {
+                    const row = payload.new as { user_id?: string; last_read_at?: string };
+                    if (row.user_id && row.user_id !== userId && row.last_read_at) {
+                        setPeerReadAt(row.last_read_at);
+                    }
+                }
+            )
             // The other participant deleted the whole chat for both.
             .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'conversations' }, (payload) => {
                 if ((payload.old as { id?: string }).id !== conversationId) return;
@@ -138,6 +171,7 @@ export default function ChatThread() {
 
         return () => {
             cancelled = true;
+            document.removeEventListener('visibilitychange', handleVisibility);
             supabase.removeChannel(channel);
         };
     }, [conversationId, userId, markReadInStore]);
@@ -309,6 +343,7 @@ export default function ChatThread() {
                                 <MessageBubble
                                     message={message}
                                     isOwn={message.sender_id === userId}
+                                    read={isReadByPeer(message.created_at, peerReadAt)}
                                     onLongPress={() => setActionMessage(message)}
                                 />
                             </React.Fragment>

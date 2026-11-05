@@ -5,8 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAppSelector } from '@/app/hooks/redux';
 import { getText, getUserId } from '@/store/selectors';
-import { useMessagesStore, isUnreadEntry, ConversationWithProfile } from '@/store/useMessagesStore';
-import { clearConversationForMe, deleteConversationForEveryone } from '@/lib/messagesData';
+import { Check, CheckCheck } from 'lucide-react';
+import { useMessagesStore, ConversationWithProfile } from '@/store/useMessagesStore';
+import { clearConversationForMe, deleteConversationForEveryone, isReadByPeer } from '@/lib/messagesData';
 import { useLongPress } from '@/app/hooks/useLongPress';
 import GlobalPopup from '@/app/components/globalPopup/globalPopup';
 import { formatConversationTime } from '@/lib/formatMessageTime';
@@ -19,12 +20,16 @@ import { formatLastActive } from '@/lib/lastActive';
 function ConversationRow({
     entry,
     userId,
-    unread,
+    unreadCount,
+    peerReadAt,
     onLongPress,
 }: {
     entry: ConversationWithProfile;
     userId: string;
-    unread: boolean;
+    // Unread messages from the other participant -- a red count pill.
+    unreadCount: number;
+    // Their read marker: ticks when the last message is mine.
+    peerReadAt?: string;
     onLongPress: () => void;
 }) {
     const longPress = useLongPress(onLongPress);
@@ -32,6 +37,9 @@ function ConversationRow({
     const { conversation, otherProfile } = entry;
     const name = otherProfile?.username ?? base.unknownUser;
     const isOnline = formatLastActive(otherProfile?.last_active_at)?.isOnline ?? false;
+
+    const lastIsMine = !!conversation.last_message_at && conversation.last_message_sender_id === userId;
+    const lastRead = lastIsMine && isReadByPeer(conversation.last_message_at as string, peerReadAt);
 
     const preview = conversation.last_message_body
         ? conversation.last_message_sender_id === userId
@@ -58,9 +66,19 @@ function ConversationRow({
                 </div>
                 <div className={styles.metaCol}>
                     {conversation.last_message_at && (
-                        <span className={styles.time}>{formatConversationTime(conversation.last_message_at)}</span>
+                        <span className={styles.timeRow}>
+                            {lastIsMine &&
+                                (lastRead ? (
+                                    <CheckCheck size={14} strokeWidth={2.4} className={styles.tickRead} aria-label={base.messageRead} />
+                                ) : (
+                                    <Check size={14} strokeWidth={2.4} className={styles.tickSent} aria-label={base.messageSent} />
+                                ))}
+                            <span className={styles.time}>{formatConversationTime(conversation.last_message_at)}</span>
+                        </span>
                     )}
-                    {unread && <span className={styles.unreadDot} />}
+                    {unreadCount > 0 && (
+                        <span className={styles.unreadPill}>{unreadCount > 99 ? '99+' : unreadCount}</span>
+                    )}
                 </div>
             </Link>
         </li>
@@ -70,7 +88,8 @@ function ConversationRow({
 export default function ConversationList() {
     const userId = useAppSelector(getUserId);
     const { base } = useAppSelector(getText);
-    const { conversations, readMarkers, loading, subscribeToRealtime, removeConversation } = useMessagesStore();
+    const { conversations, unreadCounts, peerReadMarkers, loading, subscribeToRealtime, removeConversation } =
+        useMessagesStore();
 
     const [pendingDelete, setPendingDelete] = useState<ConversationWithProfile | null>(null);
     const [alsoForOther, setAlsoForOther] = useState(false);
@@ -125,7 +144,8 @@ export default function ConversationList() {
                                 key={entry.conversation.id}
                                 entry={entry}
                                 userId={userId}
-                                unread={isUnreadEntry(entry, userId, readMarkers)}
+                                unreadCount={unreadCounts[entry.conversation.id] ?? 0}
+                                peerReadAt={peerReadMarkers[entry.conversation.id]}
                                 onLongPress={() => openDeleteDialog(entry)}
                             />
                         ))}

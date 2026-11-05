@@ -82,6 +82,8 @@ const initialState = {
             editMessage: 'Edit',
             editingMessage: 'Editing',
             messageEdited: 'edited',
+            messageSent: 'Sent',
+            messageRead: 'Read',
             cancelEditMessage: 'Cancel editing',
             deleteForEveryone: 'Delete for everyone',
             deleteForMe: 'Delete for me',

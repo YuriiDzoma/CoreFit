@@ -61,7 +61,24 @@
   font-size: 15px;
 }
 
-.time {
+.meta {
   align-self: flex-end;
+  display: flex;
+  align-items: center;
+  column-gap: 3px;
+}
+
+.time {
   font-size: 11px;
+}
+
+// On the navy own bubble: a sent tick in the same 70% white as the time, a
+// read pair in a light blue that stands out from it at a glance (same
+// colors as the mobile app's MessageBubble).
+.tickSent {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tickRead {
+  color: #7cc8ff;
 }
