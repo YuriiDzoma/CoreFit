@@ -165,6 +165,10 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 30px;
+    // The list has a fixed height (above), so without this a short result
+    // set (a search hit or two) stretched its rows to fill it and the
+    // exercises floated mid-list instead of starting at the top.
+    align-content: start;
   }
 
   .exercise {
