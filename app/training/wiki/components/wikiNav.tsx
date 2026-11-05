@@ -23,6 +23,8 @@ const WikiNav = ( {activeTab, handleChangeTab, isCreate = false }:WikiNavTypes )
         {name: training.shoulders, icon: '/musclesIcons/shoulders.png', iconLight: '/musclesIcons/shouldersLight.png', value: 'Shoulders'},
         {name: training.legs, icon: '/musclesIcons/legs.png', iconLight: '/musclesIcons/legsLight.png', value: 'Legs'},
         {name: training.abs, icon: '/musclesIcons/abs.png', iconLight: '/musclesIcons/absLight.png', value: 'Abs'},
+        // Sprint 153: cardio machines, burpees, Olympic lifts.
+        {name: training.fullBody, icon: '/musclesIcons/fullBody.png', iconLight: '/musclesIcons/fullBodyLight.png', value: 'FullBody'},
     ];
 
     return (

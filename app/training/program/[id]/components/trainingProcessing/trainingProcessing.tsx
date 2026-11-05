@@ -6,7 +6,7 @@ import { ProgramFull } from '../../../../../../types/training';
 import { useForm } from 'react-hook-form';
 import {getText} from "../../../../../../store/selectors";
 import {useAppSelector} from "../../../../../hooks/redux";
-import {completeDay, fetchDrafts, saveDraft} from "../../../../../../lib/trainingData";
+import {completeDay, fetchCardioExerciseIds, fetchDrafts, saveDraft} from "../../../../../../lib/trainingData";
 import Preloader from "../../../../../../ui/preloader/Preloader";
 import ReplayIcon from "@mui/icons-material/Replay";
 
@@ -58,6 +58,14 @@ const TrainingProcessing = ({ program, activeTab, onComplete, ownerId, history }
     const userId = ownerId;
     const { register, handleSubmit, setValue, watch } = useForm<FormValues>();
     const [dates, setDates] = useState<Record<number, string>>({});
+    // Cardio exercises are logged as minutes/km, not weight/reps (Sprint
+    // 153) -- only the placeholder changes, the field stays the same.
+    const [cardioIds, setCardioIds] = useState<Set<string>>(new Set());
+    const exerciseIdsKey = program.days.flatMap((day) => day.exercises.map((exercise) => exercise.id)).join(',');
+
+    useEffect(() => {
+        fetchCardioExerciseIds(exerciseIdsKey ? exerciseIdsKey.split(',') : []).then(setCardioIds);
+    }, [exerciseIdsKey]);
     const [submittedDays, setSubmittedDays] = useState<Record<number, boolean>>({});
     // Subscribes to every registered field (no argument), so this
     // re-renders -- and the Complete button's disabled state below
@@ -177,7 +185,7 @@ const TrainingProcessing = ({ program, activeTab, onComplete, ownerId, history }
                             <input
                                 className={styles.input}
                                 style={activeTab === 1 ? { height: '30px' } : undefined}
-                                placeholder="XXX/YY"
+                                placeholder={cardioIds.has(exercise.id) ? training.cardioPlaceholder : 'XXX/YY'}
                                 {...register(exercise.programExerciseId, {
                                     onChange: (e) => {
                                         e.target.value = sanitizeWeightRepsValue(e.target.value);

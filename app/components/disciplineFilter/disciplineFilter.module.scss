@@ -1,0 +1,41 @@
+// Same look as SubTabs (subTabs.module.scss), stretched to full width with
+// four equal segments.
+.filter {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background-color: var(--elevated-bg);
+  border: 1px solid var(--chrome-divider);
+  margin-bottom: 16px;
+}
+
+.segment,
+.segmentActive {
+  height: 36px;
+  border: none;
+  border-radius: 9px;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    color: var(--text-color);
+  }
+}
+
+.segmentActive,
+.segmentActive:hover {
+  color: var(--text-color);
+  background-color: var(--nav-active-bg);
+}

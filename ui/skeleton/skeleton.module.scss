@@ -1028,3 +1028,13 @@
     column-gap: 32px;
   }
 }
+
+// Wiki's DisciplineFilter bar (disciplineFilter.module.scss): 36px segments
+// + 4px padding + 1px border, 12px radius, 16px below.
+.disciplineFilter {
+  display: block;
+  height: 46px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  background-color: var(--skeleton-bg);
+}

@@ -4,7 +4,12 @@ export type exerciseTypes = {
     image: string;
     // Names in every language, for search only (see exerciseMatchesQuery).
     searchNames?: string[];
+    // strength / cardio / crossfit (Sprint 153) -- an exercise can be several.
+    disciplines?: string[];
 };
+
+export const DISCIPLINES = ['strength', 'cardio', 'crossfit'] as const;
+export type Discipline = (typeof DISCIPLINES)[number];
 
 
 export type ProgramType = {

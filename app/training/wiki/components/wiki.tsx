@@ -8,7 +8,8 @@ import {getLanguage, getText} from "../../../../store/selectors";
 import {exerciseMatchesQuery, fetchExercisesByGroup} from "../../../../lib/trainingData";
 import Preloader from "../../../../ui/preloader/Preloader";
 import Exercise from "./Exercise";
-import {exerciseTypes} from "../../../../types/training";
+import {exerciseTypes, type Discipline} from "../../../../types/training";
+import DisciplineFilter from "../../../components/disciplineFilter/disciplineFilter";
 import {ExerciseListSkeleton} from "../../../../ui/skeleton/skeleton";
 
 
@@ -24,6 +25,8 @@ export default function Wiki() {
     // group is a server-side re-fetch per tab, search filters the already-
     // loaded result), not a second server round-trip.
     const [searchQuery, setSearchQuery] = useState<string>('');
+    // Client-side like the search (Sprint 153); null = every discipline.
+    const [discipline, setDiscipline] = useState<Discipline | null>(null);
 
 
     const fetchExercises = (value: string) => {
@@ -49,8 +52,9 @@ export default function Wiki() {
     }
 
     const filteredExercises = useMemo(() => {
-        return exercises.filter((item) => exerciseMatchesQuery(item, searchQuery));
-    }, [exercises, searchQuery]);
+        return exercises.filter((item) =>
+            (!discipline || !!item.disciplines?.includes(discipline)) && exerciseMatchesQuery(item, searchQuery));
+    }, [exercises, searchQuery, discipline]);
 
     return (
         <div>
@@ -75,11 +79,15 @@ export default function Wiki() {
                         )}
                     </div>
 
+                    <DisciplineFilter selected={discipline} onSelect={setDiscipline} />
+
                     <div className={styles.content}>
                         <ul className={styles.exercisesList}>
                             {filteredExercises.length === 0 ? (
                                 <li className={styles.emptyState}>
-                                    {training.noExercisesMatch.replace('{value}', searchQuery.trim())}
+                                    {searchQuery.trim()
+                                        ? training.noExercisesMatch.replace('{value}', searchQuery.trim())
+                                        : training.noExercises}
                                 </li>
                             ) : (
                                 filteredExercises.map((item, index) => (

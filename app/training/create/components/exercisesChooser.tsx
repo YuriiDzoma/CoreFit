@@ -4,8 +4,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styles from './create.module.scss';
 import { useAppSelector } from '@/app/hooks/redux';
 import { getLanguage, getText } from '@/store/selectors';
-import { exerciseMatchesQuery, fetchExercisesByGroup, fetchExercisesByIds } from '@/lib/trainingData';
-import { exerciseTypes } from '@/types/training';
+import { exerciseMatchesQuery, fetchExercisesByGroup, fetchExercisesByIds, isCardio } from '@/lib/trainingData';
+import { exerciseTypes, type Discipline } from '@/types/training';
+import DisciplineFilter from '@/app/components/disciplineFilter/disciplineFilter';
 import WikiNav from "../../wiki/components/wikiNav";
 import ExercisesList from "./exercisesList";
 import Preloader from "../../../../ui/preloader/Preloader";
@@ -14,7 +15,7 @@ interface ExercisesChooserProps {
     setIsShowPopup: (value: boolean) => void;
     onSelect: (
         selected: string[],
-        map: Record<string, { name: string; image: string }>
+        map: Record<string, { name: string; image: string; cardio?: boolean }>
     ) => void;
     selectedDefault?: string[];
 }
@@ -31,8 +32,9 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
     const [activeTab, setActiveTab] = useState('All');
     const [exercises, setExercises] = useState<exerciseTypes[]>([]);
     const [selected, setSelected] = useState<string[]>([]);
-    const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string }>>({});
+    const [exerciseMap, setExerciseMap] = useState<Record<string, { name: string; image: string; cardio?: boolean }>>({});
     const [searchQuery, setSearchQuery] = useState('');
+    const [discipline, setDiscipline] = useState<Discipline | null>(null);
 
     useEffect(() => {
         const shouldLoad = selectedDefault.length > 0 && selected.length === 0 && language;
@@ -66,6 +68,7 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
                             updated[ex.id] = {
                                 name: ex.name,
                                 image: ex.image,
+                                cardio: isCardio(ex.disciplines),
                             };
                         }
                     });
@@ -90,8 +93,9 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
 
     const trimmedQuery = searchQuery.trim();
     const filteredExercises = useMemo(
-        () => exercises.filter((exercise) => exerciseMatchesQuery(exercise, searchQuery)),
-        [exercises, searchQuery],
+        () => exercises.filter((exercise) =>
+            (!discipline || !!exercise.disciplines?.includes(discipline)) && exerciseMatchesQuery(exercise, searchQuery)),
+        [exercises, searchQuery, discipline],
     );
 
     return (
@@ -114,11 +118,15 @@ const ExercisesChooser: React.FC<ExercisesChooserProps> = ({
                     )}
                 </div>
 
+                <DisciplineFilter selected={discipline} onSelect={setDiscipline} />
+
                 <div className={styles.popup__content}>
                     <WikiNav activeTab={activeTab} handleChangeTab={setActiveTab} isCreate />
-                    {trimmedQuery && filteredExercises.length === 0 ? (
+                    {(trimmedQuery || discipline) && filteredExercises.length === 0 ? (
                         <p className={styles.emptyState}>
-                            {training.noExercisesMatch.replace('{value}', searchQuery.trim())}
+                            {trimmedQuery
+                                ? training.noExercisesMatch.replace('{value}', trimmedQuery)
+                                : training.noExercises}
                         </p>
                     ) : (
                         <ExercisesList

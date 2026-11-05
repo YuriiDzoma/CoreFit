@@ -21,6 +21,7 @@ const ExerciseDetail = () => {
         video: string;
         image: string;
         type: string;
+        disciplines: string[];
     }>(null);
 
     useEffect(() => {
@@ -43,6 +44,11 @@ const ExerciseDetail = () => {
             <h2 className={`${styles.title} pageTitle`}>{data.name}</h2>
             <div className={styles.exerciseDetail__info}>
                 <p><strong>{training.type}:</strong> {data.type === 'compound' ? training.compound : training.isolation}</p>
+                {data.disciplines.length > 0 && (
+                    <p><strong>{training.disciplines}:</strong> {data.disciplines
+                        .map((discipline) => ({strength: training.exStrength, cardio: training.exCardio, crossfit: training.exCrossfit} as Record<string, string>)[discipline] ?? discipline)
+                        .join(' · ')}</p>
+                )}
                 <p><strong>{training.secondaryMuscles}:</strong> {data.secondary ? data.secondary : training.none}</p>
             </div>
             <div className={styles.imgWrapper}>

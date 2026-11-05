@@ -49,18 +49,19 @@ const SelectExercisesStep: React.FC<Props> = ({
 
     const handleSelect = (
         selected: string[],
-        map: Record<string, { name: string; image: string }>
+        map: Record<string, { name: string; image: string; cardio?: boolean }>
     ) => {
         if (currentDayIndex !== null) {
             // Preserves each kept exercise's already-configured `sets`;
-            // newly-selected exercises default to 3 -- mirrors mobile's
+            // newly-selected exercises default to 3, or 1 for cardio (one
+            // effort logged as time/distance) -- mirrors mobile's
             // exercise-picker.tsx `handleConfirm` exactly.
             const existingSetsByExerciseId = new Map(
                 days[currentDayIndex].exercises.map((slot) => [slot.exerciseId, slot.sets])
             );
             const exercises = selected.map((exerciseId) => ({
                 exerciseId,
-                sets: existingSetsByExerciseId.get(exerciseId) ?? 3,
+                sets: existingSetsByExerciseId.get(exerciseId) ?? (map[exerciseId]?.cardio ? 1 : 3),
             }));
             onUpdateDay(currentDayIndex, exercises, map);
             setIsShowPopup(false);

@@ -265,6 +265,8 @@ export function ExerciseListSkeleton() {
     return (
         <div>
             <span className={styles.wikiSearch}/>
+            {/* DisciplineFilter (Sprint 153): a 46px segmented bar. */}
+            <span className={styles.disciplineFilter}/>
             <div className={styles.wiki}>
                 <div className={styles.exercisesList}>
                     {Array.from({ length: 10 }).map((_, index) => (

@@ -22,7 +22,7 @@ export const getMuscleGroupIdByName = async (group: string): Promise<string | nu
 export const fetchExercisesByGroup = async (
     group: string,
     lang: 'eng' | 'ukr' | 'rus'
-): Promise<{ id: string; name: string; image: string }[]> => {
+): Promise<exerciseTypes[]> => {
     const supabase = createClient();
 
     const fieldMap = {
@@ -39,7 +39,7 @@ export const fetchExercisesByGroup = async (
     // all languages (see exerciseMatchesQuery below).
     let query = supabase
         .from('exercises')
-        .select('id, name_en, name_uk, name_ru, image_url');
+        .select('id, name_en, name_uk, name_ru, image_url, disciplines');
 
     if (group !== 'All') {
         const groupId = await getMuscleGroupIdByName(group);
@@ -60,7 +60,30 @@ export const fetchExercisesByGroup = async (
         name: exercise[nameField] ?? exercise.name_en,
         image: exercise.image_url,
         searchNames: [exercise.name_en, exercise.name_uk, exercise.name_ru].filter(Boolean),
+        disciplines: exercise.disciplines ?? [],
     }));
+};
+
+// Cardio is logged as time/distance ("30/5" = 30 min, 5 km), not weight/reps
+// (Sprint 153). Mirrors mobile's `isCardio`.
+export const isCardio = (disciplines: string[] | undefined): boolean =>
+    !!disciplines?.includes('cardio');
+
+// Which of these exercises are cardio -- the workout form only has exercise
+// ids, and swaps its "XXX/YY" placeholder for "min/km" on those.
+export const fetchCardioExerciseIds = async (ids: string[]): Promise<Set<string>> => {
+    const supabase = createClient();
+    if (!ids.length) return new Set();
+    const {data, error} = await supabase
+        .from('exercises')
+        .select('id')
+        .in('id', ids)
+        .contains('disciplines', ['cardio']);
+    if (error) {
+        console.error('Error fetching cardio exercises:', error.message);
+        return new Set();
+    }
+    return new Set((data ?? []).map((row) => row.id as string));
 };
 
 // Case-insensitive, and folds the spelling variants a user is likely to type
@@ -89,6 +112,7 @@ export const fetchExerciseById = async (
     video: string;
     image: string;
     type: string;
+    disciplines: string[];
 } | null> => {
     const supabase = createClient();
 
@@ -127,6 +151,7 @@ export const fetchExerciseById = async (
         'video_url',
         'image_url',
         'type',
+        'disciplines',
     ].join(',');
 
     const {data, error} = await supabase
@@ -149,6 +174,7 @@ export const fetchExerciseById = async (
         video: record.video_url,
         image: record.image_url,
         type: record.type,
+        disciplines: record.disciplines ?? [],
     };
 };
 
