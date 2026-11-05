@@ -30,16 +30,8 @@ import { Conversation, Message } from '@/types/messages';
 import { ProfileType } from '@/types/user';
 import ActionMenu, { ActionMenuItem } from '@/app/components/actionMenu/actionMenu';
 import MessageBubble from './messageBubble';
+import ChatThreadSkeleton from './chatThreadSkeleton';
 import styles from './chatThread.module.scss';
-
-// Alternating sides and uneven widths, newest at the bottom.
-const SKELETON_BUBBLES = [
-    { own: false, width: '45%', height: 44 },
-    { own: true, width: '32%', height: 44 },
-    { own: false, width: '58%', height: 64 },
-    { own: true, width: '40%', height: 44 },
-    { own: true, width: '24%', height: 44 },
-];
 
 type LoadState =
     | { state: 'loading' }
@@ -293,36 +285,7 @@ export default function ChatThread() {
         );
     }
 
-    // Same layout as the loaded thread (contact row, bubbles, input row) so a
-    // slow connection reads as loading, not as an empty chat. Mirrors
-    // mobile's ChatSkeleton.
-    if (loadState.state === 'loading') {
-        return (
-            <div className={styles.thread} aria-busy="true">
-                <div className={styles.contactRow}>
-                    <span className={`${styles.skeleton} ${styles.skeletonAvatar}`} />
-                    <div className={styles.skeletonText}>
-                        <span className={`${styles.skeleton} ${styles.skeletonName}`} />
-                        <span className={`${styles.skeleton} ${styles.skeletonStatus}`} />
-                    </div>
-                </div>
-                <div className={styles.messagesList}>
-                    {SKELETON_BUBBLES.map((bubble, index) => (
-                        <div key={index} className={bubble.own ? styles.skeletonRowOwn : styles.skeletonRow}>
-                            <span
-                                className={`${styles.skeleton} ${bubble.own ? styles.skeletonBubbleOwn : styles.skeletonBubble}`}
-                                style={{ width: bubble.width, height: bubble.height }}
-                            />
-                        </div>
-                    ))}
-                </div>
-                <div className={styles.inputRow}>
-                    <span className={`${styles.skeleton} ${styles.skeletonInput}`} />
-                    <span className={`${styles.skeleton} ${styles.skeletonSend}`} />
-                </div>
-            </div>
-        );
-    }
+    if (loadState.state === 'loading') return <ChatThreadSkeleton />;
     if (loadState.state === 'not-found') {
         return (
             <div className={styles.notFound}>
