@@ -37,6 +37,8 @@ const initialState = {
             noUsersMatch: 'No users match "{value}".',
             searchFriends: 'Search friends',
             noFriendsMatch: 'No friends match "{value}".',
+            noFriendsOwn: 'You don\'t have any friends yet.',
+            noFriendsOther: 'This user doesn\'t have any friends yet.',
             edit: 'Edit',
             save: 'Save',
             cancelRequest: 'Cancel request',

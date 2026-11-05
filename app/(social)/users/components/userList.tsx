@@ -15,10 +15,13 @@ import {
 import {getOutgoingPendingRequests, removeFriendship} from "@/lib/friendData";
 import User from "./user";
 import Preloader from "@/ui/preloader/Preloader";
+import { notifyFriendsChanged, onFriendsChanged } from '@/lib/friendsChanged';
+import { useInSocialColumns } from '../../socialColumns';
 
 export default function UserList() {
     const userId = useAppSelector(getUserId);
     const { base } = useAppSelector(getText);
+    const inColumns = useInSocialColumns();
 
     const [users, setUsers] = useState<ProfileType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -55,6 +58,20 @@ export default function UserList() {
         init();
     }, [userId]);
 
+    // A request accepted or a friend removed in the Friends/Requests column
+    // beside this one (1200+, socialLayout.tsx): refresh the buttons.
+    useEffect(() => {
+        if (!userId) return;
+        return onFriendsChanged(async () => {
+            const [pendingRaw, acceptedRelations] = await Promise.all([
+                getOutgoingPendingRequests(userId),
+                getAllFriendsOfUser(userId),
+            ]);
+            setPendingIds(pendingRaw);
+            setFriendIds(acceptedRelations.map(r => r.user_id === userId ? r.friend_id : r.user_id));
+        });
+    }, [userId]);
+
 
     const cancelFriend = async (friendId: string) => {
         setIsPreloader(true);
@@ -81,6 +98,7 @@ export default function UserList() {
         const res = await removeFriendship(friendId);
         if (res) {
             setFriendIds((prev) => prev.filter((id) => id !== friendId));
+            notifyFriendsChanged();
         }
         setIsPreloader(false);
     };
@@ -95,11 +113,11 @@ export default function UserList() {
     );
 
     return (
-        <div className={styles.users}>
+        <div className={`${styles.users} ${inColumns ? styles.oneColumn : ''}`}>
             <h2 className="pageTitle">{base.allUsers}</h2>
 
             {loading ? (
-                <UsersSkeleton />
+                <UsersSkeleton oneColumn={inColumns} />
             ) : (
                 <>
                     {users.length > 0 && (

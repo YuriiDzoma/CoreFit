@@ -136,4 +136,9 @@
     grid-template-columns: 1fr 1fr;
     grid-gap: 16px 32px;
   }
+
+  // One row per line in the 1200+ two-column layout (socialLayout.tsx).
+  .users.oneColumn ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

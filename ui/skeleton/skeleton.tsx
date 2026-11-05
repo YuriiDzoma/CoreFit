@@ -1,11 +1,12 @@
 import styles from './skeleton.module.scss'
 import React from "react";
 
-export function UsersSkeleton() {
+// `oneColumn`: the 1200+ two-column Friends layout -- one row per line.
+export function UsersSkeleton({ oneColumn = false }: { oneColumn?: boolean }) {
     return (
         <>
             <span className={styles.searchSkeleton}/>
-            <ul className={styles.users}>
+            <ul className={`${styles.users} ${oneColumn ? styles.listOneColumn : ''}`}>
                 {Array.from({ length: 4 }).map((_, index) => (
                     <li key={index} className={styles.user}>
                         <div className={styles.user__info}>
@@ -90,11 +91,11 @@ function RecordsSkeletonCard() {
     )
 }
 
-export function FriendsListSkeleton() {
+export function FriendsListSkeleton({ oneColumn = false }: { oneColumn?: boolean }) {
     return (
         <>
             <span className={styles.searchSkeleton}/>
-            <div className={styles.friendsListPage}>
+            <div className={`${styles.friendsListPage} ${oneColumn ? styles.listOneColumn : ''}`}>
                 {Array.from({ length: 4 }).map((_, index) => (
                     <div key={index} className={styles.friendsListPage__row}>
                         <span className={styles.friendsListPage__img}/>

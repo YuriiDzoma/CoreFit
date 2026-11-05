@@ -18,10 +18,13 @@ import { ProfileType } from '@/types/user';
 import type { TrainerClientRecord } from '@/types/trainerClient';
 import Image from 'next/image';
 import { useFriendRequestStore } from '@/store/useFriendRequestStore';
+import { notifyFriendsChanged } from '@/lib/friendsChanged';
+import { useInSocialColumns } from '../../socialColumns';
 
 const Requests = () => {
     const userId = useAppSelector(getUserId);
     const { base } = useAppSelector(getText);
+    const inColumns = useInSocialColumns();
 
     const { requests, removeRequest, subscribeToRealtime } = useFriendRequestStore();
     const [usersMap, setUsersMap] = useState<Record<string, ProfileType>>({});
@@ -55,6 +58,7 @@ const Requests = () => {
         setIsLoading(true);
         await acceptFriendRequest(id);
         removeRequest(id);
+        notifyFriendsChanged();
         setIsLoading(false);
     };
 
@@ -84,7 +88,7 @@ const Requests = () => {
 
     return (
         <div>
-            <h2 className="pageTitle">{base.requests}</h2>
+            {!inColumns && <h2 className="pageTitle">{base.requests}</h2>}
 
             <h3 className={styles.requestsTitle}>{base.friendRequestsTitle}</h3>
             {requests.length === 0 ? (

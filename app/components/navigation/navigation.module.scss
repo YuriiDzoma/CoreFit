@@ -61,6 +61,19 @@
   }
 }
 
+// The theme toggle is a button among links -- drop the native button look.
+.sidebarButton {
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
 .sidebarItemActive,
 .sidebarItemActive:hover {
   color: var(--text-color);

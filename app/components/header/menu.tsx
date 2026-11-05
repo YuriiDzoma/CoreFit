@@ -1,26 +1,22 @@
 import styles from "./header.module.scss";
 import Image from "next/image";
 import Link from "next/link";
-import {useAppDispatch, useAppSelector} from "../../hooks/redux";
-import {getIsDarkTheme, getText, getUserId} from "../../../store/selectors";
+import {useAppSelector} from "../../hooks/redux";
+import {getText} from "../../../store/selectors";
 import React, {useEffect, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {useRouter} from "next/navigation";
-import {updateUserProfile} from "../../../lib/userData";
 import {signOut} from "@/lib/authClient";
-import { setIsDarkTheme } from '@/store/account-slice';
 import Preloader from "../../../ui/preloader/Preloader";
 import GlobalPopup from "@/app/components/globalPopup/globalPopup";
+import useThemeToggle from "../../hooks/useThemeToggle";
 
 
 const Menu = () => {
-    const isDark = useAppSelector(getIsDarkTheme);
-    const userId = useAppSelector(getUserId);
-    const dispatch = useAppDispatch();
+    const { isDark, toggleTheme, isSaving } = useThemeToggle();
     const { base } = useAppSelector(getText);
     const router = useRouter();
     const [isActive, setIsActive] = useState<boolean>(false);
-    const [isPreloader, setIsPreloader] = useState<boolean>(false);
     const [confirmingSignOut, setConfirmingSignOut] = useState<boolean>(false);
     // Where the portaled dropdown should render -- measured from the real
     // button position (same technique the mobile app's own Header uses,
@@ -55,17 +51,6 @@ const Menu = () => {
 
     const toggleMenu = () => (isActive ? setIsActive(false) : openMenu());
 
-    const handleToggleTheme = async () => {
-        if (!userId) return;
-        setIsPreloader(true);
-
-        const updatedTheme = await updateUserProfile(userId, { dark: !isDark });
-        console.log(updatedTheme)
-        const themeString = updatedTheme?.dark ? 'dark' : 'light';
-        dispatch(setIsDarkTheme(updatedTheme?.dark));
-        document.documentElement.setAttribute('data-theme', themeString);
-        setIsPreloader(false);
-    };
 
     // Asks first (GlobalPopup), same as the Settings page's own button.
     const handleSignOut = async () => {
@@ -103,7 +88,7 @@ const Menu = () => {
                             <Link href="/settings" onClick={() => setIsActive(false)}>
                                 <span>{base.settings}</span>
                             </Link>
-                            <button className={styles.menu__language} onClick={handleToggleTheme}>
+                            <button className={styles.menu__language} onClick={toggleTheme}>
                                 <span>{base.theme}: </span>
                                 {isDark
                                     ? <Image
@@ -133,7 +118,7 @@ const Menu = () => {
                             disabled={!isActive}
                             onClick={() => setIsActive(false)}
                     />
-                    {isPreloader && <Preloader />}
+                    {isSaving && <Preloader />}
                     {confirmingSignOut && (
                         <GlobalPopup
                             title={base.signOutConfirmTitle}

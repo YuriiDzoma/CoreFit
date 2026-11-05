@@ -1,16 +1,6 @@
 import React from "react";
-import styles from './social.module.scss'
-import FriendsMenu from "../components/friendsMenu/friendsMenu";
+import SocialLayout from "./socialLayout";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-    return (
-        <div className={styles.social}>
-            <div className={styles.menu}>
-                <FriendsMenu />
-            </div>
-            <div className={styles.content}>
-                {children}
-            </div>
-        </div>
-    );
+    return <SocialLayout>{children}</SocialLayout>;
 }

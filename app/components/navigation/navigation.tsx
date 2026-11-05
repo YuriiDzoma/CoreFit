@@ -3,11 +3,12 @@ import styles from './navigation.module.scss';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { House, Users, Dumbbell, MessageSquareText, Settings, Play } from 'lucide-react';
+import { House, Users, Dumbbell, MessageSquareText, Settings, Play, Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import useWindowSize from "../../hooks/useWindowSize";
+import useThemeToggle from "../../hooks/useThemeToggle";
 import { useAppSelector } from "../../hooks/redux";
-import { getUserId, getText, getIsDarkTheme } from "@/store/selectors";
+import { getUserId, getText } from "@/store/selectors";
 import { useFriendRequestStore } from "@/store/useFriendRequestStore";
 import { useMessagesStore, selectUnreadCount } from "@/store/useMessagesStore";
 import { fetchUserProfileById } from "../../../lib/userData";
@@ -88,7 +89,7 @@ const formatBadge = (count: number) => (count > 99 ? '99+' : count);
 // shown at this width while signed in (app.module.scss `.withSidebar`).
 const Sidebar = ({ pathname }: { pathname: string }) => {
     const { base } = useAppSelector(getText);
-    const isDark = useAppSelector(getIsDarkTheme);
+    const { isDark, toggleTheme, isSaving } = useThemeToggle();
     const nav = useNavState(pathname);
 
     const items = [
@@ -133,6 +134,21 @@ const Sidebar = ({ pathname }: { pathname: string }) => {
             </Link>
 
             <div className={styles.sidebarBottom}>
+                {/* The floating layout has this in Header's Menu; nothing
+                    else offers it at this width. The icon shows the
+                    current theme, same as the Menu's. */}
+                <button
+                    type="button"
+                    onClick={toggleTheme}
+                    disabled={isSaving}
+                    className={`${styles.sidebarItem} ${styles.sidebarButton}`}
+                >
+                    {isDark
+                        ? <Moon size={ICON_SIZE} strokeWidth={1.8} />
+                        : <Sun size={ICON_SIZE} strokeWidth={1.8} />}
+                    <span className={styles.sidebarLabel}>{base.theme}</span>
+                </button>
+
                 <Link
                     href="/settings"
                     aria-current={nav.isSettingsActive ? 'page' : undefined}

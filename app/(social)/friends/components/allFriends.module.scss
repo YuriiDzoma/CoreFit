@@ -2,6 +2,12 @@
 
 }
 
+// Under the Friends | Requests tabs (1200+, socialLayout.tsx): the same
+// 16px gap Requests has there (its first heading's `margin-top`).
+.inColumns {
+  padding-top: 16px;
+}
+
 .requestsBanner {
   display: flex;
   align-items: center;
@@ -150,5 +156,10 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-gap: 16px 32px;
+  }
+
+  // One row per line in the 1200+ two-column layout (socialLayout.tsx).
+  .oneColumn {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

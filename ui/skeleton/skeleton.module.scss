@@ -973,6 +973,11 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-gap: 16px 32px;
   }
+
+  // UsersSkeleton/FriendsListSkeleton in the 1200+ Friends columns.
+  .listOneColumn {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 // Wiki's exercise list (wiki.module.scss, same 768px breakpoint): two

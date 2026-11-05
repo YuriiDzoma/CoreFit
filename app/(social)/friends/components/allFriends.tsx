@@ -15,6 +15,8 @@ import {FriendsListSkeleton} from "@/ui/skeleton/skeleton";
 import Preloader from "@/ui/preloader/Preloader";
 import {formatLastActive} from "@/lib/lastActive";
 import {avatarFallbackUrl} from "@/lib/avatarFallback";
+import {notifyFriendsChanged, onFriendsChanged} from "@/lib/friendsChanged";
+import {useInSocialColumns} from "../../socialColumns";
 
 
 const AllFriends = () => {
@@ -26,6 +28,7 @@ const AllFriends = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isPreloader, setIsPreloader] = useState(false);
     const { requests } = useFriendRequestStore();
+    const inColumns = useInSocialColumns();
 
     // Bare `/friends` (no `[id]` segment -- reachable directly by URL even
     // though nothing in the app links to it that way, see navigation.tsx's
@@ -54,6 +57,9 @@ const AllFriends = () => {
             setLoading(false);
         };
         fetchData();
+        // A request accepted or a friend removed in the other column
+        // (1200+, socialLayout.tsx).
+        return onFriendsChanged(fetchData);
     }, [effectiveId]);
 
     // Own list only -- matches userList.tsx's own removeFriend, immediate
@@ -64,6 +70,7 @@ const AllFriends = () => {
         const res = await removeFriendship(friendId);
         if (res) {
             setFriends((prev) => prev.filter((friend) => friend.id !== friendId));
+            notifyFriendsChanged();
         }
         setIsPreloader(false);
     };
@@ -78,14 +85,14 @@ const AllFriends = () => {
     );
 
     return (
-        <div className={styles.allFriends}>
-            <h2 className={'pageTitle'}>{base.friends}</h2>
+        <div className={`${styles.allFriends} ${inColumns ? styles.inColumns : ''}`}>
+            {!inColumns && <h2 className={'pageTitle'}>{base.friends}</h2>}
 
             {/* Discoverability path to /users -- previously reachable only
                 via the bottom nav's Users tab. Own-profile only, same
                 reasoning as the requests banner below: browsing to add new
                 friends doesn't belong on someone else's Friends page. */}
-            {isOwnProfile && (
+            {isOwnProfile && !inColumns && (
                 <Link href="/users" className={styles.requestsBanner}>
                     <span>{base.browseUsers}</span>
                     <span>›</span>
@@ -96,7 +103,7 @@ const AllFriends = () => {
                 primary bar's Friends badge is a count only (not a link) —
                 this is the one path back to it, shown only on your own
                 Friends page and only when there's something to act on. */}
-            {isOwnProfile && requests.length > 0 && (
+            {isOwnProfile && !inColumns && requests.length > 0 && (
                 <Link href="/requests" className={styles.requestsBanner}>
                     <span>{base.friendRequestsLabel.replace('{value}', requests.length > 99 ? '99+' : String(requests.length))}</span>
                     <span>›</span>
@@ -104,7 +111,7 @@ const AllFriends = () => {
             )}
 
             {loading ? (
-                <FriendsListSkeleton/>
+                <FriendsListSkeleton oneColumn={inColumns}/>
             ) : (
                 <>
                     {friends.length > 0 && (
@@ -124,10 +131,12 @@ const AllFriends = () => {
                         </div>
                     )}
 
-                    {trimmedQuery && filteredFriends.length === 0 ? (
+                    {friends.length === 0 ? (
+                        <p>{isOwnProfile ? base.noFriendsOwn : base.noFriendsOther}</p>
+                    ) : trimmedQuery && filteredFriends.length === 0 ? (
                         <p>{base.noFriendsMatch.replace('{value}', searchQuery.trim())}</p>
                     ) : (
-                        <ul className={styles.friendList}>
+                        <ul className={`${styles.friendList} ${inColumns ? styles.oneColumn : ''}`}>
                             {filteredFriends.map(friend => {
                                 const isOnline = formatLastActive(friend.last_active_at)?.isOnline ?? false;
 
